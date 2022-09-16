@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if ! yarn run lint; then
+  echo "[pre-commit hook] There are problems in your code. The CI will probably reject it."
+  if ! sh -c ": >/dev/tty" >/dev/null 2>/dev/null; then
+    echo "[pre-commit hook] Console not interactive (/dev/tty not available). Stopping."
+    exit 1
+  fi
+  exec < /dev/tty
+  echo "[c]ommit anyway | try [f]ixing automatically | [s]top"
+  read choice
+  if [ $choice = "c" ]; then
+    exit 0
+  else
+    if [ $choice = "f" ]; then
+      yarn run lint:fix
+    fi
+    exit 1
+  fi
+fi

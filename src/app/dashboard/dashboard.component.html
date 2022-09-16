@@ -1,0 +1,5 @@
+<div *ngIf="profile | async">
+  <p>Hi {{ (profile | async)?.username }}!</p>
+  <p>email: {{ (profile | async)?.email }}</p>
+  <button mat-stroked-button (click)="onLogout()">Log out</button>
+</div>
