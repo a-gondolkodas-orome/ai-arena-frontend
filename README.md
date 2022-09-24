@@ -1,6 +1,22 @@
-# Ai Arena Frontend [![Node.js CI](https://github.com/leanil/ai-arena-frontend/actions/workflows/CI.yml/badge.svg)](https://github.com/leanil/ai-arena-backend/actions/workflows/CI.yml)
+# AI Arena - frontend [![Node.js CI](https://github.com/leanil/ai-arena-frontend/actions/workflows/CI.yml/badge.svg)](https://github.com/leanil/ai-arena-backend/actions/workflows/CI.yml)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.3.
+
+## Setup
+
+Install NVM (Node Version Manager)
+* Linux https://github.com/nvm-sh/nvm#installing-and-updating
+* Windows https://github.com/coreybutler/nvm-windows#installation--upgrades
+
+Install the latest (Long Term Support) version of Node.js
+* Linux `nvm install --lts`
+* Windows `nvm install lts`
+
+Install yarn (package manager): https://yarnpkg.com/getting-started/install
+
+Clone the repository: `git clone https://github.com/leanil/ai-arena-frontend.git`
+
+Install the dependencies: run `yarn` in the repo directory (`ai-arena-frontend`)
 
 ## Development server
 
