@@ -6,6 +6,8 @@ import { LoginResponse } from "../../models/auth";
 import { AuthService } from "../auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
+import { decode } from "../../utils";
+import { aiArenaExceptionCodec, ErrorType } from "../../errors";
 
 type LoginQueryResponse = { login: LoginResponse };
 
@@ -51,10 +53,20 @@ export class LoginComponent {
           await this.router.navigate([""]);
         },
         error: (error) => {
-          this.errorNotification.open(error.message, "x", {
-            duration: 5000,
-            verticalPosition: "bottom",
-          });
+          const errorData = decode(
+            aiArenaExceptionCodec,
+            JSON.parse(error.message),
+          );
+          this.errorNotification.open(
+            errorData.type === ErrorType.AUTHENTICATION_ERROR
+              ? errorData.message
+              : error.message,
+            "x",
+            {
+              duration: 5000,
+              verticalPosition: "bottom",
+            },
+          );
         },
       });
   }
