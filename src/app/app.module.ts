@@ -5,7 +5,7 @@ import { AppComponent } from "./app.component";
 import { RegistrationComponent } from "./registration/registration.component";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
-import { GameSelectorComponent } from "./game-selector/game-selector.component";
+import { GameComponent } from "./game/game.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
@@ -19,6 +19,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { GraphQLModule } from "./graphql.module";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { GameSelectorComponent } from "./game-selector/game-selector.component";
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     RegistrationComponent,
     LoginComponent,
     DashboardComponent,
+    GameComponent,
     GameSelectorComponent,
   ],
   imports: [
@@ -33,9 +36,10 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: "", component: DashboardComponent },
       { path: "login", component: LoginComponent },
       { path: "register", component: RegistrationComponent },
+      { path: "", component: DashboardComponent },
+      { path: "game/:id", component: GameComponent },
       { path: "**", redirectTo: "", pathMatch: "full" },
     ]),
     BrowserAnimationsModule,
@@ -48,6 +52,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     MatSnackBarModule,
     GraphQLModule,
     MatToolbarModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

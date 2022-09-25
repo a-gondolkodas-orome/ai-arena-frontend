@@ -2,8 +2,13 @@ import { Component, OnInit } from "@angular/core";
 import { Apollo, graphql } from "apollo-angular";
 import { map, Observable, Subscription } from "rxjs";
 import { Game } from "../../models/game";
+import { Router } from "@angular/router";
 
-type GamesQueryResponse = { games: Game[] };
+type GamePreview = Pick<Game, "id" | "name" | "picture" | "shortDescription">;
+
+type GamesQueryResponse = {
+  games: GamePreview[];
+};
 
 @Component({
   selector: "app-game-selector",
@@ -14,6 +19,7 @@ export class GameSelectorComponent implements OnInit {
   static readonly GAMES_QUERY = graphql`
     query GetGames {
       games {
+        id
         name
         picture
         shortDescription
@@ -21,11 +27,10 @@ export class GameSelectorComponent implements OnInit {
     }
   `;
 
-  constructor(protected apollo: Apollo) {}
+  constructor(protected apollo: Apollo, protected router: Router) {}
 
   protected getGamesSubscription?: Subscription;
-  games?: Observable<Game[]>;
-  selectedGame: Game | undefined;
+  games?: Observable<GamePreview[]>;
 
   ngOnInit() {
     this.games = this.apollo
@@ -38,7 +43,9 @@ export class GameSelectorComponent implements OnInit {
     this.getGamesSubscription?.unsubscribe();
   }
 
-  handleSelection(game: Game) {
-    this.selectedGame = game;
+  async handleSelection(selectedGame: GamePreview) {
+    await this.router.navigate(["game", selectedGame.id], {
+      state: selectedGame,
+    });
   }
 }

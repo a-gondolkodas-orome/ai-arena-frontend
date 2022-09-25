@@ -1,9 +1,4 @@
-.game-card-container {
-  display: grid;
-  grid-template-columns: 200px 200px 200px 200px;
-  grid-template-rows: auto;
-
-  .game-card {
-    display: inline;
-  }
+.game-card {
+  margin: 1%;
+  cursor: pointer;
 }
