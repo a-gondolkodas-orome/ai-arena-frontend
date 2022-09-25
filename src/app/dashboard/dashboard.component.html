@@ -1,4 +1,5 @@
 <div *ngIf="profile | async">
+  <app-game-selector></app-game-selector>
   <p>Hi {{ (profile | async)?.username }}!</p>
   <p>email: {{ (profile | async)?.email }}</p>
   <button mat-stroked-button (click)="onLogout()">Log out</button>

@@ -3,6 +3,9 @@ import { BrowserModule } from "@angular/platform-browser";
 
 import { AppComponent } from "./app.component";
 import { RegistrationComponent } from "./registration/registration.component";
+import { LoginComponent } from "./login/login.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { GameSelectorComponent } from "./game-selector/game-selector.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
@@ -13,10 +16,9 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { LoginComponent } from "./login/login.component";
 import { GraphQLModule } from "./graphql.module";
-import { DashboardComponent } from "./dashboard/dashboard.component";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     RegistrationComponent,
     LoginComponent,
     DashboardComponent,
+    GameSelectorComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +47,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatIconModule,
     MatSnackBarModule,
     GraphQLModule,
+    MatToolbarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
