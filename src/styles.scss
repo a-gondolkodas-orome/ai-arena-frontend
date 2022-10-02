@@ -11,3 +11,16 @@ body {
 
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
+
+.notification-service {
+  white-space: pre-wrap;
+}
+.notification-service-success {
+  color: green;
+}
+.notification-service-error {
+  color: red;
+}
+.notification-service-info {
+  color: royalblue;
+}

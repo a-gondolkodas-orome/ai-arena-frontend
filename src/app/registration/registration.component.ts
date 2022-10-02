@@ -1,37 +1,27 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { Apollo, graphql } from "apollo-angular";
-import { RegistrationResponse } from "../../models/auth";
+import { concatMap, filter, from, map, of, Subscription } from "rxjs";
+import { RegisterGQL } from "../graphql/generated";
+import { LoginStatusService } from "../services/login-status.service";
 import { Router } from "@angular/router";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Subscription } from "rxjs";
-import { AuthService } from "../auth.service";
-import { aiArenaExceptionCodec, ErrorType } from "../../errors";
-import { decode } from "../../utils";
-type RegisterMutationResponse = { register: RegistrationResponse };
+import { NotificationService } from "../services/notification.service";
+import { handleGraphqlAuthErrors } from "../error";
 
 @Component({
   selector: "app-registration",
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.scss"],
 })
-export class RegistrationComponent {
-  static readonly REGISTER_MUTATION = graphql`
-    mutation Register($userData: UserData!) {
-      register(userData: $userData) {
-        token
-      }
-    }
-  `;
-
+export class RegistrationComponent implements OnDestroy {
   constructor(
     protected formBuilder: FormBuilder,
-    protected apollo: Apollo,
-    protected errorNotification: MatSnackBar,
+    protected register: RegisterGQL,
+    protected notificationService: NotificationService,
+    protected loginStatusService: LoginStatusService,
     protected router: Router,
   ) {}
 
-  registrationForm = this.formBuilder.group({
+  registrationForm = this.formBuilder.nonNullable.group({
     username: "",
     email: "",
     password: "",
@@ -41,50 +31,43 @@ export class RegistrationComponent {
   protected registerSubscription?: Subscription;
 
   onSubmit() {
-    this.registerSubscription = this.apollo
-      .mutate<RegisterMutationResponse>({
-        mutation: RegistrationComponent.REGISTER_MUTATION,
-        variables: { userData: this.registrationForm.value },
-      })
-      .subscribe({
-        next: async ({ data }) => {
-          if (!data)
-            throw new Error(
-              "RegistrationComponent: no data returned from registration",
-            );
-          AuthService.saveToken(data.register.token);
-          await this.router.navigate([""]);
-        },
-        error: (error) => {
-          const errorData = decode(
-            aiArenaExceptionCodec,
-            JSON.parse(error.message),
-          );
-          if (errorData.type === ErrorType.VALIDATION_ERROR) {
-            for (const [field, errors] of Object.entries(
-              errorData.fieldErrors ?? {},
-            )) {
-              this.registrationForm
-                .get(field)
-                ?.setErrors({ serverError: errors.join(", ") });
+    this.registerSubscription = this.register
+      .mutate({ registrationData: this.registrationForm.getRawValue() })
+      .pipe(
+        map((result) => result.data),
+        filter(<T>(value: T): value is Exclude<T, null | undefined> => {
+          if (value != null) return true;
+          this.notificationService.error("No data returned from registration");
+          return false;
+        }),
+        map((data) => data.register),
+        handleGraphqlAuthErrors(this.notificationService),
+        concatMap((register) => {
+          if (register.__typename === "RegistrationSuccess") {
+            this.loginStatusService.login(register.token);
+            return from(this.router.navigate([""]));
+          } else {
+            for (const field of ["username", "email"] as const) {
+              const errors = register.fieldErrors?.[field];
+              if (errors) {
+                this.registrationForm
+                  .get(field)
+                  ?.setErrors({ serverError: errors.join(", ") });
+              }
             }
-            if (errorData.nonFieldErrors) {
-              this.errorNotification.open(
-                errorData.nonFieldErrors.join(", "),
-                "x",
-                {
-                  duration: 5000,
-                  verticalPosition: "bottom",
-                },
+            if (register.nonFieldErrors) {
+              this.notificationService.error(
+                register.nonFieldErrors.join("\n"),
               );
             }
-          } else {
-            this.errorNotification.open(error.message, "x", {
-              duration: 5000,
-              verticalPosition: "bottom",
-            });
+            return of(null);
           }
-        },
-      });
+        }),
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy() {
+    this.registerSubscription?.unsubscribe();
   }
 }

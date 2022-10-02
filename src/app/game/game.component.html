@@ -1,6 +1,6 @@
 <div *ngIf="selectedGame | async">
   <mat-toolbar>
-    <button mat-icon-button (click)="handleClearSelection()">
+    <button mat-icon-button (click)="handleBackToDashboard()">
       <mat-icon>arrow_back</mat-icon>
     </button>
     <span>{{ (selectedGame | async)?.name }}</span>

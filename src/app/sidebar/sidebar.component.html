@@ -1,0 +1,5 @@
+<div *ngIf="userProfile | async" class="sidebar">
+  <p>Logged in as: {{ (userProfile | async)?.username }}</p>
+  <p>email: {{ (userProfile | async)?.email }}</p>
+  <button mat-stroked-button (click)="onLogout()">Log out</button>
+</div>

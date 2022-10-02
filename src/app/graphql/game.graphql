@@ -1,0 +1,36 @@
+query GetGames {
+  getGames {
+    __typename
+    ... on Games {
+      games {
+        id
+        name
+        picture
+        shortDescription
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+query FindGame($id: String!) {
+  findGame(id: $id) {
+    __typename
+    ... on Game {
+      id
+      name
+      shortDescription
+      picture
+      fullDescription
+      playerCount {
+        min
+        max
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}

@@ -16,11 +16,14 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { GraphQLModule } from "./graphql.module";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { GameSelectorComponent } from "./game-selector/game-selector.component";
+import { SidebarComponent } from "./sidebar/sidebar.component";
+import { ApolloModule } from "apollo-angular";
+import { GraphqlAuthMiddlewareProvider } from "./services/graphql-auth-middleware.provider";
+import { AuthGuard } from "./auth-guard";
 
 @NgModule({
   declarations: [
@@ -30,17 +33,33 @@ import { GameSelectorComponent } from "./game-selector/game-selector.component";
     DashboardComponent,
     GameComponent,
     GameSelectorComponent,
+    SidebarComponent,
   ],
   imports: [
+    ApolloModule,
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: "login", component: LoginComponent },
-      { path: "register", component: RegistrationComponent },
-      { path: "", component: DashboardComponent },
-      { path: "game/:id", component: GameComponent },
-      { path: "**", redirectTo: "", pathMatch: "full" },
+      { path: "login", component: LoginComponent, title: "AI Arena - Login" },
+      {
+        path: "register",
+        component: RegistrationComponent,
+        title: "AI Arena - Register",
+      },
+      {
+        path: "",
+        component: DashboardComponent,
+        canActivate: [AuthGuard],
+        title: "AI Arena",
+      },
+      {
+        path: "game/:id",
+        component: GameComponent,
+        canActivate: [AuthGuard],
+        title: "AI Arena",
+      },
+      { path: "**", redirectTo: "", canActivate: [AuthGuard] },
     ]),
     BrowserAnimationsModule,
     MatFormFieldModule,
@@ -50,11 +69,10 @@ import { GameSelectorComponent } from "./game-selector/game-selector.component";
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    GraphQLModule,
     MatToolbarModule,
     NgbModule,
   ],
-  providers: [],
+  providers: [GraphqlAuthMiddlewareProvider],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

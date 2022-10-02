@@ -1,47 +1,31 @@
-import { Component, OnInit } from "@angular/core";
-import { Apollo, graphql } from "apollo-angular";
-import { map, Observable, Subscription } from "rxjs";
-import { Game } from "../../models/game";
+import { Component } from "@angular/core";
+import { map, Observable } from "rxjs";
 import { Router } from "@angular/router";
+import { Game, GetGamesGQL } from "../graphql/generated";
+import { handleGraphqlAuthErrors } from "../error";
+import { NotificationService } from "../services/notification.service";
 
 type GamePreview = Pick<Game, "id" | "name" | "picture" | "shortDescription">;
-
-type GamesQueryResponse = {
-  games: GamePreview[];
-};
 
 @Component({
   selector: "app-game-selector",
   templateUrl: "./game-selector.component.html",
   styleUrls: ["./game-selector.component.scss"],
 })
-export class GameSelectorComponent implements OnInit {
-  static readonly GAMES_QUERY = graphql`
-    query GetGames {
-      games {
-        id
-        name
-        picture
-        shortDescription
-      }
-    }
-  `;
-
-  constructor(protected apollo: Apollo, protected router: Router) {}
-
-  protected getGamesSubscription?: Subscription;
-  games?: Observable<GamePreview[]>;
-
-  ngOnInit() {
-    this.games = this.apollo
-      .query<GamesQueryResponse>({ query: GameSelectorComponent.GAMES_QUERY })
-      .pipe(map((result) => result.data.games));
-    this.getGamesSubscription = this.games.subscribe();
+export class GameSelectorComponent {
+  constructor(
+    protected getGames: GetGamesGQL,
+    protected notificationService: NotificationService,
+    protected router: Router,
+  ) {
+    this.games = this.getGames.fetch().pipe(
+      map((result) => result.data.getGames),
+      handleGraphqlAuthErrors(this.notificationService),
+      map((getGames) => getGames.games),
+    );
   }
 
-  ngOnDestroy() {
-    this.getGamesSubscription?.unsubscribe();
-  }
+  games: Observable<GamePreview[]>;
 
   async handleSelection(selectedGame: GamePreview) {
     await this.router.navigate(["game", selectedGame.id], {

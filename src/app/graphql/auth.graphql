@@ -1,0 +1,47 @@
+query Login($credentials: Credentials!) {
+  login(credentials: $credentials) {
+    __typename
+    ... on LoginSuccess {
+      token
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+mutation Register($registrationData: RegistrationData!) {
+  register(registrationData: $registrationData) {
+    __typename
+    ... on RegistrationSuccess {
+      token
+      user {
+        id
+      }
+    }
+    ... on RegistrationError {
+      fieldErrors {
+        username
+        email
+      }
+      nonFieldErrors
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+query GetProfile {
+  profile {
+    __typename
+    ... on User {
+      id
+      username
+      email
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}

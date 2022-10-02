@@ -1,3 +1,16 @@
 <div class="container">
-  <router-outlet></router-outlet>
+  <div *ngIf="userProfile | async">
+    <div class="row">
+      <div class="col-10">
+        <router-outlet></router-outlet>
+      </div>
+      <!--    TODO hide sidebar on small screens-->
+      <div class="col-2">
+        <app-sidebar></app-sidebar>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!(userProfile | async)">
+    <router-outlet></router-outlet>
+  </div>
 </div>
