@@ -1,4 +1,4 @@
-# AI Arena - frontend [![Node.js CI](https://github.com/leanil/ai-arena-frontend/actions/workflows/CI.yml/badge.svg)](https://github.com/leanil/ai-arena-backend/actions/workflows/CI.yml)
+# AI Arena - frontend [![Node.js CI](https://github.com/leanil/ai-arena-frontend/actions/workflows/CI.yml/badge.svg)](https://github.com/leanil/ai-arena-frontend/actions/workflows/CI.yml)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.3.
 
