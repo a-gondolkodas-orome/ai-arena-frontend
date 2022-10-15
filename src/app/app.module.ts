@@ -8,7 +8,7 @@ import { DashboardComponent } from "./dashboard/dashboard.component";
 import { GameComponent } from "./game/game.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -24,6 +24,12 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
 import { ApolloModule } from "apollo-angular";
 import { GraphqlAuthMiddlewareProvider } from "./services/graphql-auth-middleware.provider";
 import { AuthGuard } from "./auth-guard";
+import { BotListComponent } from "./bot-list/bot-list.component";
+import { MatListModule } from "@angular/material/list";
+import { AddBotDialogComponent } from "./add-bot-dialog/add-bot-dialog.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MaterialFileInputModule } from "ngx-material-file-input";
+import { AuthInterceptor } from "./services/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -34,6 +40,8 @@ import { AuthGuard } from "./auth-guard";
     GameComponent,
     GameSelectorComponent,
     SidebarComponent,
+    BotListComponent,
+    AddBotDialogComponent,
   ],
   imports: [
     ApolloModule,
@@ -71,8 +79,14 @@ import { AuthGuard } from "./auth-guard";
     MatSnackBarModule,
     MatToolbarModule,
     NgbModule,
+    MatListModule,
+    MatDialogModule,
+    MaterialFileInputModule,
   ],
-  providers: [GraphqlAuthMiddlewareProvider],
+  providers: [
+    GraphqlAuthMiddlewareProvider,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

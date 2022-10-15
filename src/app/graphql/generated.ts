@@ -21,6 +21,53 @@ export type Scalars = {
   Float: number;
 };
 
+export type AddBotError = GraphqlError & {
+  __typename?: "AddBotError";
+  fieldErrors: AddBotFieldErrors;
+  message: Scalars["String"];
+};
+
+export type AddBotFieldErrors = {
+  __typename?: "AddBotFieldErrors";
+  gameId?: Maybe<Array<Scalars["String"]>>;
+  name?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type AddBotResponse =
+  | AddBotError
+  | BotWithUploadLink
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError;
+
+export type Bot = {
+  __typename?: "Bot";
+  game: Game;
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  user: User;
+};
+
+export type BotInput = {
+  gameId: Scalars["String"];
+  name: Scalars["String"];
+};
+
+export type BotWithUploadLink = {
+  __typename?: "BotWithUploadLink";
+  bot: Bot;
+  uploadLink: Scalars["String"];
+};
+
+export type Bots = {
+  __typename?: "Bots";
+  bots: Array<Bot>;
+};
+
+export type BotsResponse =
+  | Bots
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError;
+
 export type Credentials = {
   email: Scalars["String"];
   password: Scalars["String"];
@@ -36,7 +83,7 @@ export type Game = {
   shortDescription: Scalars["String"];
 };
 
-export type GameData = {
+export type GameInput = {
   fullDescription: Scalars["String"];
   name: Scalars["String"];
   picture: Scalars["String"];
@@ -85,16 +132,21 @@ export type LoginSuccess = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  createBot: AddBotResponse;
   createGame: GameResponse;
   register: RegistrationResponse;
 };
 
+export type MutationCreateBotArgs = {
+  bot: BotInput;
+};
+
 export type MutationCreateGameArgs = {
-  game: GameData;
+  game: GameInput;
 };
 
 export type MutationRegisterArgs = {
-  registrationData: RegistrationData;
+  registrationData: RegistrationInput;
 };
 
 export type PlayerCount = {
@@ -111,6 +163,7 @@ export type PlayerCountInput = {
 export type Query = {
   __typename?: "Query";
   findGame?: Maybe<GameResponse>;
+  getBots: BotsResponse;
   getGames: GamesResponse;
   login: LoginResponse;
   profile: UserResponse;
@@ -121,14 +174,12 @@ export type QueryFindGameArgs = {
   id: Scalars["String"];
 };
 
-export type QueryLoginArgs = {
-  credentials: Credentials;
+export type QueryGetBotsArgs = {
+  gameId: Scalars["String"];
 };
 
-export type RegistrationData = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-  username: Scalars["String"];
+export type QueryLoginArgs = {
+  credentials: Credentials;
 };
 
 export type RegistrationError = GraphqlError & {
@@ -142,6 +193,12 @@ export type RegistrationFieldErrors = {
   __typename?: "RegistrationFieldErrors";
   email?: Maybe<Array<Scalars["String"]>>;
   username?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type RegistrationInput = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+  username: Scalars["String"];
 };
 
 export type RegistrationResponse =
@@ -191,7 +248,7 @@ export type LoginQuery = {
 };
 
 export type RegisterMutationVariables = Exact<{
-  registrationData: RegistrationData;
+  registrationInput: RegistrationInput;
 }>;
 
 export type RegisterMutation = {
@@ -224,6 +281,46 @@ export type GetProfileQuery = {
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
     | { __typename: "User"; id: string; username: string; email: string };
+};
+
+export type CreateBotMutationVariables = Exact<{
+  botInput: BotInput;
+}>;
+
+export type CreateBotMutation = {
+  __typename?: "Mutation";
+  createBot:
+    | {
+        __typename: "AddBotError";
+        message: string;
+        fieldErrors: {
+          __typename?: "AddBotFieldErrors";
+          name?: Array<string> | null;
+          gameId?: Array<string> | null;
+        };
+      }
+    | {
+        __typename: "BotWithUploadLink";
+        uploadLink: string;
+        bot: { __typename?: "Bot"; id: string; name: string };
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string };
+};
+
+export type GetBotsQueryVariables = Exact<{
+  gameId: Scalars["String"];
+}>;
+
+export type GetBotsQuery = {
+  __typename?: "Query";
+  getBots:
+    | {
+        __typename: "Bots";
+        bots: Array<{ __typename?: "Bot"; id: string; name: string }>;
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string };
 };
 
 export type GetGamesQueryVariables = Exact<{ [key: string]: never }>;
@@ -291,8 +388,8 @@ export class LoginGQL extends Apollo.Query<LoginQuery, LoginQueryVariables> {
   }
 }
 export const RegisterDocument = gql`
-  mutation Register($registrationData: RegistrationData!) {
-    register(registrationData: $registrationData) {
+  mutation Register($registrationInput: RegistrationInput!) {
+    register(registrationData: $registrationInput) {
       __typename
       ... on RegistrationSuccess {
         token
@@ -351,6 +448,73 @@ export class GetProfileGQL extends Apollo.Query<
   GetProfileQueryVariables
 > {
   override document = GetProfileDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const CreateBotDocument = gql`
+  mutation CreateBot($botInput: BotInput!) {
+    createBot(bot: $botInput) {
+      __typename
+      ... on BotWithUploadLink {
+        bot {
+          id
+          name
+        }
+        uploadLink
+      }
+      ... on AddBotError {
+        fieldErrors {
+          name
+          gameId
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class CreateBotGQL extends Apollo.Mutation<
+  CreateBotMutation,
+  CreateBotMutationVariables
+> {
+  override document = CreateBotDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const GetBotsDocument = gql`
+  query GetBots($gameId: String!) {
+    getBots(gameId: $gameId) {
+      __typename
+      ... on Bots {
+        bots {
+          id
+          name
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class GetBotsGQL extends Apollo.Query<
+  GetBotsQuery,
+  GetBotsQueryVariables
+> {
+  override document = GetBotsDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

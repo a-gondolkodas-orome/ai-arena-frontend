@@ -34,7 +34,10 @@ export class LoginComponent implements OnDestroy {
 
   onSubmit() {
     this.loginSubscription = this.loginGQL
-      .fetch({ credentials: this.loginForm.getRawValue() })
+      .fetch(
+        { credentials: this.loginForm.getRawValue() },
+        { fetchPolicy: "no-cache" },
+      )
       .pipe(
         map((result) => result.data.login),
         handleGraphqlAuthErrors(this.notificationService),

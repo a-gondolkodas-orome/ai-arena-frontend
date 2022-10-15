@@ -18,7 +18,7 @@ export class GameSelectorComponent {
     protected notificationService: NotificationService,
     protected router: Router,
   ) {
-    this.games = this.getGames.fetch().pipe(
+    this.games = this.getGames.watch().valueChanges.pipe(
       map((result) => result.data.getGames),
       handleGraphqlAuthErrors(this.notificationService),
       map((getGames) => getGames.games),

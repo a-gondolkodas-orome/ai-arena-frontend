@@ -1,0 +1,36 @@
+mutation CreateBot($botInput: BotInput!) {
+  createBot(bot: $botInput) {
+    __typename
+    ... on BotWithUploadLink {
+      bot {
+        id
+        name
+      }
+      uploadLink
+    }
+    ... on AddBotError {
+      fieldErrors {
+        name
+        gameId
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+query GetBots($gameId: String!) {
+  getBots(gameId: $gameId) {
+    __typename
+    ... on Bots {
+      bots {
+        id
+        name
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}

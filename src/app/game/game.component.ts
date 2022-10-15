@@ -20,11 +20,9 @@ export class GameComponent {
     const gameId = this.route.snapshot.paramMap.get("id");
     if (gameId === null) {
       this.notificationService.error("No game id in path");
-      this.selectedGame = from(this.handleBackToDashboard()).pipe(
-        ignoreElements(),
-      );
+      this.game$ = from(this.handleBackToDashboard()).pipe(ignoreElements());
     } else {
-      this.selectedGame = this.findGame.fetch({ id: gameId }).pipe(
+      this.game$ = this.findGame.watch({ id: gameId }).valueChanges.pipe(
         map((result) => result.data.findGame),
         filter(<T>(value: T): value is Exclude<T, null | undefined> => {
           if (value != null) return true;
@@ -36,7 +34,7 @@ export class GameComponent {
     }
   }
 
-  selectedGame: Observable<Game>;
+  game$: Observable<Game>;
 
   async handleBackToDashboard() {
     await this.router.navigate([""]);

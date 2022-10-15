@@ -1,0 +1,39 @@
+<form [formGroup]="addBotForm" (ngSubmit)="onSubmit()">
+  <h1 mat-dialog-title>Add new bot</h1>
+  <div mat-dialog-content>
+    <mat-form-field appearance="standard">
+      <mat-label>name</mat-label>
+      <input matInput formControlName="name" required />
+      <mat-error
+        *ngIf="addBotForm.get('name')?.errors?.['serverError'] as nameError"
+      >
+        {{ nameError }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+      <mat-label>source file</mat-label>
+      <ngx-mat-file-input
+        formControlName="sourceFile"
+        required
+        [accept]="'.cpp'"
+        valuePlaceholder="No file selected"
+      ></ngx-mat-file-input>
+      <mat-error
+        *ngIf="
+          addBotForm.get('sourceFile')?.getError('maxContentSize') as sizeError
+        "
+      >
+        The file size must not exceed {{ sizeError.maxSize | byteFormat }} (now
+        {{ sizeError.actualSize | byteFormat }}).
+      </mat-error>
+      <mat-icon matSuffix>folder</mat-icon>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button type="submit" [disabled]="addBotForm.invalid">
+      Add
+    </button>
+  </div>
+</form>

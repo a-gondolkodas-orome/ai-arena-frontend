@@ -3633,6 +3633,7 @@ __metadata:
     karma-coverage: ~2.2.0
     karma-jasmine: ~5.1.0
     karma-jasmine-html-reporter: ~2.0.0
+    ngx-material-file-input: ^4.0.0
     prettier: ^2.7.1
     rxjs: ^7.5.7
     ts-node: ^10.9.1
@@ -8201,6 +8202,20 @@ __metadata:
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
+  languageName: node
+  linkType: hard
+
+"ngx-material-file-input@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "ngx-material-file-input@npm:4.0.0"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/cdk": ^14.0.0
+    "@angular/common": ^14.0.0
+    "@angular/core": ^14.0.0
+    "@angular/material": ^14.0.0
+  checksum: 979d26961a4c73b2cd416d48e794288abd80fc651b35f1a58224127008f7b632821bf8d1e2db44146eb0e99a8d9cb2a9c8e5af35214668d7371214caac0718e8
   languageName: node
   linkType: hard
 

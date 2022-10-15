@@ -1,11 +1,12 @@
-<div *ngIf="selectedGame | async">
+<div *ngIf="game$ | async as selectedGame">
   <mat-toolbar>
     <button mat-icon-button (click)="handleBackToDashboard()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <span>{{ (selectedGame | async)?.name }}</span>
+    <span>{{ selectedGame.name }}</span>
   </mat-toolbar>
+  <app-bot-list [game]="selectedGame"></app-bot-list>
   <div>
-    {{ (selectedGame | async)?.fullDescription }}
+    {{ selectedGame.fullDescription }}
   </div>
 </div>

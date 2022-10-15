@@ -31,8 +31,8 @@ export class AuthService {
 
   setProfile() {
     this.getProfileSubscription = this.getProfile
-      .fetch()
-      .pipe(map((result) => result.data.profile))
+      .watch()
+      .valueChanges.pipe(map((result) => result.data.profile))
       .subscribe((response) => {
         if (response.__typename === "User") {
           this.userProfile$.next(response);

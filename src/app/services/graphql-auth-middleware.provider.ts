@@ -1,4 +1,3 @@
-import { HttpHeaders } from "@angular/common/http";
 import {
   InMemoryCache,
   ApolloClientOptions,
@@ -8,10 +7,8 @@ import {
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { LoginStatusService } from "./login-status.service";
-import { JwtToken } from "./jwt-token";
 import { possibleTypes } from "../apollo-possible-types";
-
-const uri = "http://localhost:3000/graphql";
+import { environment } from "../../environments/environment";
 
 export const GraphqlAuthMiddlewareProvider = {
   provide: APOLLO_OPTIONS,
@@ -19,16 +16,7 @@ export const GraphqlAuthMiddlewareProvider = {
     httpLink: HttpLink,
     loginStatusService: LoginStatusService,
   ): ApolloClientOptions<unknown> {
-    const http = httpLink.create({ uri });
-    const jwtTokenSetter = new ApolloLink((operation, forward) => {
-      const token = JwtToken.get();
-      if (token) {
-        operation.setContext({
-          headers: new HttpHeaders().set("Authorization", `Bearer ${token}`),
-        });
-      }
-      return forward(operation);
-    });
+    const http = httpLink.create({ uri: environment.backendUrl + "/graphql" });
     const handleAuthError = new ApolloLink(function (operation, forward) {
       return new Observable(function (observer) {
         const subscription = forward(operation).subscribe({
@@ -54,7 +42,7 @@ export const GraphqlAuthMiddlewareProvider = {
         };
       });
     });
-    const link = jwtTokenSetter.concat(handleAuthError).concat(http);
+    const link = handleAuthError.concat(http);
 
     return {
       link,

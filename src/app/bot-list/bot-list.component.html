@@ -1,0 +1,9 @@
+<mat-list>
+  <div mat-subheader>
+    Bots
+    <mat-icon class="add-bot" (click)="addBot()"> add </mat-icon>
+  </div>
+  <mat-list-item class="bot-list-item" *ngFor="let bot of bots$ | async">
+    <mat-card class="bot-list-item-content">{{ bot.name }}</mat-card>
+  </mat-list-item>
+</mat-list>

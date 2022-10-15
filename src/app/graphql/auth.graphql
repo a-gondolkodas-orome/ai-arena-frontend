@@ -10,8 +10,8 @@ query Login($credentials: Credentials!) {
   }
 }
 
-mutation Register($registrationData: RegistrationData!) {
-  register(registrationData: $registrationData) {
+mutation Register($registrationInput: RegistrationInput!) {
+  register(registrationData: $registrationInput) {
     __typename
     ... on RegistrationSuccess {
       token

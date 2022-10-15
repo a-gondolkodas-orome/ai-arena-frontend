@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { concatMap, filter, from, map, of, Subscription } from "rxjs";
+import { concatMap, filter, from, map, Subscription } from "rxjs";
 import { RegisterGQL } from "../graphql/generated";
 import { LoginStatusService } from "../services/login-status.service";
 import { Router } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
-import { handleGraphqlAuthErrors } from "../error";
+import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
 
 @Component({
   selector: "app-registration",
@@ -32,36 +32,24 @@ export class RegistrationComponent implements OnDestroy {
 
   onSubmit() {
     this.registerSubscription = this.register
-      .mutate({ registrationData: this.registrationForm.getRawValue() })
+      .mutate({ registrationInput: this.registrationForm.getRawValue() })
       .pipe(
         map((result) => result.data),
-        filter(<T>(value: T): value is Exclude<T, null | undefined> => {
+        filter((value): value is Exclude<typeof value, null | undefined> => {
           if (value != null) return true;
           this.notificationService.error("No data returned from registration");
           return false;
         }),
         map((data) => data.register),
         handleGraphqlAuthErrors(this.notificationService),
+        handleValidationErrors(
+          "RegistrationError" as const,
+          this.notificationService,
+          this.registrationForm,
+        ),
         concatMap((register) => {
-          if (register.__typename === "RegistrationSuccess") {
-            this.loginStatusService.login(register.token);
-            return from(this.router.navigate([""]));
-          } else {
-            for (const field of ["username", "email"] as const) {
-              const errors = register.fieldErrors?.[field];
-              if (errors) {
-                this.registrationForm
-                  .get(field)
-                  ?.setErrors({ serverError: errors.join(", ") });
-              }
-            }
-            if (register.nonFieldErrors) {
-              this.notificationService.error(
-                register.nonFieldErrors.join("\n"),
-              );
-            }
-            return of(null);
-          }
+          this.loginStatusService.login(register.token);
+          return from(this.router.navigate([""]));
         }),
       )
       .subscribe();
