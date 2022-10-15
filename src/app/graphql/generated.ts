@@ -39,6 +39,8 @@ export type AddBotResponse =
   | GraphqlAuthenticationError
   | GraphqlAuthorizationError;
 
+export type AuthError = GraphqlAuthenticationError | GraphqlAuthorizationError;
+
 export type Bot = {
   __typename?: "Bot";
   game: Game;
@@ -134,6 +136,7 @@ export type Mutation = {
   __typename?: "Mutation";
   createBot: AddBotResponse;
   createGame: GameResponse;
+  deleteBot?: Maybe<AuthError>;
   register: RegistrationResponse;
 };
 
@@ -143,6 +146,10 @@ export type MutationCreateBotArgs = {
 
 export type MutationCreateGameArgs = {
   game: GameInput;
+};
+
+export type MutationDeleteBotArgs = {
+  botId: Scalars["String"];
 };
 
 export type MutationRegisterArgs = {
@@ -321,6 +328,18 @@ export type GetBotsQuery = {
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string };
+};
+
+export type DeleteBotMutationVariables = Exact<{
+  botId: Scalars["String"];
+}>;
+
+export type DeleteBotMutation = {
+  __typename?: "Mutation";
+  deleteBot?:
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | null;
 };
 
 export type GetGamesQueryVariables = Exact<{ [key: string]: never }>;
@@ -515,6 +534,30 @@ export class GetBotsGQL extends Apollo.Query<
   GetBotsQueryVariables
 > {
   override document = GetBotsDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const DeleteBotDocument = gql`
+  mutation DeleteBot($botId: String!) {
+    deleteBot(botId: $botId) {
+      __typename
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class DeleteBotGQL extends Apollo.Mutation<
+  DeleteBotMutation,
+  DeleteBotMutationVariables
+> {
+  override document = DeleteBotDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

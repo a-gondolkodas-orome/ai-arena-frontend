@@ -34,3 +34,12 @@ query GetBots($gameId: String!) {
     }
   }
 }
+
+mutation DeleteBot($botId: String!) {
+  deleteBot(botId: $botId) {
+    __typename
+    ... on GraphqlError {
+      message
+    }
+  }
+}

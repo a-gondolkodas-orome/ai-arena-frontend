@@ -1,14 +1,29 @@
-.add-bot {
-  cursor: pointer;
-}
+#bot-list {
+  display: flex;
+  justify-content: center;
 
-mat-list-item.bot-list-item {
-  margin: 1% auto;
-  width: 80%;
-  height: unset;
-}
+  .add-bot-icon {
+    cursor: pointer;
+  }
 
-.bot-list-item-content {
-  width: 100%;
-  padding: 10px;
+  #bot-list-items-container {
+    width: 80%;
+
+    mat-list-item.bot-list-item {
+      margin: 1%;
+      height: unset;
+    }
+
+    .bot-list-item-content {
+      display: flex;
+      width: 100%;
+      padding: 10px;
+      justify-content: space-between;
+
+      .delete-bot-icon {
+        display: block;
+        cursor: pointer;
+      }
+    }
+  }
 }

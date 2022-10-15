@@ -11,6 +11,7 @@ import { decode } from "../../utils";
 import { BotWithUploadLink, CreateBotGQL } from "../graphql/generated";
 import { NotificationService } from "../services/notification.service";
 import { environment } from "../../environments/environment";
+import { BotListComponent } from "../bot-list/bot-list.component";
 
 @Component({
   selector: "app-add-bot-dialog",
@@ -63,7 +64,11 @@ export class AddBotDialogComponent implements OnDestroy {
           update: (cache, { data }) => {
             cache.modify({
               fields: {
-                getBots: (getBots, { toReference, INVALIDATE }) => {
+                getBots: (cacheValue: unknown, { toReference, INVALIDATE }) => {
+                  const getBots = decode(
+                    BotListComponent.getBotsCacheCodec,
+                    cacheValue,
+                  );
                   const botWithUploadLink =
                     data?.createBot as BotWithUploadLink;
                   let id;
