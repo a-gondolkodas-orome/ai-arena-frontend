@@ -1,0 +1,40 @@
+mutation StartMatch($matchInput: MatchInput!) {
+  startMatch(matchInput: $matchInput) {
+    __typename
+    ... on Match {
+      id
+    }
+    ... on StartMatchError {
+      fieldErrors {
+        gameId
+        botIds
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+query GetMatches($gameId: String!) {
+  getMatches(gameId: $gameId) {
+    __typename
+    ... on Matches {
+      matches {
+        id
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+mutation DeleteMatch($matchId: String!) {
+  deleteMatch(matchId: $matchId) {
+    __typename
+    ... on GraphqlError {
+      message
+    }
+  }
+}

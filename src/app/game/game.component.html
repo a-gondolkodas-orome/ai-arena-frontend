@@ -6,6 +6,7 @@
     <span>{{ selectedGame.name }}</span>
   </mat-toolbar>
   <app-bot-list [game]="selectedGame"></app-bot-list>
+  <app-match-list [game]="selectedGame"></app-match-list>
   <div>
     {{ selectedGame.fullDescription }}
   </div>

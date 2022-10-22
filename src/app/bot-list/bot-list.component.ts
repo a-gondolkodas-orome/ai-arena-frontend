@@ -14,6 +14,11 @@ import { decode } from "../../utils";
   styleUrls: ["./bot-list.component.scss"],
 })
 export class BotListComponent implements OnInit, OnDestroy {
+  static getBotsCacheCodec = t.type({
+    __typename: t.literal("Bots"),
+    bots: t.array(t.type({ __ref: t.string })),
+  });
+
   @Input() game!: Game;
 
   constructor(
@@ -42,11 +47,6 @@ export class BotListComponent implements OnInit, OnDestroy {
   }
 
   protected deleteBotSubscription?: Subscription;
-
-  static getBotsCacheCodec = t.type({
-    __typename: t.literal("Bots"),
-    bots: t.array(t.type({ __ref: t.string })),
-  });
 
   deleteBot(botId: string) {
     this.deleteBotSubscription = this.deleteBotMutation

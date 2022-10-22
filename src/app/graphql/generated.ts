@@ -132,12 +132,43 @@ export type LoginSuccess = {
   token: Scalars["String"];
 };
 
+export type Match = {
+  __typename?: "Match";
+  bots: Array<Bot>;
+  game: Game;
+  id: Scalars["ID"];
+  result?: Maybe<MatchResult>;
+  user: User;
+};
+
+export type MatchInput = {
+  botIds: Array<Scalars["String"]>;
+  gameId: Scalars["String"];
+};
+
+export type MatchResult = {
+  __typename?: "MatchResult";
+  scores: Scalars["String"];
+};
+
+export type Matches = {
+  __typename?: "Matches";
+  matches: Array<Match>;
+};
+
+export type MatchesResponse =
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError
+  | Matches;
+
 export type Mutation = {
   __typename?: "Mutation";
   createBot: AddBotResponse;
   createGame: GameResponse;
   deleteBot?: Maybe<AuthError>;
+  deleteMatch?: Maybe<AuthError>;
   register: RegistrationResponse;
+  startMatch: StartMatchResponse;
 };
 
 export type MutationCreateBotArgs = {
@@ -152,8 +183,16 @@ export type MutationDeleteBotArgs = {
   botId: Scalars["String"];
 };
 
+export type MutationDeleteMatchArgs = {
+  matchId: Scalars["String"];
+};
+
 export type MutationRegisterArgs = {
   registrationData: RegistrationInput;
+};
+
+export type MutationStartMatchArgs = {
+  matchInput: MatchInput;
 };
 
 export type PlayerCount = {
@@ -172,6 +211,7 @@ export type Query = {
   findGame?: Maybe<GameResponse>;
   getBots: BotsResponse;
   getGames: GamesResponse;
+  getMatches: MatchesResponse;
   login: LoginResponse;
   profile: UserResponse;
   users: UsersResponse;
@@ -182,6 +222,10 @@ export type QueryFindGameArgs = {
 };
 
 export type QueryGetBotsArgs = {
+  gameId: Scalars["String"];
+};
+
+export type QueryGetMatchesArgs = {
   gameId: Scalars["String"];
 };
 
@@ -219,6 +263,24 @@ export type RegistrationSuccess = {
   token: Scalars["String"];
   user: User;
 };
+
+export type StartMatchError = GraphqlError & {
+  __typename?: "StartMatchError";
+  fieldErrors: StartMatchFieldErrors;
+  message: Scalars["String"];
+};
+
+export type StartMatchFieldErrors = {
+  __typename?: "StartMatchFieldErrors";
+  botIds?: Maybe<Array<Scalars["String"]>>;
+  gameId?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type StartMatchResponse =
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError
+  | Match
+  | StartMatchError;
 
 export type User = {
   __typename?: "User";
@@ -377,6 +439,54 @@ export type FindGameQuery = {
         fullDescription: string;
         playerCount: { __typename?: "PlayerCount"; min: number; max: number };
       }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | null;
+};
+
+export type StartMatchMutationVariables = Exact<{
+  matchInput: MatchInput;
+}>;
+
+export type StartMatchMutation = {
+  __typename?: "Mutation";
+  startMatch:
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "Match"; id: string }
+    | {
+        __typename: "StartMatchError";
+        message: string;
+        fieldErrors: {
+          __typename?: "StartMatchFieldErrors";
+          gameId?: Array<string> | null;
+          botIds?: Array<string> | null;
+        };
+      };
+};
+
+export type GetMatchesQueryVariables = Exact<{
+  gameId: Scalars["String"];
+}>;
+
+export type GetMatchesQuery = {
+  __typename?: "Query";
+  getMatches:
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | {
+        __typename: "Matches";
+        matches: Array<{ __typename?: "Match"; id: string }>;
+      };
+};
+
+export type DeleteMatchMutationVariables = Exact<{
+  matchId: Scalars["String"];
+}>;
+
+export type DeleteMatchMutation = {
+  __typename?: "Mutation";
+  deleteMatch?:
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
     | null;
@@ -625,6 +735,92 @@ export class FindGameGQL extends Apollo.Query<
   FindGameQueryVariables
 > {
   override document = FindGameDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const StartMatchDocument = gql`
+  mutation StartMatch($matchInput: MatchInput!) {
+    startMatch(matchInput: $matchInput) {
+      __typename
+      ... on Match {
+        id
+      }
+      ... on StartMatchError {
+        fieldErrors {
+          gameId
+          botIds
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class StartMatchGQL extends Apollo.Mutation<
+  StartMatchMutation,
+  StartMatchMutationVariables
+> {
+  override document = StartMatchDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const GetMatchesDocument = gql`
+  query GetMatches($gameId: String!) {
+    getMatches(gameId: $gameId) {
+      __typename
+      ... on Matches {
+        matches {
+          id
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class GetMatchesGQL extends Apollo.Query<
+  GetMatchesQuery,
+  GetMatchesQueryVariables
+> {
+  override document = GetMatchesDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const DeleteMatchDocument = gql`
+  mutation DeleteMatch($matchId: String!) {
+    deleteMatch(matchId: $matchId) {
+      __typename
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class DeleteMatchGQL extends Apollo.Mutation<
+  DeleteMatchMutation,
+  DeleteMatchMutationVariables
+> {
+  override document = DeleteMatchDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

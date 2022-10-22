@@ -1,0 +1,40 @@
+<form [formGroup]="startMatchForm" (ngSubmit)="onSubmit()">
+  <h1 mat-dialog-title>Start a match</h1>
+  <div mat-dialog-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Bots</mat-label>
+      <mat-chip-list #bots aria-label="bot selection">
+        <mat-chip
+          *ngFor="let bot of selectedBots"
+          (removed)="removeBot(bot.id)"
+        >
+          {{ bot.name }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        <input
+          placeholder="Select bot..."
+          #botInput
+          [formControl]="startMatchForm.controls.selectBot"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="bots"
+        />
+      </mat-chip-list>
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="selected($event)"
+      >
+        <mat-option *ngFor="let bot of filteredBots$ | async" [value]="bot">
+          {{ bot.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button type="submit" [disabled]="startMatchForm.invalid">
+      Start
+    </button>
+  </div>
+</form>

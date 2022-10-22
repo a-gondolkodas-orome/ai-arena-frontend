@@ -64,7 +64,7 @@ export class AddBotDialogComponent implements OnDestroy {
           update: (cache, { data }) => {
             cache.modify({
               fields: {
-                getBots: (cacheValue: unknown, { toReference, INVALIDATE }) => {
+                getBots: (cacheValue: unknown, { toReference, DELETE }) => {
                   const getBots = decode(
                     BotListComponent.getBotsCacheCodec,
                     cacheValue,
@@ -76,12 +76,11 @@ export class AddBotDialogComponent implements OnDestroy {
                     botWithUploadLink?.__typename !== "BotWithUploadLink" ||
                     !(id = cache.identify(botWithUploadLink.bot))
                   )
-                    return INVALIDATE;
-                  const x = {
+                    return DELETE;
+                  return {
                     ...getBots,
                     bots: [...getBots.bots, toReference(id)],
                   };
-                  return x;
                 },
               },
             });

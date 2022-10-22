@@ -30,6 +30,10 @@ import { AddBotDialogComponent } from "./add-bot-dialog/add-bot-dialog.component
 import { MatDialogModule } from "@angular/material/dialog";
 import { MaterialFileInputModule } from "ngx-material-file-input";
 import { AuthInterceptor } from "./services/auth.interceptor";
+import { MatchListComponent } from "./match-list/match-list.component";
+import { StartMatchDialogComponent } from "./start-match-dialog/start-match-dialog.component";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @NgModule({
   declarations: [
@@ -42,6 +46,8 @@ import { AuthInterceptor } from "./services/auth.interceptor";
     SidebarComponent,
     BotListComponent,
     AddBotDialogComponent,
+    MatchListComponent,
+    StartMatchDialogComponent,
   ],
   imports: [
     ApolloModule,
@@ -82,6 +88,8 @@ import { AuthInterceptor } from "./services/auth.interceptor";
     MatListModule,
     MatDialogModule,
     MaterialFileInputModule,
+    MatChipsModule,
+    MatAutocompleteModule,
   ],
   providers: [
     GraphqlAuthMiddlewareProvider,

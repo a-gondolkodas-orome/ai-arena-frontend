@@ -1,26 +1,26 @@
-.add-bot-icon {
+.start-match-icon {
   cursor: pointer;
 }
 
-#bot-list {
+#match-list {
   display: flex;
   justify-content: center;
 
-  #bot-list-items-container {
+  #match-list-items-container {
     width: 80%;
 
-    mat-list-item.bot-list-item {
+    mat-list-item.match-list-item {
       margin: 1%;
       height: unset;
     }
 
-    .bot-list-item-content {
+    .match-list-item-content {
       display: flex;
       width: 100%;
       padding: 10px;
       justify-content: space-between;
 
-      .delete-bot-icon {
+      .delete-match-icon {
         display: block;
         cursor: pointer;
       }
