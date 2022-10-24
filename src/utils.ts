@@ -11,16 +11,11 @@ export namespace Time {
 }
 
 export function notNull<T>(value: T): Exclude<T, null | undefined> {
-  if (value === null || value === undefined)
-    throw new Error(`notNull: value is ${value}`);
+  if (value === null || value === undefined) throw new Error(`notNull: value is ${value}`);
   return value as Exclude<T, null | undefined>;
 }
 
-export function catchWithInfo(
-  promise: Promise<unknown>,
-  filename: string,
-  location: string,
-) {
+export function catchWithInfo(promise: Promise<unknown>, filename: string, location: string) {
   promise.catch((error) => {
     throw new Error(`${error.message()} at ${filename} - ${location}`);
   });

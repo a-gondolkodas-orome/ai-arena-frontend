@@ -58,10 +58,7 @@ export class BotListComponent implements OnInit, OnDestroy {
             cache.modify({
               fields: {
                 getBots: (cacheValue: unknown, { DELETE }) => {
-                  const getBots = decode(
-                    BotListComponent.getBotsCacheCodec,
-                    cacheValue,
-                  );
+                  const getBots = decode(BotListComponent.getBotsCacheCodec, cacheValue);
                   if (data == null || data.deleteBot !== null || !id)
                     // TODO using DELETE is a workaround until INVALIDATE is fixed
                     // See https://github.com/apollographql/apollo-client/issues/7060

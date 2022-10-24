@@ -20,8 +20,7 @@ export class AuthService {
       this.setProfile();
     }
     loginStatusService.loginStatus$.subscribe(async (statusEvent) => {
-      if (statusEvent.type === "login")
-        await this.handleLogin(statusEvent.token);
+      if (statusEvent.type === "login") await this.handleLogin(statusEvent.token);
       else await this.handleLogout();
     });
   }

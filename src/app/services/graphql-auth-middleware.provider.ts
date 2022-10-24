@@ -1,9 +1,4 @@
-import {
-  InMemoryCache,
-  ApolloClientOptions,
-  ApolloLink,
-  Observable,
-} from "@apollo/client/core";
+import { InMemoryCache, ApolloClientOptions, ApolloLink, Observable } from "@apollo/client/core";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { LoginStatusService } from "./login-status.service";

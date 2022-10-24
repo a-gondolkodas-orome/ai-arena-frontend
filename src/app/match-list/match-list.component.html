@@ -5,16 +5,11 @@
   </div>
   <div id="match-list">
     <div id="match-list-items-container">
-      <mat-list-item
-        class="match-list-item"
-        *ngFor="let match of matches$ | async"
-      >
+      <mat-list-item class="match-list-item" *ngFor="let match of matches$ | async">
         <mat-card class="match-list-item-content">
           <div>{{ match.id }}</div>
           <div>
-            <mat-icon class="delete-match-icon" (click)="deleteMatch(match.id)">
-              delete
-            </mat-icon>
+            <mat-icon class="delete-match-icon" (click)="deleteMatch(match.id)"> delete </mat-icon>
           </div>
         </mat-card>
       </mat-list-item>

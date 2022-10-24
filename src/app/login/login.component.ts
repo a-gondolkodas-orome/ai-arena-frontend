@@ -34,10 +34,7 @@ export class LoginComponent implements OnDestroy {
 
   onSubmit() {
     this.loginSubscription = this.loginGQL
-      .fetch(
-        { credentials: this.loginForm.getRawValue() },
-        { fetchPolicy: "no-cache" },
-      )
+      .fetch({ credentials: this.loginForm.getRawValue() }, { fetchPolicy: "no-cache" })
       .pipe(
         map((result) => result.data.login),
         handleGraphqlAuthErrors(this.notificationService),
@@ -45,9 +42,7 @@ export class LoginComponent implements OnDestroy {
           this.loginStatusService.login(login.token);
           return from(
             this.router.navigate([
-              this.route.snapshot.queryParamMap.get(
-                LoginComponent.QUERY_PARAM__RETURN_URL,
-              ) ?? "",
+              this.route.snapshot.queryParamMap.get(LoginComponent.QUERY_PARAM__RETURN_URL) ?? "",
             ]),
           );
         }),

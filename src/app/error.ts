@@ -1,23 +1,15 @@
 import { filter, OperatorFunction } from "rxjs";
 import { NotificationService } from "./services/notification.service";
-import {
-  GraphqlAuthenticationError,
-  GraphqlAuthorizationError,
-} from "./graphql/generated";
+import { GraphqlAuthenticationError, GraphqlAuthorizationError } from "./graphql/generated";
 import { FormGroup } from "@angular/forms";
 
-type WithoutAuthErrors<T> = Exclude<
-  T,
-  GraphqlAuthenticationError | GraphqlAuthorizationError
->;
+type WithoutAuthErrors<T> = Exclude<T, GraphqlAuthenticationError | GraphqlAuthorizationError>;
 
 export function handleGraphqlAuthErrors<T>(
   notificationService: NotificationService,
 ): OperatorFunction<T, WithoutAuthErrors<T>> {
   return filter((result: unknown): result is WithoutAuthErrors<T> => {
-    const error = result as
-      | GraphqlAuthenticationError
-      | GraphqlAuthorizationError;
+    const error = result as GraphqlAuthenticationError | GraphqlAuthorizationError;
     if (
       error.__typename === "GraphqlAuthenticationError" ||
       error.__typename === "GraphqlAuthorizationError"

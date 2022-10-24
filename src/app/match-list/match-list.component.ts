@@ -1,10 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import {
-  Match,
-  DeleteMatchGQL,
-  Game,
-  GetMatchesGQL,
-} from "../graphql/generated";
+import { Match, DeleteMatchGQL, Game, GetMatchesGQL } from "../graphql/generated";
 import { MatDialog } from "@angular/material/dialog";
 import { NotificationService } from "../services/notification.service";
 import { filter, map, Observable, Subscription } from "rxjs";
@@ -36,13 +31,11 @@ export class MatchListComponent implements OnInit, OnDestroy {
   matches$?: Observable<Pick<Match, "id">[]>;
 
   ngOnInit() {
-    this.matches$ = this.getMatches
-      .watch({ gameId: this.game.id })
-      .valueChanges.pipe(
-        map((result) => result.data.getMatches),
-        handleGraphqlAuthErrors(this.notificationService),
-        map((getMatches) => getMatches.matches),
-      );
+    this.matches$ = this.getMatches.watch({ gameId: this.game.id }).valueChanges.pipe(
+      map((result) => result.data.getMatches),
+      handleGraphqlAuthErrors(this.notificationService),
+      map((getMatches) => getMatches.matches),
+    );
   }
 
   startMatch() {
@@ -65,18 +58,12 @@ export class MatchListComponent implements OnInit, OnDestroy {
             cache.modify({
               fields: {
                 getMatches: (cacheValue: unknown, { DELETE }) => {
-                  const getMatches = decode(
-                    MatchListComponent.getMatchesCacheCodec,
-                    cacheValue,
-                  );
-                  if (data == null || data.deleteMatch !== null || !id)
-                    return DELETE;
+                  const getMatches = decode(MatchListComponent.getMatchesCacheCodec, cacheValue);
+                  if (data == null || data.deleteMatch !== null || !id) return DELETE;
 
                   return {
                     ...getMatches,
-                    matches: getMatches.matches.filter(
-                      (match) => match.__ref !== id,
-                    ),
+                    matches: getMatches.matches.filter((match) => match.__ref !== id),
                   };
                 },
               },
@@ -89,9 +76,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
         map((result) => result.data),
         filter((value): value is Exclude<typeof value, null | undefined> => {
           if (value != null) return true;
-          this.notificationService.error(
-            "No data returned from match deletion",
-          );
+          this.notificationService.error("No data returned from match deletion");
           return false;
         }),
         map((data) => data.deleteMatch),

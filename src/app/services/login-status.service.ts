@@ -5,9 +5,7 @@ import { Subject } from "rxjs";
   providedIn: "root",
 })
 export class LoginStatusService {
-  loginStatus$ = new Subject<
-    { type: "login"; token: string } | { type: "logout" }
-  >();
+  loginStatus$ = new Subject<{ type: "login"; token: string } | { type: "logout" }>();
 
   login(token: string) {
     this.loginStatus$.next({ type: "login", token });

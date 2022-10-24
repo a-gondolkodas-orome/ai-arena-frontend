@@ -4,9 +4,7 @@
       <mat-form-field appearance="standard">
         <mat-label>username</mat-label>
         <input matInput formControlName="username" required />
-        <mat-error
-          *ngIf="registrationForm.get('username')?.errors?.['serverError']"
-        >
+        <mat-error *ngIf="registrationForm.get('username')?.errors?.['serverError']">
           {{ registrationForm.get('username')?.errors?.['serverError'] }}
         </mat-error>
       </mat-form-field>
@@ -14,9 +12,7 @@
       <mat-form-field appearance="standard">
         <mat-label>email</mat-label>
         <input matInput formControlName="email" required />
-        <mat-error
-          *ngIf="registrationForm.get('email')?.errors?.['serverError']"
-        >
+        <mat-error *ngIf="registrationForm.get('email')?.errors?.['serverError']">
           {{ registrationForm.get('email')?.errors?.['serverError'] }}
         </mat-error>
       </mat-form-field>
@@ -34,11 +30,7 @@
         </mat-icon>
       </mat-form-field>
 
-      <button
-        mat-stroked-button
-        type="submit"
-        [disabled]="registrationForm.invalid"
-      >
+      <button mat-stroked-button type="submit" [disabled]="registrationForm.invalid">
         Register
       </button>
     </form>

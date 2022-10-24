@@ -13,47 +13,28 @@ export class NotificationService {
   success(message: string, duration = 5 * Time.second) {
     if (message.length > NotificationService.SNACKBAR_MAX_LENGTH) {
       console.log(message);
-      message =
-        message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
+      message = message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
     }
-    this.showNotificationSnackbar(
-      message,
-      duration,
-      "notification-service-success",
-    );
+    this.showNotificationSnackbar(message, duration, "notification-service-success");
   }
 
   error(message: string, duration = 5 * Time.second) {
     if (message.length > NotificationService.SNACKBAR_MAX_LENGTH) {
       console.error(message);
-      message =
-        message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
+      message = message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
     }
-    this.showNotificationSnackbar(
-      message,
-      duration,
-      "notification-service-error",
-    );
+    this.showNotificationSnackbar(message, duration, "notification-service-error");
   }
 
   info(message: string, duration = 5 * Time.second) {
     if (message.length > NotificationService.SNACKBAR_MAX_LENGTH) {
       console.info(message);
-      message =
-        message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
+      message = message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
     }
-    this.showNotificationSnackbar(
-      message,
-      duration,
-      "notification-service-info",
-    );
+    this.showNotificationSnackbar(message, duration, "notification-service-info");
   }
 
-  protected showNotificationSnackbar(
-    message: string,
-    duration: number,
-    panelClass: string,
-  ) {
+  protected showNotificationSnackbar(message: string, duration: number, panelClass: string) {
     this.notification.open(message, "x", {
       duration,
       verticalPosition: "top",

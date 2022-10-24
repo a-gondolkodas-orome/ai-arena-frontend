@@ -1,25 +1,11 @@
-import {
-  Component,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  ViewChild,
-} from "@angular/core";
+import { Component, ElementRef, Inject, OnDestroy, ViewChild } from "@angular/core";
 import * as t from "io-ts";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder } from "@angular/forms";
 import { Bot, GetBotsGQL, Match, StartMatchGQL } from "../graphql/generated";
 import { NotificationService } from "../services/notification.service";
 import { decode } from "../../utils";
-import {
-  combineLatest,
-  filter,
-  map,
-  Observable,
-  startWith,
-  Subscription,
-  tap,
-} from "rxjs";
+import { combineLatest, filter, map, Observable, startWith, Subscription, tap } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
 import { MatchListComponent } from "../match-list/match-list.component";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
@@ -43,16 +29,11 @@ export class StartMatchDialogComponent implements OnDestroy {
     protected notificationService: NotificationService,
     @Inject(MAT_DIALOG_DATA) unknownData: unknown,
   ) {
-    this.data = decode(
-      StartMatchDialogComponent.startMatchDialogDataCodec,
-      unknownData,
-    );
+    this.data = decode(StartMatchDialogComponent.startMatchDialogDataCodec, unknownData);
   }
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  protected data: t.TypeOf<
-    typeof StartMatchDialogComponent.startMatchDialogDataCodec
-  >;
+  protected data: t.TypeOf<typeof StartMatchDialogComponent.startMatchDialogDataCodec>;
   startMatchForm = this.formBuilder.group({
     selectBot: this.formBuilder.nonNullable.control<BotHead | string>(""),
   });
@@ -63,21 +44,17 @@ export class StartMatchDialogComponent implements OnDestroy {
   @ViewChild("botInput") botInput!: ElementRef<HTMLInputElement>;
 
   ngOnInit() {
-    this.allBots$ = this.getBots
-      .watch({ gameId: this.data.gameId })
-      .valueChanges.pipe(
-        map((result) => result.data.getBots),
-        handleGraphqlAuthErrors(this.notificationService),
-        map((getBots) => getBots.bots),
-      );
+    this.allBots$ = this.getBots.watch({ gameId: this.data.gameId }).valueChanges.pipe(
+      map((result) => result.data.getBots),
+      handleGraphqlAuthErrors(this.notificationService),
+      map((getBots) => getBots.bots),
+    );
     this.filteredBots$ = combineLatest([
       this.allBots$,
       this.startMatchForm.controls.selectBot.valueChanges.pipe(startWith("")),
     ]).pipe(
       map(([allBots, filter]) =>
-        typeof filter === "string"
-          ? this.filterBots(allBots, filter)
-          : allBots.slice(),
+        typeof filter === "string" ? this.filterBots(allBots, filter) : allBots.slice(),
       ),
     );
   }
@@ -97,9 +74,7 @@ export class StartMatchDialogComponent implements OnDestroy {
 
   protected filterBots(allBots: BotHead[], value: string) {
     const filterValue = value.toLowerCase();
-    return allBots.filter((bot) =>
-      bot.name.toLowerCase().includes(filterValue),
-    );
+    return allBots.filter((bot) => bot.name.toLowerCase().includes(filterValue));
   }
 
   startMatchSubscription?: Subscription;
@@ -118,17 +93,10 @@ export class StartMatchDialogComponent implements OnDestroy {
             cache.modify({
               fields: {
                 getMatches: (cacheValue: unknown, { toReference, DELETE }) => {
-                  const getMatches = decode(
-                    MatchListComponent.getMatchesCacheCodec,
-                    cacheValue,
-                  );
+                  const getMatches = decode(MatchListComponent.getMatchesCacheCodec, cacheValue);
                   const match = data?.startMatch as Match;
                   let id;
-                  if (
-                    match?.__typename !== "Match" ||
-                    !(id = cache.identify(match))
-                  )
-                    return DELETE;
+                  if (match?.__typename !== "Match" || !(id = cache.identify(match))) return DELETE;
                   return {
                     ...getMatches,
                     matches: [...getMatches.matches, toReference(id)],
@@ -143,9 +111,7 @@ export class StartMatchDialogComponent implements OnDestroy {
         map((result) => result.data),
         filter((value): value is Exclude<typeof value, null | undefined> => {
           if (value != null) return true;
-          this.notificationService.error(
-            "No data returned from match creation",
-          );
+          this.notificationService.error("No data returned from match creation");
           return false;
         }),
         map((data) => data.startMatch),

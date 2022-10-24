@@ -65,10 +65,7 @@ export type Bots = {
   bots: Array<Bot>;
 };
 
-export type BotsResponse =
-  | Bots
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError;
+export type BotsResponse = Bots | GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type Credentials = {
   email: Scalars["String"];
@@ -93,20 +90,14 @@ export type GameInput = {
   shortDescription: Scalars["String"];
 };
 
-export type GameResponse =
-  | Game
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError;
+export type GameResponse = Game | GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type Games = {
   __typename?: "Games";
   games: Array<Game>;
 };
 
-export type GamesResponse =
-  | Games
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError;
+export type GamesResponse = Games | GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type GraphqlAuthenticationError = GraphqlError & {
   __typename?: "GraphqlAuthenticationError";
@@ -122,10 +113,7 @@ export type GraphqlError = {
   message: Scalars["String"];
 };
 
-export type LoginResponse =
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError
-  | LoginSuccess;
+export type LoginResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | LoginSuccess;
 
 export type LoginSuccess = {
   __typename?: "LoginSuccess";
@@ -156,10 +144,7 @@ export type Matches = {
   matches: Array<Match>;
 };
 
-export type MatchesResponse =
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError
-  | Matches;
+export type MatchesResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | Matches;
 
 export type Mutation = {
   __typename?: "Mutation";
@@ -289,20 +274,14 @@ export type User = {
   username: Scalars["String"];
 };
 
-export type UserResponse =
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError
-  | User;
+export type UserResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | User;
 
 export type Users = {
   __typename?: "Users";
   users: Array<User>;
 };
 
-export type UsersResponse =
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError
-  | Users;
+export type UsersResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | Users;
 
 export type LoginQueryVariables = Exact<{
   credentials: Credentials;
@@ -543,10 +522,7 @@ export const RegisterDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class RegisterGQL extends Apollo.Mutation<
-  RegisterMutation,
-  RegisterMutationVariables
-> {
+export class RegisterGQL extends Apollo.Mutation<RegisterMutation, RegisterMutationVariables> {
   override document = RegisterDocument;
 
   constructor(apollo: Apollo.Apollo) {
@@ -572,10 +548,7 @@ export const GetProfileDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class GetProfileGQL extends Apollo.Query<
-  GetProfileQuery,
-  GetProfileQueryVariables
-> {
+export class GetProfileGQL extends Apollo.Query<GetProfileQuery, GetProfileQueryVariables> {
   override document = GetProfileDocument;
 
   constructor(apollo: Apollo.Apollo) {
@@ -609,10 +582,7 @@ export const CreateBotDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class CreateBotGQL extends Apollo.Mutation<
-  CreateBotMutation,
-  CreateBotMutationVariables
-> {
+export class CreateBotGQL extends Apollo.Mutation<CreateBotMutation, CreateBotMutationVariables> {
   override document = CreateBotDocument;
 
   constructor(apollo: Apollo.Apollo) {
@@ -639,10 +609,7 @@ export const GetBotsDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class GetBotsGQL extends Apollo.Query<
-  GetBotsQuery,
-  GetBotsQueryVariables
-> {
+export class GetBotsGQL extends Apollo.Query<GetBotsQuery, GetBotsQueryVariables> {
   override document = GetBotsDocument;
 
   constructor(apollo: Apollo.Apollo) {
@@ -663,10 +630,7 @@ export const DeleteBotDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class DeleteBotGQL extends Apollo.Mutation<
-  DeleteBotMutation,
-  DeleteBotMutationVariables
-> {
+export class DeleteBotGQL extends Apollo.Mutation<DeleteBotMutation, DeleteBotMutationVariables> {
   override document = DeleteBotDocument;
 
   constructor(apollo: Apollo.Apollo) {
@@ -695,10 +659,7 @@ export const GetGamesDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class GetGamesGQL extends Apollo.Query<
-  GetGamesQuery,
-  GetGamesQueryVariables
-> {
+export class GetGamesGQL extends Apollo.Query<GetGamesQuery, GetGamesQueryVariables> {
   override document = GetGamesDocument;
 
   constructor(apollo: Apollo.Apollo) {
@@ -730,10 +691,7 @@ export const FindGameDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class FindGameGQL extends Apollo.Query<
-  FindGameQuery,
-  FindGameQueryVariables
-> {
+export class FindGameGQL extends Apollo.Query<FindGameQuery, FindGameQueryVariables> {
   override document = FindGameDocument;
 
   constructor(apollo: Apollo.Apollo) {
@@ -792,10 +750,7 @@ export const GetMatchesDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class GetMatchesGQL extends Apollo.Query<
-  GetMatchesQuery,
-  GetMatchesQueryVariables
-> {
+export class GetMatchesGQL extends Apollo.Query<GetMatchesQuery, GetMatchesQueryVariables> {
   override document = GetMatchesDocument;
 
   constructor(apollo: Apollo.Apollo) {

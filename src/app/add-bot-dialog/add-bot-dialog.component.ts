@@ -31,10 +31,7 @@ export class AddBotDialogComponent implements OnDestroy {
     protected httpClient: HttpClient,
     @Inject(MAT_DIALOG_DATA) unknownData: unknown,
   ) {
-    this.data = decode(
-      AddBotDialogComponent.addBotDialogDataCodec,
-      unknownData,
-    );
+    this.data = decode(AddBotDialogComponent.addBotDialogDataCodec, unknownData);
   }
 
   protected data: t.TypeOf<typeof AddBotDialogComponent.addBotDialogDataCodec>;
@@ -65,12 +62,8 @@ export class AddBotDialogComponent implements OnDestroy {
             cache.modify({
               fields: {
                 getBots: (cacheValue: unknown, { toReference, DELETE }) => {
-                  const getBots = decode(
-                    BotListComponent.getBotsCacheCodec,
-                    cacheValue,
-                  );
-                  const botWithUploadLink =
-                    data?.createBot as BotWithUploadLink;
+                  const getBots = decode(BotListComponent.getBotsCacheCodec, cacheValue);
+                  const botWithUploadLink = data?.createBot as BotWithUploadLink;
                   let id;
                   if (
                     botWithUploadLink?.__typename !== "BotWithUploadLink" ||
@@ -96,11 +89,7 @@ export class AddBotDialogComponent implements OnDestroy {
         }),
         map((data) => data.createBot),
         handleGraphqlAuthErrors(this.notificationService),
-        handleValidationErrors(
-          "AddBotError" as const,
-          this.notificationService,
-          this.addBotForm,
-        ),
+        handleValidationErrors("AddBotError" as const, this.notificationService, this.addBotForm),
         concatMap((result) => {
           const sourceFile = this.addBotForm.value.sourceFile?.files?.[0];
           if (!sourceFile) {
@@ -109,10 +98,7 @@ export class AddBotDialogComponent implements OnDestroy {
           }
           const formData = new FormData();
           formData.append("sourceFile", sourceFile);
-          return this.httpClient.post(
-            environment.backendUrl + result.uploadLink,
-            formData,
-          );
+          return this.httpClient.post(environment.backendUrl + result.uploadLink, formData);
         }),
         tap(() => {
           this.dialogRef.close();

@@ -19,13 +19,9 @@
         </mat-icon>
       </mat-form-field>
 
-      <button mat-stroked-button type="submit" [disabled]="loginForm.invalid">
-        Log in
-      </button>
+      <button mat-stroked-button type="submit" [disabled]="loginForm.invalid">Log in</button>
     </form>
 
-    <p>
-      Need an account? <a [routerLink]="['/register']" mat-button>Register</a>
-    </p>
+    <p>Need an account? <a [routerLink]="['/register']" mat-button>Register</a></p>
   </mat-card-content>
 </mat-card>
