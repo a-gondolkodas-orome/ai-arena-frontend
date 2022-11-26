@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { FindGameGQL, Game } from "../graphql/generated";
 import { handleGraphqlAuthErrors } from "../error";
 import { NotificationService } from "../services/notification.service";
+import { marked } from "marked";
+import * as DOMPurify from "dompurify";
 
 @Component({
   selector: "app-game",
@@ -38,5 +40,9 @@ export class GameComponent {
 
   async handleBackToDashboard() {
     await this.router.navigate([""]);
+  }
+
+  protected renderGameDescription(rawDescription: string) {
+    return DOMPurify.sanitize(marked.parse(rawDescription)); // security threat?
   }
 }
