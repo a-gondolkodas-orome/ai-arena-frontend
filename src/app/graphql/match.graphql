@@ -30,6 +30,20 @@ query GetMatches($gameId: String!) {
   }
 }
 
+query GetMatch($id: String!) {
+  getMatch(id: $id) {
+    __typename
+    ... on Match {
+      result {
+        log
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
 mutation DeleteMatch($matchId: String!) {
   deleteMatch(matchId: $matchId) {
     __typename

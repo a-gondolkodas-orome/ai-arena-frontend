@@ -2667,6 +2667,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@leanil/nanowar-visualizer@npm:0":
+  version: 0.0.2
+  resolution: "@leanil/nanowar-visualizer@npm:0.0.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40leanil%2Fnanowar-visualizer%2F0.0.2%2F1d325e404d117c257e12e0b9ae9e7d3a5f287772"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/common": 14
+    "@angular/core": 14
+    p5: 1
+  checksum: 5706af1f0d85ece2ba8980c39b19c287568545fe0a984259f3898654a24a257163c25852a985d6a94108d394ab6f3eca27305a1ec3e7cba3f29be9455b9703f4
+  languageName: node
+  linkType: hard
+
 "@leichtgewicht/ip-codec@npm:^2.0.1":
   version: 2.0.4
   resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
@@ -3635,6 +3648,7 @@ __metadata:
     "@graphql-codegen/typescript": ^2.7.3
     "@graphql-codegen/typescript-apollo-angular": ^3.5.3
     "@graphql-codegen/typescript-operations": ^2.5.3
+    "@leanil/nanowar-visualizer": 0
     "@ng-bootstrap/ng-bootstrap": ^13.0.0
     "@popperjs/core": ^2.10.2
     "@types/dompurify": ^2.4.0
@@ -3661,6 +3675,7 @@ __metadata:
     karma-jasmine-html-reporter: ~2.0.0
     marked: ^4.2.3
     ngx-material-file-input: ^4.0.0
+    p5: 1
     prettier: ^2.7.1
     rxjs: ^7.5.7
     ts-node: ^10.9.1
@@ -8767,6 +8782,13 @@ __metadata:
   version: 2.2.0
   resolution: "p-try@npm:2.2.0"
   checksum: f8a8e9a7693659383f06aec604ad5ead237c7a261c18048a6e1b5b85a5f8a067e469aa24f5bc009b991ea3b058a87f5065ef4176793a200d4917349881216cae
+  languageName: node
+  linkType: hard
+
+"p5@npm:1":
+  version: 1.5.0
+  resolution: "p5@npm:1.5.0"
+  checksum: d5e18e548d7c71493488f8257feca1b9298628448517a944272b9b099e50d12a72932e09063dad47bc63817a70b298668a47cae47cdc97dbe0c5f3ac19497234
   languageName: node
   linkType: hard
 

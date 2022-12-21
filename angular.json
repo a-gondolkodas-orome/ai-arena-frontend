@@ -38,8 +38,10 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "dompurify", "p5"
             ]
-
           },
           "configurations": {
             "production": {

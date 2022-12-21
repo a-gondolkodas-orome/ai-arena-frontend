@@ -1,17 +1,12 @@
 import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -134,9 +129,11 @@ export type MatchInput = {
   gameId: Scalars["String"];
 };
 
+export type MatchResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | Match;
+
 export type MatchResult = {
   __typename?: "MatchResult";
-  scores: Scalars["String"];
+  log: Scalars["String"];
 };
 
 export type Matches = {
@@ -196,6 +193,7 @@ export type Query = {
   findGame?: Maybe<GameResponse>;
   getBots: BotsResponse;
   getGames: GamesResponse;
+  getMatch: MatchResponse;
   getMatches: MatchesResponse;
   login: LoginResponse;
   profile: UserResponse;
@@ -208,6 +206,10 @@ export type QueryFindGameArgs = {
 
 export type QueryGetBotsArgs = {
   gameId: Scalars["String"];
+};
+
+export type QueryGetMatchArgs = {
+  id: Scalars["String"];
 };
 
 export type QueryGetMatchesArgs = {
@@ -363,10 +365,7 @@ export type GetBotsQueryVariables = Exact<{
 export type GetBotsQuery = {
   __typename?: "Query";
   getBots:
-    | {
-        __typename: "Bots";
-        bots: Array<{ __typename?: "Bot"; id: string; name: string }>;
-      }
+    | { __typename: "Bots"; bots: Array<{ __typename?: "Bot"; id: string; name: string }> }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string };
 };
@@ -453,10 +452,19 @@ export type GetMatchesQuery = {
   getMatches:
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
-    | {
-        __typename: "Matches";
-        matches: Array<{ __typename?: "Match"; id: string }>;
-      };
+    | { __typename: "Matches"; matches: Array<{ __typename?: "Match"; id: string }> };
+};
+
+export type GetMatchQueryVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type GetMatchQuery = {
+  __typename?: "Query";
+  getMatch:
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "Match"; result?: { __typename?: "MatchResult"; log: string } | null };
 };
 
 export type DeleteMatchMutationVariables = Exact<{
@@ -495,6 +503,7 @@ export class LoginGQL extends Apollo.Query<LoginQuery, LoginQueryVariables> {
     super(apollo);
   }
 }
+
 export const RegisterDocument = gql`
   mutation Register($registrationInput: RegistrationInput!) {
     register(registrationData: $registrationInput) {
@@ -529,6 +538,7 @@ export class RegisterGQL extends Apollo.Mutation<RegisterMutation, RegisterMutat
     super(apollo);
   }
 }
+
 export const GetProfileDocument = gql`
   query GetProfile {
     profile {
@@ -555,6 +565,7 @@ export class GetProfileGQL extends Apollo.Query<GetProfileQuery, GetProfileQuery
     super(apollo);
   }
 }
+
 export const CreateBotDocument = gql`
   mutation CreateBot($botInput: BotInput!) {
     createBot(bot: $botInput) {
@@ -589,6 +600,7 @@ export class CreateBotGQL extends Apollo.Mutation<CreateBotMutation, CreateBotMu
     super(apollo);
   }
 }
+
 export const GetBotsDocument = gql`
   query GetBots($gameId: String!) {
     getBots(gameId: $gameId) {
@@ -616,6 +628,7 @@ export class GetBotsGQL extends Apollo.Query<GetBotsQuery, GetBotsQueryVariables
     super(apollo);
   }
 }
+
 export const DeleteBotDocument = gql`
   mutation DeleteBot($botId: String!) {
     deleteBot(botId: $botId) {
@@ -637,6 +650,7 @@ export class DeleteBotGQL extends Apollo.Mutation<DeleteBotMutation, DeleteBotMu
     super(apollo);
   }
 }
+
 export const GetGamesDocument = gql`
   query GetGames {
     getGames {
@@ -666,6 +680,7 @@ export class GetGamesGQL extends Apollo.Query<GetGamesQuery, GetGamesQueryVariab
     super(apollo);
   }
 }
+
 export const FindGameDocument = gql`
   query FindGame($id: String!) {
     findGame(id: $id) {
@@ -698,6 +713,7 @@ export class FindGameGQL extends Apollo.Query<FindGameQuery, FindGameQueryVariab
     super(apollo);
   }
 }
+
 export const StartMatchDocument = gql`
   mutation StartMatch($matchInput: MatchInput!) {
     startMatch(matchInput: $matchInput) {
@@ -731,6 +747,7 @@ export class StartMatchGQL extends Apollo.Mutation<
     super(apollo);
   }
 }
+
 export const GetMatchesDocument = gql`
   query GetMatches($gameId: String!) {
     getMatches(gameId: $gameId) {
@@ -757,6 +774,34 @@ export class GetMatchesGQL extends Apollo.Query<GetMatchesQuery, GetMatchesQuery
     super(apollo);
   }
 }
+
+export const GetMatchDocument = gql`
+  query GetMatch($id: String!) {
+    getMatch(id: $id) {
+      __typename
+      ... on Match {
+        result {
+          log
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class GetMatchGQL extends Apollo.Query<GetMatchQuery, GetMatchQueryVariables> {
+  override document = GetMatchDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+
 export const DeleteMatchDocument = gql`
   mutation DeleteMatch($matchId: String!) {
     deleteMatch(matchId: $matchId) {

@@ -34,6 +34,8 @@ import { MatchListComponent } from "./match-list/match-list.component";
 import { StartMatchDialogComponent } from "./start-match-dialog/start-match-dialog.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { NanowarVisualizerModule } from "@leanil/nanowar-visualizer";
+import { MatchComponent } from "./match/match.component";
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
     AddBotDialogComponent,
     MatchListComponent,
     StartMatchDialogComponent,
+    MatchComponent,
   ],
   imports: [
     ApolloModule,
@@ -73,6 +76,12 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
         canActivate: [AuthGuard],
         title: "AI Arena",
       },
+      {
+        path: "match/:id",
+        component: MatchComponent,
+        canActivate: [AuthGuard],
+        title: "AI Arena",
+      },
       { path: "**", redirectTo: "", canActivate: [AuthGuard] },
     ]),
     BrowserAnimationsModule,
@@ -90,6 +99,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
     MaterialFileInputModule,
     MatChipsModule,
     MatAutocompleteModule,
+    NanowarVisualizerModule,
   ],
   providers: [
     GraphqlAuthMiddlewareProvider,

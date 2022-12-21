@@ -36,6 +36,7 @@
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
     "@apollo/client": "^3.0.0",
+    "@leanil/nanowar-visualizer": "0",
     "@ng-bootstrap/ng-bootstrap": "^13.0.0",
     "@popperjs/core": "^2.10.2",
     "apollo-angular": "4.0.1",
@@ -47,6 +48,7 @@
     "io-ts": "^2.2.18",
     "marked": "^4.2.3",
     "ngx-material-file-input": "^4.0.0",
+    "p5": "1",
     "rxjs": "^7.5.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
