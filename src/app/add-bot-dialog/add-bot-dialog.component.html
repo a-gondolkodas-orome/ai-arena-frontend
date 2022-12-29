@@ -13,15 +13,12 @@
       <mat-label>source file</mat-label>
       <ngx-mat-file-input
         formControlName="sourceFile"
-        required
         [accept]="'.cpp, .zip'"
-        valuePlaceholder="No file selected"
+        placeholder="No file selected"
       ></ngx-mat-file-input>
-      <mat-error *ngIf="addBotForm.get('sourceFile')?.getError('maxContentSize') as sizeError">
-        The file size must not exceed {{ sizeError.maxSize | byteFormat }} (now
-        {{ sizeError.actualSize | byteFormat }}).
+      <mat-error *ngIf="addBotForm.get('sourceFile')?.getError('maxSize') as sizeError">
+        The file size must not exceed {{ sourceFileMaxSize }} KB.
       </mat-error>
-      <mat-icon matSuffix>folder</mat-icon>
     </mat-form-field>
   </div>
   <div mat-dialog-actions align="end">

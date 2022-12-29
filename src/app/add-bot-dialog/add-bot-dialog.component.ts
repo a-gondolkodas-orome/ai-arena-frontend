@@ -3,7 +3,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, Validators } from "@angular/forms";
 import { concatMap, EMPTY, filter, map, Subscription, tap } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
-import { FileInput, FileValidator } from "ngx-material-file-input";
+import { MaxSizeValidator } from "@angular-material-components/file-input";
 import { HttpClient } from "@angular/common/http";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import * as t from "io-ts";
@@ -19,7 +19,8 @@ import { BotListComponent } from "../bot-list/bot-list.component";
   styleUrls: ["./add-bot-dialog.component.scss"],
 })
 export class AddBotDialogComponent implements OnDestroy {
-  static readonly SOURCE_FILE_MAX_SIZE = 1048576; // 1MB
+  static readonly SOURCE_FILE_MAX_SIZE_KB = 1000;
+  public sourceFileMaxSize = AddBotDialogComponent.SOURCE_FILE_MAX_SIZE_KB; // To be used by the html template
 
   static readonly addBotDialogDataCodec = t.type({ gameId: t.string });
 
@@ -38,9 +39,9 @@ export class AddBotDialogComponent implements OnDestroy {
 
   addBotForm = this.formBuilder.group({
     name: this.formBuilder.nonNullable.control(""),
-    sourceFile: this.formBuilder.control<FileInput | null>(null, [
+    sourceFile: this.formBuilder.control<File | null>(null, [
       Validators.required,
-      FileValidator.maxContentSize(AddBotDialogComponent.SOURCE_FILE_MAX_SIZE),
+      MaxSizeValidator(AddBotDialogComponent.SOURCE_FILE_MAX_SIZE_KB),
     ]),
   });
 
@@ -91,7 +92,7 @@ export class AddBotDialogComponent implements OnDestroy {
         handleGraphqlAuthErrors(this.notificationService),
         handleValidationErrors("AddBotError" as const, this.notificationService, this.addBotForm),
         concatMap((result) => {
-          const sourceFile = this.addBotForm.value.sourceFile?.files?.[0];
+          const sourceFile = this.addBotForm.value.sourceFile;
           if (!sourceFile) {
             this.notificationService.error("No source file selected");
             return EMPTY;

@@ -172,6 +172,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-material-components/file-input@npm:8":
+  version: 8.0.0
+  resolution: "@angular-material-components/file-input@npm:8.0.0"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/cdk": ^14.0.1
+    "@angular/common": ^14.0.1
+    "@angular/core": ^14.0.1
+    "@angular/forms": ^14.0.1
+    "@angular/material": ^14.0.1
+    "@angular/platform-browser": ^14.0.1
+  checksum: b2c81e88551be4203abb61ba134cd9841d8c57860e91ed5e0a191fdb5a75b8fd19d8f093bee07ad39200830c10bd4053db6a1d9f96bb5adac6ccb1fabfeef87d
+  languageName: node
+  linkType: hard
+
 "@angular/animations@npm:^14.2.0":
   version: 14.2.4
   resolution: "@angular/animations@npm:14.2.4"
@@ -3630,6 +3646,7 @@ __metadata:
   resolution: "ai-arena-frontend@workspace:."
   dependencies:
     "@angular-devkit/build-angular": ^14.2.3
+    "@angular-material-components/file-input": 8
     "@angular/animations": ^14.2.0
     "@angular/cdk": 14.2.2
     "@angular/cli": ~14.2.3
@@ -3674,7 +3691,6 @@ __metadata:
     karma-jasmine: ~5.1.0
     karma-jasmine-html-reporter: ~2.0.0
     marked: ^4.2.3
-    ngx-material-file-input: ^4.0.0
     p5: 1
     prettier: ^2.7.1
     rxjs: ^7.5.7
@@ -8260,20 +8276,6 @@ __metadata:
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
-  languageName: node
-  linkType: hard
-
-"ngx-material-file-input@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "ngx-material-file-input@npm:4.0.0"
-  dependencies:
-    tslib: ^2.3.0
-  peerDependencies:
-    "@angular/cdk": ^14.0.0
-    "@angular/common": ^14.0.0
-    "@angular/core": ^14.0.0
-    "@angular/material": ^14.0.0
-  checksum: 979d26961a4c73b2cd416d48e794288abd80fc651b35f1a58224127008f7b632821bf8d1e2db44146eb0e99a8d9cb2a9c8e5af35214668d7371214caac0718e8
   languageName: node
   linkType: hard
 

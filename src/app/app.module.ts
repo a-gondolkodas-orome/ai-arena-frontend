@@ -28,7 +28,7 @@ import { BotListComponent } from "./bot-list/bot-list.component";
 import { MatListModule } from "@angular/material/list";
 import { AddBotDialogComponent } from "./add-bot-dialog/add-bot-dialog.component";
 import { MatDialogModule } from "@angular/material/dialog";
-import { MaterialFileInputModule } from "ngx-material-file-input";
+import { NgxMatFileInputModule } from "@angular-material-components/file-input";
 import { AuthInterceptor } from "./services/auth.interceptor";
 import { MatchListComponent } from "./match-list/match-list.component";
 import { StartMatchDialogComponent } from "./start-match-dialog/start-match-dialog.component";
@@ -96,7 +96,7 @@ import { MatchComponent } from "./match/match.component";
     NgbModule,
     MatListModule,
     MatDialogModule,
-    MaterialFileInputModule,
+    NgxMatFileInputModule,
     MatChipsModule,
     MatAutocompleteModule,
     NanowarVisualizerModule,

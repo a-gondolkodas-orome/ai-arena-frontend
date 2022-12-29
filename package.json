@@ -24,6 +24,7 @@
   "author": "András Leitereg",
   "license": "UNLICENSED",
   "dependencies": {
+    "@angular-material-components/file-input": "8",
     "@angular/animations": "^14.2.0",
     "@angular/cdk": "14.2.2",
     "@angular/common": "^14.2.0",
@@ -47,7 +48,6 @@
     "graphql": "^16",
     "io-ts": "^2.2.18",
     "marked": "^4.2.3",
-    "ngx-material-file-input": "^4.0.0",
     "p5": "1",
     "rxjs": "^7.5.7",
     "tslib": "^2.3.0",
