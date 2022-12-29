@@ -1,3 +1,7 @@
+.mat-mdc-list-item {
+  height: unset !important;
+}
+
 .start-match-icon {
   cursor: pointer;
 }
@@ -9,20 +13,19 @@
   #match-list-items-container {
     width: 80%;
 
-    mat-list-item.match-list-item {
-      margin: 1%;
-      height: unset;
-    }
+    .match-list-item {
+      padding: 1%;
 
-    .match-list-item-content {
-      display: flex;
-      width: 100%;
-      padding: 10px;
-      justify-content: space-between;
+      .match-card-content {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 8px;
+        padding-bottom: 8px;
 
-      .delete-match-icon {
-        display: block;
-        cursor: pointer;
+        .delete-match-icon {
+          display: block;
+          cursor: pointer;
+        }
       }
     }
   }

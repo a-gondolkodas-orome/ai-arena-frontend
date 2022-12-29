@@ -1,12 +1,12 @@
 <mat-card>
   <mat-card-content>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="standard">
+      <mat-form-field>
         <mat-label>email</mat-label>
         <input matInput formControlName="email" required />
       </mat-form-field>
 
-      <mat-form-field appearance="standard">
+      <mat-form-field>
         <mat-label>password</mat-label>
         <input
           matInput

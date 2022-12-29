@@ -5,7 +5,9 @@
     </button>
     <span>{{ selectedGame.name }}</span>
   </mat-toolbar>
-  <app-bot-list [game]="selectedGame"></app-bot-list>
-  <app-match-list [game]="selectedGame"></app-match-list>
+  <div class="row">
+    <app-bot-list [game]="selectedGame" class="col-12 col-xl-6"></app-bot-list>
+    <app-match-list [game]="selectedGame" class="col-12 col-xl-6"></app-match-list>
+  </div>
   <div [innerHTML]="renderGameDescription(selectedGame.fullDescription)"></div>
 </div>

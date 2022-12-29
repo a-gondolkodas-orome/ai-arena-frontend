@@ -1,17 +1,19 @@
 <mat-list>
-  <div mat-subheader>
+  <div mat-subheader id="bot-list-header">
     Bots
     <mat-icon class="add-bot-icon" (click)="addBot()">add</mat-icon>
   </div>
   <div id="bot-list">
     <div id="bot-list-items-container">
-      <mat-list-item class="bot-list-item" *ngFor="let bot of bots$ | async">
-        <mat-card class="bot-list-item-content">
-          <div>{{ bot.name }}</div>
-          <div>
-            <mat-icon class="delete-bot-icon" (click)="deleteBot(bot.id)"> delete </mat-icon>
-          </div>
-        </mat-card>
+      <mat-list-item *ngFor="let bot of bots$ | async">
+        <div class="bot-list-item">
+          <mat-card>
+            <mat-card-content class="bot-card-content">
+              <span>{{ bot.name }}</span>
+              <mat-icon class="delete-bot-icon" (click)="deleteBot(bot.id)"> delete</mat-icon>
+            </mat-card-content>
+          </mat-card>
+        </div>
       </mat-list-item>
     </div>
   </div>

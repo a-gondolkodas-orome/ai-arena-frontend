@@ -10,7 +10,7 @@ body {
 }
 
 /* Importing Bootstrap SCSS file. */
-@import "~bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 
 .notification-service {
   white-space: pre-wrap;
@@ -23,4 +23,11 @@ body {
 }
 .notification-service-info {
   color: royalblue;
+}
+.mat-icon {
+  vertical-align: middle;
+}
+
+.mat-mdc-form-field-infix {
+  width: auto !important;
 }

@@ -1,11 +1,10 @@
 import { Component, Inject, OnDestroy } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { FormBuilder, Validators } from "@angular/forms";
 import { concatMap, EMPTY, filter, map, Subscription, tap } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
 import { MaxSizeValidator } from "@angular-material-components/file-input";
 import { HttpClient } from "@angular/common/http";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import * as t from "io-ts";
 import { decode } from "../../utils";
 import { BotWithUploadLink, CreateBotGQL } from "../graphql/generated";

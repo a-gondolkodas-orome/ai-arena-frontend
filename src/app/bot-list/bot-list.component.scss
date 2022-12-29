@@ -1,3 +1,7 @@
+.mat-mdc-list-item {
+  height: unset !important;
+}
+
 .add-bot-icon {
   cursor: pointer;
 }
@@ -9,20 +13,19 @@
   #bot-list-items-container {
     width: 80%;
 
-    mat-list-item.bot-list-item {
-      margin: 1%;
-      height: unset;
-    }
+    .bot-list-item {
+      padding: 1%;
 
-    .bot-list-item-content {
-      display: flex;
-      width: 100%;
-      padding: 10px;
-      justify-content: space-between;
+      .bot-card-content {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 8px;
+        padding-bottom: 8px;
 
-      .delete-bot-icon {
-        display: block;
-        cursor: pointer;
+        .delete-bot-icon {
+          display: block;
+          cursor: pointer;
+        }
       }
     }
   }

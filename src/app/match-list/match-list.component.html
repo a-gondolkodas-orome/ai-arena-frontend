@@ -5,15 +5,17 @@
   </div>
   <div id="match-list">
     <div id="match-list-items-container">
-      <mat-list-item class="match-list-item" *ngFor="let match of matches$ | async">
-        <mat-card class="match-list-item-content">
-          <a [routerLink]="['/match', match.id]">
-            <div>{{ match.id }}</div>
-          </a>
-          <div>
-            <mat-icon class="delete-match-icon" (click)="deleteMatch(match.id)"> delete</mat-icon>
-          </div>
-        </mat-card>
+      <mat-list-item *ngFor="let match of matches$ | async">
+        <div class="match-list-item">
+          <mat-card>
+            <mat-card-content class="match-card-content">
+              <a [routerLink]="['/match', match.id]">
+                {{ match.id }}
+              </a>
+              <mat-icon class="delete-match-icon" (click)="deleteMatch(match.id)"> delete</mat-icon>
+            </mat-card-content>
+          </mat-card>
+        </div>
       </mat-list-item>
     </div>
   </div>
