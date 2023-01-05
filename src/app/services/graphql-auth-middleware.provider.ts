@@ -4,12 +4,14 @@ import { HttpLink } from "apollo-angular/http";
 import { LoginStatusService } from "./login-status.service";
 import { possibleTypes } from "../apollo-possible-types";
 import { environment } from "../../environments/environment";
+import { NotificationService } from "./notification.service";
 
 export const GraphqlAuthMiddlewareProvider = {
   provide: APOLLO_OPTIONS,
   useFactory(
     httpLink: HttpLink,
     loginStatusService: LoginStatusService,
+    notificationService: NotificationService,
   ): ApolloClientOptions<unknown> {
     const http = httpLink.create({ uri: environment.backendUrl + "/graphql" });
     const handleAuthError = new ApolloLink(function (operation, forward) {
@@ -23,6 +25,10 @@ export const GraphqlAuthMiddlewareProvider = {
               )
             ) {
               loginStatusService.logout();
+            } else if (result.errors) {
+              notificationService.error(
+                result.errors.reduce((msg: string, error) => msg + error.message, ""),
+              );
             }
             observer.next(result);
           },
@@ -46,5 +52,5 @@ export const GraphqlAuthMiddlewareProvider = {
       }),
     };
   },
-  deps: [HttpLink, LoginStatusService],
+  deps: [HttpLink, LoginStatusService, NotificationService],
 };

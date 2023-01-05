@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { FormBuilder, Validators } from "@angular/forms";
-import { concatMap, EMPTY, filter, map, Subscription, tap } from "rxjs";
+import { concatMap, EMPTY, filter, finalize, map, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
 import { MaxSizeValidator } from "@angular-material-components/file-input";
 import { HttpClient } from "@angular/common/http";
@@ -100,7 +100,7 @@ export class AddBotDialogComponent implements OnDestroy {
           formData.append("sourceFile", sourceFile);
           return this.httpClient.post(environment.backendUrl + result.uploadLink, formData);
         }),
-        tap(() => {
+        finalize(() => {
           this.dialogRef.close();
         }),
       )
