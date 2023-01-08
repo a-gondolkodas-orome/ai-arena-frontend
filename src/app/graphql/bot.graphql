@@ -5,6 +5,10 @@ mutation CreateBot($botInput: BotInput!) {
       bot {
         id
         name
+        submitStatus {
+          stage
+          log
+        }
       }
       uploadLink
     }
@@ -27,6 +31,27 @@ query GetBots($gameId: String!) {
       bots {
         id
         name
+        submitStatus {
+          stage
+          log
+        }
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+query GetBot($id: String!) {
+  getBot(id: $id) {
+    __typename
+    ... on Bot {
+      id
+      name
+      submitStatus {
+        stage
+        log
       }
     }
     ... on GraphqlError {

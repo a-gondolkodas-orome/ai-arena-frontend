@@ -36,6 +36,7 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { NanowarVisualizerModule } from "@leanil/nanowar-visualizer";
 import { MatchComponent } from "./match/match.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { MatchComponent } from "./match/match.component";
     MatChipsModule,
     MatAutocompleteModule,
     NanowarVisualizerModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     GraphqlAuthMiddlewareProvider,

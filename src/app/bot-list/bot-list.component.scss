@@ -19,6 +19,7 @@
       .bot-card-content {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding-top: 8px;
         padding-bottom: 8px;
 
@@ -29,4 +30,20 @@
       }
     }
   }
+}
+
+mat-progress-spinner {
+  visibility: hidden;
+}
+
+.eval-in-progress {
+  background-color: lightyellow;
+
+  mat-progress-spinner {
+    visibility: visible;
+  }
+}
+
+.eval-error {
+  background-color: #ffe0e0;
 }

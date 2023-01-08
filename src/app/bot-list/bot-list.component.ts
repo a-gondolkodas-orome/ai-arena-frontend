@@ -1,12 +1,20 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { AddBotDialogComponent } from "../add-bot-dialog/add-bot-dialog.component";
-import { Bot, DeleteBotGQL, Game, GetBotsGQL } from "../graphql/generated";
-import { filter, map, Observable, Subscription } from "rxjs";
+import {
+  Bot,
+  BotSubmitStage,
+  DeleteBotGQL,
+  Game,
+  GetBotGQL,
+  GetBotsGQL,
+} from "../graphql/generated";
+import { concatMap, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { NotificationService } from "../services/notification.service";
 import * as t from "io-ts";
 import { decode } from "../../utils";
+import { Sse } from "../services/sse";
 
 @Component({
   selector: "app-bot-list",
@@ -19,16 +27,21 @@ export class BotListComponent implements OnInit, OnDestroy {
     bots: t.array(t.type({ __ref: t.string })),
   });
 
+  readonly submitStageInProgress = [BotSubmitStage.Registered, BotSubmitStage.SourceUploadSuccess];
+  readonly submitStageError = [BotSubmitStage.SourceUploadError, BotSubmitStage.CheckError];
+
   @Input() game!: Game;
 
   constructor(
     protected dialog: MatDialog,
     protected getBots: GetBotsGQL,
+    protected getBot: GetBotGQL,
     protected notificationService: NotificationService,
     protected deleteBotMutation: DeleteBotGQL,
   ) {}
 
-  bots$?: Observable<Pick<Bot, "id" | "name">[]>;
+  bots$?: Observable<Pick<Bot, "id" | "name" | "submitStatus">[]>;
+  protected sseSubscription?: Subscription;
 
   ngOnInit() {
     this.bots$ = this.getBots.watch({ gameId: this.game.id }).valueChanges.pipe(
@@ -36,6 +49,9 @@ export class BotListComponent implements OnInit, OnDestroy {
       handleGraphqlAuthErrors(this.notificationService),
       map((getBots) => getBots.bots),
     );
+    this.sseSubscription = Sse.botEvents
+      .pipe(concatMap((event) => this.getBot.fetch({ id: event.botUpdate })))
+      .subscribe();
   }
 
   addBot() {
@@ -93,5 +109,6 @@ export class BotListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.deleteBotSubscription?.unsubscribe();
+    this.sseSubscription?.unsubscribe();
   }
 }

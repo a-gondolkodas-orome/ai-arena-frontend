@@ -1,7 +1,6 @@
 import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -41,12 +40,29 @@ export type Bot = {
   game: Game;
   id: Scalars["ID"];
   name: Scalars["String"];
+  submitStatus: BotSubmitStatus;
   user: User;
 };
 
 export type BotInput = {
   gameId: Scalars["String"];
   name: Scalars["String"];
+};
+
+export type BotResponse = Bot | GraphqlAuthenticationError | GraphqlAuthorizationError;
+
+export enum BotSubmitStage {
+  CheckError = "CHECK_ERROR",
+  CheckSuccess = "CHECK_SUCCESS",
+  Registered = "REGISTERED",
+  SourceUploadError = "SOURCE_UPLOAD_ERROR",
+  SourceUploadSuccess = "SOURCE_UPLOAD_SUCCESS",
+}
+
+export type BotSubmitStatus = {
+  __typename?: "BotSubmitStatus";
+  log?: Maybe<Scalars["String"]>;
+  stage: BotSubmitStage;
 };
 
 export type BotWithUploadLink = {
@@ -191,6 +207,7 @@ export type PlayerCountInput = {
 export type Query = {
   __typename?: "Query";
   findGame?: Maybe<GameResponse>;
+  getBot: BotResponse;
   getBots: BotsResponse;
   getGames: GamesResponse;
   getMatch: MatchResponse;
@@ -201,6 +218,10 @@ export type Query = {
 };
 
 export type QueryFindGameArgs = {
+  id: Scalars["String"];
+};
+
+export type QueryGetBotArgs = {
   id: Scalars["String"];
 };
 
@@ -352,7 +373,16 @@ export type CreateBotMutation = {
     | {
         __typename: "BotWithUploadLink";
         uploadLink: string;
-        bot: { __typename?: "Bot"; id: string; name: string };
+        bot: {
+          __typename?: "Bot";
+          id: string;
+          name: string;
+          submitStatus: {
+            __typename?: "BotSubmitStatus";
+            stage: BotSubmitStage;
+            log?: string | null;
+          };
+        };
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string };
@@ -365,7 +395,40 @@ export type GetBotsQueryVariables = Exact<{
 export type GetBotsQuery = {
   __typename?: "Query";
   getBots:
-    | { __typename: "Bots"; bots: Array<{ __typename?: "Bot"; id: string; name: string }> }
+    | {
+        __typename: "Bots";
+        bots: Array<{
+          __typename?: "Bot";
+          id: string;
+          name: string;
+          submitStatus: {
+            __typename?: "BotSubmitStatus";
+            stage: BotSubmitStage;
+            log?: string | null;
+          };
+        }>;
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string };
+};
+
+export type GetBotQueryVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type GetBotQuery = {
+  __typename?: "Query";
+  getBot:
+    | {
+        __typename: "Bot";
+        id: string;
+        name: string;
+        submitStatus: {
+          __typename?: "BotSubmitStatus";
+          stage: BotSubmitStage;
+          log?: string | null;
+        };
+      }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string };
 };
@@ -503,7 +566,6 @@ export class LoginGQL extends Apollo.Query<LoginQuery, LoginQueryVariables> {
     super(apollo);
   }
 }
-
 export const RegisterDocument = gql`
   mutation Register($registrationInput: RegistrationInput!) {
     register(registrationData: $registrationInput) {
@@ -538,7 +600,6 @@ export class RegisterGQL extends Apollo.Mutation<RegisterMutation, RegisterMutat
     super(apollo);
   }
 }
-
 export const GetProfileDocument = gql`
   query GetProfile {
     profile {
@@ -565,7 +626,6 @@ export class GetProfileGQL extends Apollo.Query<GetProfileQuery, GetProfileQuery
     super(apollo);
   }
 }
-
 export const CreateBotDocument = gql`
   mutation CreateBot($botInput: BotInput!) {
     createBot(bot: $botInput) {
@@ -574,6 +634,10 @@ export const CreateBotDocument = gql`
         bot {
           id
           name
+          submitStatus {
+            stage
+            log
+          }
         }
         uploadLink
       }
@@ -600,7 +664,6 @@ export class CreateBotGQL extends Apollo.Mutation<CreateBotMutation, CreateBotMu
     super(apollo);
   }
 }
-
 export const GetBotsDocument = gql`
   query GetBots($gameId: String!) {
     getBots(gameId: $gameId) {
@@ -609,6 +672,10 @@ export const GetBotsDocument = gql`
         bots {
           id
           name
+          submitStatus {
+            stage
+            log
+          }
         }
       }
       ... on GraphqlError {
@@ -628,7 +695,35 @@ export class GetBotsGQL extends Apollo.Query<GetBotsQuery, GetBotsQueryVariables
     super(apollo);
   }
 }
+export const GetBotDocument = gql`
+  query GetBot($id: String!) {
+    getBot(id: $id) {
+      __typename
+      ... on Bot {
+        id
+        name
+        submitStatus {
+          stage
+          log
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
 
+@Injectable({
+  providedIn: "root",
+})
+export class GetBotGQL extends Apollo.Query<GetBotQuery, GetBotQueryVariables> {
+  override document = GetBotDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const DeleteBotDocument = gql`
   mutation DeleteBot($botId: String!) {
     deleteBot(botId: $botId) {
@@ -650,7 +745,6 @@ export class DeleteBotGQL extends Apollo.Mutation<DeleteBotMutation, DeleteBotMu
     super(apollo);
   }
 }
-
 export const GetGamesDocument = gql`
   query GetGames {
     getGames {
@@ -680,7 +774,6 @@ export class GetGamesGQL extends Apollo.Query<GetGamesQuery, GetGamesQueryVariab
     super(apollo);
   }
 }
-
 export const FindGameDocument = gql`
   query FindGame($id: String!) {
     findGame(id: $id) {
@@ -713,7 +806,6 @@ export class FindGameGQL extends Apollo.Query<FindGameQuery, FindGameQueryVariab
     super(apollo);
   }
 }
-
 export const StartMatchDocument = gql`
   mutation StartMatch($matchInput: MatchInput!) {
     startMatch(matchInput: $matchInput) {
@@ -747,7 +839,6 @@ export class StartMatchGQL extends Apollo.Mutation<
     super(apollo);
   }
 }
-
 export const GetMatchesDocument = gql`
   query GetMatches($gameId: String!) {
     getMatches(gameId: $gameId) {
@@ -774,7 +865,6 @@ export class GetMatchesGQL extends Apollo.Query<GetMatchesQuery, GetMatchesQuery
     super(apollo);
   }
 }
-
 export const GetMatchDocument = gql`
   query GetMatch($id: String!) {
     getMatch(id: $id) {
@@ -801,7 +891,6 @@ export class GetMatchGQL extends Apollo.Query<GetMatchQuery, GetMatchQueryVariab
     super(apollo);
   }
 }
-
 export const DeleteMatchDocument = gql`
   mutation DeleteMatch($matchId: String!) {
     deleteMatch(matchId: $matchId) {

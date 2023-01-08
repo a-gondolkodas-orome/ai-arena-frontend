@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { FormBuilder, Validators } from "@angular/forms";
-import { concatMap, EMPTY, filter, finalize, map, Subscription } from "rxjs";
+import { concatMap, EMPTY, filter, map, Subscription, tap } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
 import { MaxSizeValidator } from "@angular-material-components/file-input";
 import { HttpClient } from "@angular/common/http";
@@ -18,8 +18,8 @@ import { BotListComponent } from "../bot-list/bot-list.component";
   styleUrls: ["./add-bot-dialog.component.scss"],
 })
 export class AddBotDialogComponent implements OnDestroy {
-  static readonly SOURCE_FILE_MAX_SIZE_KB = 1000;
-  public sourceFileMaxSize = AddBotDialogComponent.SOURCE_FILE_MAX_SIZE_KB; // To be used by the html template
+  static readonly SOURCE_FILE_MAX_SIZE = 1000000;
+  public sourceFileMaxSize = AddBotDialogComponent.SOURCE_FILE_MAX_SIZE; // To be used by the html template
 
   static readonly addBotDialogDataCodec = t.type({ gameId: t.string });
 
@@ -40,13 +40,14 @@ export class AddBotDialogComponent implements OnDestroy {
     name: this.formBuilder.nonNullable.control(""),
     sourceFile: this.formBuilder.control<File | null>(null, [
       Validators.required,
-      MaxSizeValidator(AddBotDialogComponent.SOURCE_FILE_MAX_SIZE_KB),
+      MaxSizeValidator(AddBotDialogComponent.SOURCE_FILE_MAX_SIZE),
     ]),
   });
 
   addBotSubscription?: Subscription;
 
   onSubmit() {
+    const closeDialog = () => this.dialogRef.close();
     this.addBotSubscription = this.createBot
       .mutate(
         {
@@ -100,9 +101,7 @@ export class AddBotDialogComponent implements OnDestroy {
           formData.append("sourceFile", sourceFile);
           return this.httpClient.post(environment.backendUrl + result.uploadLink, formData);
         }),
-        finalize(() => {
-          this.dialogRef.close();
-        }),
+        tap({ next: closeDialog, error: closeDialog }),
       )
       .subscribe();
   }

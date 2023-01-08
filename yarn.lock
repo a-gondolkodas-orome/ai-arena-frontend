@@ -3622,6 +3622,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/fetch-event-source@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@microsoft/fetch-event-source@npm:2.0.1"
+  checksum: a50e1c0f33220206967266d0a4bbba0703e2793b079d9f6e6bfd48f71b2115964a803e14cf6e902c6fab321edc084f26022334f5eaacc2cec87f174715d41852
+  languageName: node
+  linkType: hard
+
 "@ng-bootstrap/ng-bootstrap@npm:14":
   version: 14.0.0
   resolution: "@ng-bootstrap/ng-bootstrap@npm:14.0.0"
@@ -4594,6 +4601,7 @@ __metadata:
     "@graphql-codegen/typescript-apollo-angular": ^3.5.3
     "@graphql-codegen/typescript-operations": ^2.5.3
     "@leanil/nanowar-visualizer": 0
+    "@microsoft/fetch-event-source": ^2.0.1
     "@ng-bootstrap/ng-bootstrap": 14
     "@popperjs/core": ^2.10.2
     "@types/dompurify": ^2.4.0

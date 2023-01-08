@@ -5,6 +5,7 @@ import { BehaviorSubject, map, Subscription } from "rxjs";
 import { LoginStatusService } from "./login-status.service";
 import { JwtToken } from "./jwt-token";
 import { GetProfileGQL, User } from "../graphql/generated";
+import { Sse } from "./sse";
 
 @Injectable({
   providedIn: "root",
@@ -16,8 +17,10 @@ export class AuthService {
     protected router: Router,
     loginStatusService: LoginStatusService,
   ) {
-    if (JwtToken.get()) {
+    const token = JwtToken.get();
+    if (token) {
       this.setProfile();
+      Sse.open(token);
     }
     loginStatusService.loginStatus$.subscribe(async (statusEvent) => {
       if (statusEvent.type === "login") await this.handleLogin(statusEvent.token);
@@ -41,11 +44,13 @@ export class AuthService {
 
   async handleLogin(token: string) {
     JwtToken.set(token);
+    Sse.open(token);
     this.setProfile();
   }
 
   async handleLogout() {
     JwtToken.clear();
+    Sse.close();
     this.getProfileSubscription?.unsubscribe();
     this.userProfile$.next(undefined);
     await this.apollo.client.clearStore();

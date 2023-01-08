@@ -38,6 +38,7 @@
     "@angular/router": "15",
     "@apollo/client": "^3.0.0",
     "@leanil/nanowar-visualizer": "0",
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@ng-bootstrap/ng-bootstrap": "14",
     "@popperjs/core": "^2.10.2",
     "apollo-angular": "4.0.1",
