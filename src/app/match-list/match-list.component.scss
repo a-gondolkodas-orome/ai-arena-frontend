@@ -6,6 +6,11 @@
   cursor: pointer;
 }
 
+#match-list-header {
+  display: flex;
+  align-items: center;
+}
+
 #match-list {
   display: flex;
   justify-content: center;
@@ -15,17 +20,14 @@
 
     .match-list-item {
       padding: 1%;
+      cursor: pointer;
 
       .match-card-content {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding-top: 8px;
         padding-bottom: 8px;
-
-        .delete-match-icon {
-          display: block;
-          cursor: pointer;
-        }
       }
     }
   }

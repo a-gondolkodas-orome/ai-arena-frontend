@@ -1,13 +1,13 @@
 <mat-list>
   <div mat-subheader id="bot-list-header">
-    Bots
+    <span>Bots</span>
     <mat-icon class="add-bot-icon" (click)="addBot()">add</mat-icon>
   </div>
   <div id="bot-list">
     <div id="bot-list-items-container">
       <mat-list-item *ngFor="let bot of bots$ | async">
         <div class="bot-list-item">
-          <mat-card>
+          <mat-card [routerLink]="['/bot', bot.id]">
             <mat-card-content
               class="bot-card-content"
               [ngClass]="{
@@ -17,7 +17,9 @@
             >
               <span>{{ bot.name }}</span>
               <mat-progress-spinner [mode]="'indeterminate'" [diameter]="15"></mat-progress-spinner>
-              <mat-icon class="delete-bot-icon" (click)="deleteBot(bot.id)"> delete</mat-icon>
+              <button mat-icon-button (click)="deleteBot(bot.id, $event)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </mat-card-content>
           </mat-card>
         </div>

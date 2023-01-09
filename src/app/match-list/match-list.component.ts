@@ -48,7 +48,8 @@ export class MatchListComponent implements OnInit, OnDestroy {
 
   protected deleteMatchSubscription?: Subscription;
 
-  deleteMatch(matchId: string) {
+  deleteMatch(matchId: string, event: MouseEvent) {
+    event.stopPropagation();
     this.deleteMatchSubscription = this.deleteMatchMutation
       .mutate(
         { matchId },

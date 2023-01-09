@@ -19,8 +19,7 @@ export class AuthService {
   ) {
     const token = JwtToken.get();
     if (token) {
-      this.setProfile();
-      Sse.open(token);
+      this.setProfile(token);
     }
     loginStatusService.loginStatus$.subscribe(async (statusEvent) => {
       if (statusEvent.type === "login") await this.handleLogin(statusEvent.token);
@@ -31,21 +30,21 @@ export class AuthService {
   userProfile$ = new BehaviorSubject<User | undefined>(undefined);
   protected getProfileSubscription?: Subscription;
 
-  setProfile() {
+  setProfile(token: string) {
     this.getProfileSubscription = this.getProfile
       .watch()
       .valueChanges.pipe(map((result) => result.data.profile))
       .subscribe((response) => {
         if (response.__typename === "User") {
           this.userProfile$.next(response);
+          Sse.open(token);
         }
       });
   }
 
   async handleLogin(token: string) {
     JwtToken.set(token);
-    Sse.open(token);
-    this.setProfile();
+    this.setProfile(token);
   }
 
   async handleLogout() {

@@ -64,7 +64,8 @@ export class BotListComponent implements OnInit, OnDestroy {
 
   protected deleteBotSubscription?: Subscription;
 
-  deleteBot(botId: string) {
+  deleteBot(botId: string, event: MouseEvent) {
+    event.stopPropagation();
     this.deleteBotSubscription = this.deleteBotMutation
       .mutate(
         { botId },

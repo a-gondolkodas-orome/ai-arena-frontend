@@ -6,6 +6,11 @@
   cursor: pointer;
 }
 
+#bot-list-header {
+  display: flex;
+  align-items: center;
+}
+
 #bot-list {
   display: flex;
   justify-content: center;
@@ -15,6 +20,7 @@
 
     .bot-list-item {
       padding: 1%;
+      cursor: pointer;
 
       .bot-card-content {
         display: flex;
