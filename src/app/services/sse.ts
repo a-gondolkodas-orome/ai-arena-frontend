@@ -14,16 +14,20 @@ export class Sse {
     fetchEventSource(environment.backendUrl + "/sse", {
       headers: { Authorization: `Bearer ${token}` },
       onmessage: (message) => {
+        if (!message.data) return;
         let eventSubject;
         switch (message.event) {
           case EVENT_TYPE__BOT:
             eventSubject = this.botEvents;
             break;
           default:
-            throw new Error("Sse.onmessage: unknown event type " + message.event);
+            throw new Error(
+              "Sse.onmessage: unknown event type " + message.event + ", data: " + message.data,
+            );
         }
         eventSubject.next(decode(botUpdateEventCodec, JSON.parse(message.data)));
       },
+      onerror: (error: unknown) => console.error("SSE error", error),
     }).catch((error) => console.error("SSE error", error));
   }
 

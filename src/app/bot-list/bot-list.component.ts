@@ -1,20 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { AddBotDialogComponent } from "../add-bot-dialog/add-bot-dialog.component";
-import {
-  Bot,
-  BotSubmitStage,
-  DeleteBotGQL,
-  Game,
-  GetBotGQL,
-  GetBotsGQL,
-} from "../graphql/generated";
+import { Bot, DeleteBotGQL, Game, GetBotGQL, GetBotsGQL } from "../graphql/generated";
 import { concatMap, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { NotificationService } from "../services/notification.service";
 import * as t from "io-ts";
 import { decode } from "../../utils";
 import { Sse } from "../services/sse";
+import { BOT_SUBMIT_STAGE__IN_PROGRESS, BOT_SUBMIT_STAGE__ERROR } from "../../bot";
 
 @Component({
   selector: "app-bot-list",
@@ -27,10 +21,10 @@ export class BotListComponent implements OnInit, OnDestroy {
     bots: t.array(t.type({ __ref: t.string })),
   });
 
-  readonly submitStageInProgress = [BotSubmitStage.Registered, BotSubmitStage.SourceUploadSuccess];
-  readonly submitStageError = [BotSubmitStage.SourceUploadError, BotSubmitStage.CheckError];
-
   @Input() game!: Game;
+
+  BOT_SUBMIT_STAGE__IN_PROGRESS = BOT_SUBMIT_STAGE__IN_PROGRESS;
+  BOT_SUBMIT_STAGE__ERROR = BOT_SUBMIT_STAGE__ERROR;
 
   constructor(
     protected dialog: MatDialog,
@@ -50,7 +44,11 @@ export class BotListComponent implements OnInit, OnDestroy {
       map((getBots) => getBots.bots),
     );
     this.sseSubscription = Sse.botEvents
-      .pipe(concatMap((event) => this.getBot.fetch({ id: event.botUpdate })))
+      .pipe(
+        concatMap((event) =>
+          this.getBot.fetch({ id: event.botUpdate }, { fetchPolicy: "network-only" }),
+        ),
+      )
       .subscribe();
   }
 

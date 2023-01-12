@@ -37,6 +37,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { NanowarVisualizerModule } from "@leanil/nanowar-visualizer";
 import { MatchComponent } from "./match/match.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { BotComponent } from "./bot/bot.component";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatchListComponent,
     StartMatchDialogComponent,
     MatchComponent,
+    BotComponent,
   ],
   imports: [
     ApolloModule,
@@ -74,6 +76,12 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
       {
         path: "game/:id",
         component: GameComponent,
+        canActivate: [AuthGuard],
+        title: "AI Arena",
+      },
+      {
+        path: "bot/:id",
+        component: BotComponent,
         canActivate: [AuthGuard],
         title: "AI Arena",
       },

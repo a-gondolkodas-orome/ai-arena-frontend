@@ -11,8 +11,8 @@
             <mat-card-content
               class="bot-card-content"
               [ngClass]="{
-                'eval-in-progress': submitStageInProgress.includes(bot.submitStatus.stage),
-                'eval-error': submitStageError.includes(bot.submitStatus.stage)
+                'eval-in-progress': BOT_SUBMIT_STAGE__IN_PROGRESS.includes(bot.submitStatus.stage),
+                'eval-error': BOT_SUBMIT_STAGE__ERROR.includes(bot.submitStatus.stage)
               }"
             >
               <span>{{ bot.name }}</span>

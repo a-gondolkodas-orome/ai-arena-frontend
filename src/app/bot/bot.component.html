@@ -1,0 +1,16 @@
+<div *ngIf="bot$ | async as bot" class="row">
+  <h1>{{ bot.name }}</h1>
+  <h2>
+    check
+    {{
+      BOT_SUBMIT_STAGE__IN_PROGRESS.includes(bot.submitStatus.stage)
+        ? "in progress"
+        : BOT_SUBMIT_STAGE__ERROR.includes(bot.submitStatus.stage)
+        ? "failed"
+        : "successful"
+    }}
+  </h2>
+  <div class="check-log">
+    {{ bot.submitStatus.log }}
+  </div>
+</div>
