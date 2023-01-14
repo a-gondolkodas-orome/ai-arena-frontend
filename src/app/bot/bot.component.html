@@ -3,9 +3,9 @@
   <h2>
     check
     {{
-      BOT_SUBMIT_STAGE__IN_PROGRESS.includes(bot.submitStatus.stage)
+      bot.evalStatus === "eval-in-progress"
         ? "in progress"
-        : BOT_SUBMIT_STAGE__ERROR.includes(bot.submitStatus.stage)
+        : bot.evalStatus === "eval-error"
         ? "failed"
         : "successful"
     }}

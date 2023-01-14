@@ -1,16 +1,14 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Bot, Exact, GetBotGQL, GetBotQuery } from "../graphql/generated";
+import { Bot, GetBotGQL } from "../graphql/generated";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
 import { Location } from "@angular/common";
 import { concatMap, EMPTY, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
-import { BOT_SUBMIT_STAGE__ERROR, BOT_SUBMIT_STAGE__IN_PROGRESS } from "../../bot";
 import { Sse } from "../services/sse";
-import { QueryRef } from "apollo-angular";
-import { notNull } from "../../utils";
+import { getEvalStatus, notNull } from "../../utils";
 
-type BotInfo = Pick<Bot, "name" | "submitStatus">;
+type BotInfo = Pick<Bot, "name" | "submitStatus"> & { evalStatus: string };
 
 @Component({
   selector: "app-bot",
@@ -18,9 +16,6 @@ type BotInfo = Pick<Bot, "name" | "submitStatus">;
   styleUrls: ["./bot.component.scss"],
 })
 export class BotComponent implements OnInit, OnDestroy {
-  BOT_SUBMIT_STAGE__IN_PROGRESS = BOT_SUBMIT_STAGE__IN_PROGRESS;
-  BOT_SUBMIT_STAGE__ERROR = BOT_SUBMIT_STAGE__ERROR;
-
   constructor(
     protected getBot: GetBotGQL,
     protected route: ActivatedRoute,
@@ -30,19 +25,17 @@ export class BotComponent implements OnInit, OnDestroy {
   ) {}
 
   bot$?: Observable<BotInfo>;
-  protected botQuery?: QueryRef<GetBotQuery, Exact<{ id: string }>>;
   protected sseSubscription?: Subscription;
-  protected botId: string | null = null;
 
   ngOnInit() {
-    this.botId = this.route.snapshot.paramMap.get("id");
-    if (this.botId === null) {
+    const botId = this.route.snapshot.paramMap.get("id");
+    if (botId === null) {
       this.notificationService.error("No bot id in path");
       this.bot$ = EMPTY;
       this.handleBackToGame();
     } else {
-      this.botQuery = this.getBot.watch({ id: this.botId });
-      this.bot$ = this.botQuery.valueChanges.pipe(
+      const botQuery = this.getBot.watch({ id: botId });
+      this.bot$ = botQuery.valueChanges.pipe(
         map((result) => result.data.getBot),
         filter(<T>(value: T): value is Exclude<T, null | undefined> => {
           if (value != null) return true;
@@ -50,11 +43,12 @@ export class BotComponent implements OnInit, OnDestroy {
           return false;
         }),
         handleGraphqlAuthErrors(this.notificationService),
+        map((bot) => ({ ...bot, evalStatus: getEvalStatus(bot.submitStatus.stage) })),
       );
       this.sseSubscription = Sse.botEvents
         .pipe(
           concatMap((event) => {
-            return event.botUpdate === this.botId ? notNull(this.botQuery).refetch() : EMPTY;
+            return event.botUpdate === botId ? notNull(botQuery).refetch() : EMPTY;
           }),
         )
         .subscribe();

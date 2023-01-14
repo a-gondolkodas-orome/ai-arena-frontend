@@ -28,3 +28,11 @@ body {
 .mat-mdc-form-field-infix {
   width: auto !important;
 }
+
+.eval-in-progress {
+  background-color: lightyellow;
+}
+
+.eval-error {
+  background-color: #ffe0e0;
+}

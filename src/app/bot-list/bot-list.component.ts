@@ -6,9 +6,8 @@ import { concatMap, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { NotificationService } from "../services/notification.service";
 import * as t from "io-ts";
-import { decode } from "../../utils";
+import { decode, getEvalStatus } from "../../utils";
 import { Sse } from "../services/sse";
-import { BOT_SUBMIT_STAGE__IN_PROGRESS, BOT_SUBMIT_STAGE__ERROR } from "../../bot";
 
 @Component({
   selector: "app-bot-list",
@@ -23,9 +22,6 @@ export class BotListComponent implements OnInit, OnDestroy {
 
   @Input() game!: Game;
 
-  BOT_SUBMIT_STAGE__IN_PROGRESS = BOT_SUBMIT_STAGE__IN_PROGRESS;
-  BOT_SUBMIT_STAGE__ERROR = BOT_SUBMIT_STAGE__ERROR;
-
   constructor(
     protected dialog: MatDialog,
     protected getBots: GetBotsGQL,
@@ -34,14 +30,19 @@ export class BotListComponent implements OnInit, OnDestroy {
     protected deleteBotMutation: DeleteBotGQL,
   ) {}
 
-  bots$?: Observable<Pick<Bot, "id" | "name" | "submitStatus">[]>;
+  bots$?: Observable<(Pick<Bot, "id" | "name"> & { evalStatus: string })[]>;
   protected sseSubscription?: Subscription;
 
   ngOnInit() {
     this.bots$ = this.getBots.watch({ gameId: this.game.id }).valueChanges.pipe(
       map((result) => result.data.getBots),
       handleGraphqlAuthErrors(this.notificationService),
-      map((getBots) => getBots.bots),
+      map((getBots) =>
+        getBots.bots.map((bot) => ({
+          ...bot,
+          evalStatus: getEvalStatus(bot.submitStatus.stage.toString()),
+        })),
+      ),
     );
     this.sseSubscription = Sse.botEvents
       .pipe(

@@ -1,11 +1,19 @@
 import { Subject } from "rxjs";
 import { decode } from "../../utils";
-import { BotUpdateEvent, botUpdateEventCodec, EVENT_TYPE__BOT } from "../../common";
+import {
+  BotUpdateEvent,
+  botUpdateEventCodec,
+  EVENT_TYPE__BOT,
+  EVENT_TYPE__MATCH,
+  MatchUpdateEvent,
+  matchUpdateEventCodec,
+} from "../../common";
 import { environment } from "../../environments/environment";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 export class Sse {
   static botEvents = new Subject<BotUpdateEvent>();
+  static matchEvents = new Subject<MatchUpdateEvent>();
 
   static open(token: string) {
     if (this.isOpen) {
@@ -15,17 +23,18 @@ export class Sse {
       headers: { Authorization: `Bearer ${token}` },
       onmessage: (message) => {
         if (!message.data) return;
-        let eventSubject;
         switch (message.event) {
           case EVENT_TYPE__BOT:
-            eventSubject = this.botEvents;
+            this.botEvents.next(decode(botUpdateEventCodec, JSON.parse(message.data)));
+            break;
+          case EVENT_TYPE__MATCH:
+            this.matchEvents.next(decode(matchUpdateEventCodec, JSON.parse(message.data)));
             break;
           default:
             throw new Error(
               "Sse.onmessage: unknown event type " + message.event + ", data: " + message.data,
             );
         }
-        eventSubject.next(decode(botUpdateEventCodec, JSON.parse(message.data)));
       },
       onerror: (error: unknown) => console.error("SSE error", error),
     }).catch((error) => console.error("SSE error", error));

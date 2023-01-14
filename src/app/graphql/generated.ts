@@ -55,8 +55,8 @@ export enum BotSubmitStage {
   CheckError = "CHECK_ERROR",
   CheckSuccess = "CHECK_SUCCESS",
   Registered = "REGISTERED",
+  SourceUploadDone = "SOURCE_UPLOAD_DONE",
   SourceUploadError = "SOURCE_UPLOAD_ERROR",
-  SourceUploadSuccess = "SOURCE_UPLOAD_SUCCESS",
 }
 
 export type BotSubmitStatus = {
@@ -137,6 +137,7 @@ export type Match = {
   game: Game;
   id: Scalars["ID"];
   result?: Maybe<MatchResult>;
+  runStatus: MatchRunStatus;
   user: User;
 };
 
@@ -150,6 +151,22 @@ export type MatchResponse = GraphqlAuthenticationError | GraphqlAuthorizationErr
 export type MatchResult = {
   __typename?: "MatchResult";
   log: Scalars["String"];
+};
+
+export enum MatchRunStage {
+  PrepareBotsDone = "PREPARE_BOTS_DONE",
+  PrepareBotsError = "PREPARE_BOTS_ERROR",
+  PrepareGameServerDone = "PREPARE_GAME_SERVER_DONE",
+  PrepareGameServerError = "PREPARE_GAME_SERVER_ERROR",
+  Registered = "REGISTERED",
+  RunError = "RUN_ERROR",
+  RunSuccess = "RUN_SUCCESS",
+}
+
+export type MatchRunStatus = {
+  __typename?: "MatchRunStatus";
+  log?: Maybe<Scalars["String"]>;
+  stage: MatchRunStage;
 };
 
 export type Matches = {
@@ -207,7 +224,7 @@ export type PlayerCountInput = {
 export type Query = {
   __typename?: "Query";
   findGame?: Maybe<GameResponse>;
-  getBot: BotResponse;
+  getBot?: Maybe<BotResponse>;
   getBots: BotsResponse;
   getGames: GamesResponse;
   getMatch: MatchResponse;
@@ -418,7 +435,7 @@ export type GetBotQueryVariables = Exact<{
 
 export type GetBotQuery = {
   __typename?: "Query";
-  getBot:
+  getBot?:
     | {
         __typename: "Bot";
         id: string;
@@ -430,7 +447,8 @@ export type GetBotQuery = {
         };
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
-    | { __typename: "GraphqlAuthorizationError"; message: string };
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | null;
 };
 
 export type DeleteBotMutationVariables = Exact<{
@@ -515,7 +533,14 @@ export type GetMatchesQuery = {
   getMatches:
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
-    | { __typename: "Matches"; matches: Array<{ __typename?: "Match"; id: string }> };
+    | {
+        __typename: "Matches";
+        matches: Array<{
+          __typename?: "Match";
+          id: string;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage };
+        }>;
+      };
 };
 
 export type GetMatchQueryVariables = Exact<{
@@ -527,7 +552,12 @@ export type GetMatchQuery = {
   getMatch:
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
-    | { __typename: "Match"; result?: { __typename?: "MatchResult"; log: string } | null };
+    | {
+        __typename: "Match";
+        id: string;
+        result?: { __typename?: "MatchResult"; log: string } | null;
+        runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+      };
 };
 
 export type DeleteMatchMutationVariables = Exact<{
@@ -846,6 +876,9 @@ export const GetMatchesDocument = gql`
       ... on Matches {
         matches {
           id
+          runStatus {
+            stage
+          }
         }
       }
       ... on GraphqlError {
@@ -870,7 +903,12 @@ export const GetMatchDocument = gql`
     getMatch(id: $id) {
       __typename
       ... on Match {
+        id
         result {
+          log
+        }
+        runStatus {
+          stage
           log
         }
       }

@@ -8,15 +8,14 @@
       <mat-list-item *ngFor="let bot of bots$ | async">
         <div class="bot-list-item">
           <mat-card [routerLink]="['/bot', bot.id]">
-            <mat-card-content
-              class="bot-card-content"
-              [ngClass]="{
-                'eval-in-progress': BOT_SUBMIT_STAGE__IN_PROGRESS.includes(bot.submitStatus.stage),
-                'eval-error': BOT_SUBMIT_STAGE__ERROR.includes(bot.submitStatus.stage)
-              }"
-            >
+            <mat-card-content class="bot-card-content {{ bot.evalStatus }}">
               <span>{{ bot.name }}</span>
-              <mat-progress-spinner [mode]="'indeterminate'" [diameter]="15"></mat-progress-spinner>
+              <mat-progress-spinner
+                [mode]="'indeterminate'"
+                [diameter]="15"
+                [hidden]="bot.evalStatus !== 'eval-in-progress'"
+              >
+              </mat-progress-spinner>
               <button mat-icon-button (click)="deleteBot(bot.id, $event)">
                 <mat-icon>delete</mat-icon>
               </button>

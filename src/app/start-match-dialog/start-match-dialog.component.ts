@@ -5,7 +5,7 @@ import { FormBuilder } from "@angular/forms";
 import { Bot, GetBotsGQL, Match, StartMatchGQL } from "../graphql/generated";
 import { NotificationService } from "../services/notification.service";
 import { decode } from "../../utils";
-import { combineLatest, filter, finalize, map, Observable, startWith, Subscription } from "rxjs";
+import { combineLatest, filter, map, Observable, startWith, Subscription, tap } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
 import { MatchListComponent } from "../match-list/match-list.component";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
@@ -80,6 +80,7 @@ export class StartMatchDialogComponent implements OnDestroy {
   startMatchSubscription?: Subscription;
 
   onSubmit() {
+    const closeDialog = () => this.dialogRef.close();
     this.startMatchSubscription = this.startMatch
       .mutate(
         {
@@ -121,9 +122,7 @@ export class StartMatchDialogComponent implements OnDestroy {
           this.notificationService,
           this.startMatchForm,
         ),
-        finalize(() => {
-          this.dialogRef.close();
-        }),
+        tap({ next: closeDialog, error: closeDialog }),
       )
       .subscribe();
   }

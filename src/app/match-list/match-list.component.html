@@ -8,10 +8,16 @@
       <mat-list-item *ngFor="let match of matches$ | async">
         <div class="match-list-item">
           <mat-card [routerLink]="['/match', match.id]">
-            <mat-card-content class="match-card-content">
+            <mat-card-content class="match-card-content {{ match.evalStatus }}">
               <span>
                 {{ match.id }}
               </span>
+              <mat-progress-spinner
+                [mode]="'indeterminate'"
+                [diameter]="15"
+                [hidden]="match.evalStatus !== 'eval-in-progress'"
+              >
+              </mat-progress-spinner>
               <button mat-icon-button (click)="deleteMatch(match.id, $event)">
                 <mat-icon>delete</mat-icon>
               </button>

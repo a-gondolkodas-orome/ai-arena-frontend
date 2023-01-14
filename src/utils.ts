@@ -28,3 +28,9 @@ export function decode<A, O, I>(codec: t.Type<A, O, I>, input: I): A {
   }
   return decodeResult.right;
 }
+
+export function getEvalStatus(stage: string) {
+  if (stage.endsWith("SUCCESS")) return "eval-success";
+  if (stage.endsWith("ERROR")) return "eval-error";
+  return "eval-in-progress";
+}

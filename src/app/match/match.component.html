@@ -1,9 +1,13 @@
 <div *ngIf="match$ | async as match" class="row">
   <div class="col-xs-12 col-md-9">
     <lib-nanowar-visualizer
-      *ngIf="match.result"
+      *ngIf="match.result; else matchInProgress"
       [jsonstring]="match.result.log"
     ></lib-nanowar-visualizer>
   </div>
+  <ng-template #matchInProgress>
+    <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+    Running...
+  </ng-template>
   <div class="col-xs-12 col-md-3">game info placeholder</div>
 </div>

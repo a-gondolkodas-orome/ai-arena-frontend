@@ -37,19 +37,3 @@
     }
   }
 }
-
-mat-progress-spinner {
-  visibility: hidden;
-}
-
-.eval-in-progress {
-  background-color: lightyellow;
-
-  mat-progress-spinner {
-    visibility: visible;
-  }
-}
-
-.eval-error {
-  background-color: #ffe0e0;
-}

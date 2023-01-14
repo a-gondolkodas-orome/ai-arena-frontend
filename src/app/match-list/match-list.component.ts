@@ -1,12 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { Match, DeleteMatchGQL, Game, GetMatchesGQL } from "../graphql/generated";
+import { Match, DeleteMatchGQL, Game, GetMatchesGQL, GetMatchGQL } from "../graphql/generated";
 import { MatDialog } from "@angular/material/dialog";
 import { NotificationService } from "../services/notification.service";
-import { filter, map, Observable, Subscription } from "rxjs";
+import { concatMap, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { StartMatchDialogComponent } from "../start-match-dialog/start-match-dialog.component";
 import * as t from "io-ts";
-import { decode } from "../../utils";
+import { decode, getEvalStatus } from "../../utils";
+import { Sse } from "../services/sse";
 
 @Component({
   selector: "app-match-list",
@@ -24,18 +25,32 @@ export class MatchListComponent implements OnInit, OnDestroy {
   constructor(
     protected dialog: MatDialog,
     protected getMatches: GetMatchesGQL,
+    protected getMatch: GetMatchGQL,
     protected notificationService: NotificationService,
     protected deleteMatchMutation: DeleteMatchGQL,
   ) {}
 
-  matches$?: Observable<Pick<Match, "id">[]>;
+  matches$?: Observable<(Pick<Match, "id"> & { evalStatus: string })[]>;
+  protected sseSubscription?: Subscription;
 
   ngOnInit() {
     this.matches$ = this.getMatches.watch({ gameId: this.game.id }).valueChanges.pipe(
       map((result) => result.data.getMatches),
       handleGraphqlAuthErrors(this.notificationService),
-      map((getMatches) => getMatches.matches),
+      map((getMatches) =>
+        getMatches.matches.map((match) => ({
+          ...match,
+          evalStatus: getEvalStatus(match.runStatus.stage),
+        })),
+      ),
     );
+    this.sseSubscription = Sse.matchEvents
+      .pipe(
+        concatMap((event) =>
+          this.getMatch.fetch({ id: event.matchUpdate }, { fetchPolicy: "network-only" }),
+        ),
+      )
+      .subscribe();
   }
 
   startMatch() {
@@ -91,5 +106,6 @@ export class MatchListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.deleteMatchSubscription?.unsubscribe();
+    this.sseSubscription?.unsubscribe();
   }
 }
