@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 import { AuthService } from "../services/auth.service";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { LoginStatusService } from "../services/login-status.service";
-import { User } from "../graphql/generated";
+import { Role, User } from "../graphql/generated";
 
 @Component({
   selector: "app-sidebar",
@@ -16,10 +16,18 @@ export class SidebarComponent {
     protected loginStatusService: LoginStatusService,
     protected router: Router,
   ) {
-    this.userProfile = authService.userProfile$.asObservable();
+    this.user$ = authService.userProfile$.asObservable().pipe(
+      map(
+        (user) =>
+          user && {
+            ...user,
+            isAdmin: user.roles.includes(Role.Admin),
+          },
+      ),
+    );
   }
 
-  userProfile: Observable<User | undefined>;
+  user$: Observable<(User & { isAdmin: boolean }) | undefined>;
 
   onLogout() {
     this.loginStatusService.logout();

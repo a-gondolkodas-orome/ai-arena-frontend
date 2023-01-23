@@ -38,6 +38,7 @@ import { NanowarVisualizerModule } from "@leanil/nanowar-visualizer";
 import { MatchComponent } from "./match/match.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { BotComponent } from "./bot/bot.component";
+import { AdminComponent } from "./admin/admin.component";
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { BotComponent } from "./bot/bot.component";
     StartMatchDialogComponent,
     MatchComponent,
     BotComponent,
+    AdminComponent,
   ],
   imports: [
     ApolloModule,
@@ -88,6 +90,12 @@ import { BotComponent } from "./bot/bot.component";
       {
         path: "match/:id",
         component: MatchComponent,
+        canActivate: [AuthGuard],
+        title: "AI Arena",
+      },
+      {
+        path: "admin",
+        component: AdminComponent,
         canActivate: [AuthGuard],
         title: "AI Arena",
       },

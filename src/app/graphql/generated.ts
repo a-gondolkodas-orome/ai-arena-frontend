@@ -13,6 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
 };
 
 export type AddBotError = GraphqlError & {
@@ -77,6 +79,27 @@ export type Bots = {
 };
 
 export type BotsResponse = Bots | GraphqlAuthenticationError | GraphqlAuthorizationError;
+
+export type Contest = {
+  __typename?: "Contest";
+  bots: Array<Bot>;
+  date: Scalars["DateTime"];
+  game: Game;
+  id: Scalars["ID"];
+  matches: Array<Match>;
+  name: Scalars["String"];
+  owner: User;
+  status: Scalars["String"];
+};
+
+export type ContestResponse = Contest | GraphqlAuthenticationError | GraphqlAuthorizationError;
+
+export type Contests = {
+  __typename?: "Contests";
+  contests: Array<Contest>;
+};
+
+export type ContestsResponse = Contests | GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type Credentials = {
   email: Scalars["String"];
@@ -226,6 +249,8 @@ export type Query = {
   findGame?: Maybe<GameResponse>;
   getBot?: Maybe<BotResponse>;
   getBots: BotsResponse;
+  getContest?: Maybe<ContestResponse>;
+  getContests: ContestsResponse;
   getGames: GamesResponse;
   getMatch: MatchResponse;
   getMatches: MatchesResponse;
@@ -244,6 +269,10 @@ export type QueryGetBotArgs = {
 
 export type QueryGetBotsArgs = {
   gameId: Scalars["String"];
+};
+
+export type QueryGetContestArgs = {
+  id: Scalars["String"];
 };
 
 export type QueryGetMatchArgs = {
@@ -289,6 +318,10 @@ export type RegistrationSuccess = {
   user: User;
 };
 
+export enum Role {
+  Admin = "ADMIN",
+}
+
 export type StartMatchError = GraphqlError & {
   __typename?: "StartMatchError";
   fieldErrors: StartMatchFieldErrors;
@@ -311,6 +344,7 @@ export type User = {
   __typename?: "User";
   email: Scalars["String"];
   id: Scalars["ID"];
+  roles: Array<Role>;
   username: Scalars["String"];
 };
 
@@ -368,7 +402,7 @@ export type GetProfileQuery = {
   profile:
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
-    | { __typename: "User"; id: string; username: string; email: string };
+    | { __typename: "User"; id: string; username: string; email: string; roles: Array<Role> };
 };
 
 export type CreateBotMutationVariables = Exact<{
@@ -638,6 +672,7 @@ export const GetProfileDocument = gql`
         id
         username
         email
+        roles
       }
       ... on GraphqlError {
         message

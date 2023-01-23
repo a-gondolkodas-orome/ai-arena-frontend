@@ -4,6 +4,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -15,12 +16,15 @@ body {
 .notification-service {
   white-space: pre-wrap;
 }
+
 .notification-service-success {
   color: green;
 }
+
 .notification-service-error {
   color: red;
 }
+
 .notification-service-info {
   color: royalblue;
 }
@@ -35,4 +39,23 @@ body {
 
 .eval-error {
   background-color: #ffe0e0;
+}
+
+.card-list {
+  .mat-mdc-list-item {
+    height: unset !important;
+  }
+
+  .card-list-item-container {
+    padding: 1%;
+
+    .card-list-item-content {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+  }
 }

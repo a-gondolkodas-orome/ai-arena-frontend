@@ -1,4 +1,4 @@
-<mat-list>
+<mat-list class="card-list">
   <div mat-subheader id="match-list-header">
     Matches
     <mat-icon class="start-match-icon" (click)="startMatch()">add</mat-icon>
@@ -6,9 +6,9 @@
   <div id="match-list">
     <div id="match-list-items-container">
       <mat-list-item *ngFor="let match of matches$ | async">
-        <div class="match-list-item">
+        <div class="card-list-item-container">
           <mat-card [routerLink]="['/match', match.id]">
-            <mat-card-content class="match-card-content {{ match.evalStatus }}">
+            <mat-card-content class="card-list-item-content {{ match.evalStatus }}">
               <span>
                 {{ match.id }}
               </span>

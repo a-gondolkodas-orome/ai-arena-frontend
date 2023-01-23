@@ -1,4 +1,4 @@
-<mat-list>
+<mat-list class="card-list">
   <div mat-subheader id="bot-list-header">
     <span>Bots</span>
     <mat-icon class="add-bot-icon" (click)="addBot()">add</mat-icon>
@@ -6,9 +6,9 @@
   <div id="bot-list">
     <div id="bot-list-items-container">
       <mat-list-item *ngFor="let bot of bots$ | async">
-        <div class="bot-list-item">
+        <div class="card-list-item-container">
           <mat-card [routerLink]="['/bot', bot.id]">
-            <mat-card-content class="bot-card-content {{ bot.evalStatus }}">
+            <mat-card-content class="card-list-item-content {{ bot.evalStatus }}">
               <span>{{ bot.name }}</span>
               <mat-progress-spinner
                 [mode]="'indeterminate'"

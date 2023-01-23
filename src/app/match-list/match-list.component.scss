@@ -1,7 +1,3 @@
-.mat-mdc-list-item {
-  height: unset !important;
-}
-
 .start-match-icon {
   cursor: pointer;
 }
@@ -17,18 +13,5 @@
 
   #match-list-items-container {
     width: 80%;
-
-    .match-list-item {
-      padding: 1%;
-      cursor: pointer;
-
-      .match-card-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 8px;
-        padding-bottom: 8px;
-      }
-    }
   }
 }
