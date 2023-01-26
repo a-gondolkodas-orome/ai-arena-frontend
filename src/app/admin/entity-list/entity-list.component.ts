@@ -1,11 +1,11 @@
 import { Component } from "@angular/core";
 
 @Component({
-  selector: "app-admin",
-  templateUrl: "./admin.component.html",
-  styleUrls: ["./admin.component.scss"],
+  selector: "app-entity-list",
+  templateUrl: "./entity-list.component.html",
+  styleUrls: ["./entity-list.component.scss"],
 })
-export class AdminComponent {
+export class EntityListComponent {
   entityTypes = [
     { name: "Users", link: "users", enabled: false },
     { name: "Games", link: "games", enabled: false },
