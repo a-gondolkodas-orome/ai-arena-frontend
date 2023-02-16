@@ -90,7 +90,11 @@ export class AddBotDialogComponent implements OnDestroy {
         }),
         map((data) => data.createBot),
         handleGraphqlAuthErrors(this.notificationService),
-        handleValidationErrors("AddBotError" as const, this.notificationService, this.addBotForm),
+        handleValidationErrors(
+          "CreateBotError" as const,
+          this.notificationService,
+          this.addBotForm,
+        ),
         concatMap((result) => {
           const sourceFile = this.addBotForm.value.sourceFile;
           if (!sourceFile) {

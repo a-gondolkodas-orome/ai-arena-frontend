@@ -63,31 +63,31 @@ export class BotListComponent implements OnInit, OnDestroy {
 
   protected deleteBotSubscription?: Subscription;
 
-  deleteBot(botId: string, event: MouseEvent) {
+  deleteBot(id: string, event: MouseEvent) {
     event.stopPropagation();
     this.deleteBotSubscription = this.deleteBotMutation
       .mutate(
-        { botId },
+        { id },
         {
           update: (cache, { data }) => {
-            const id = cache.identify({ __typename: "Bot", id: botId });
+            const cacheId = cache.identify({ __typename: "Bot", id });
             cache.modify({
               fields: {
                 getBots: (cacheValue: unknown, { DELETE }) => {
                   const getBots = decode(BotListComponent.getBotsCacheCodec, cacheValue);
-                  if (data == null || data.deleteBot !== null || !id)
+                  if (data == null || data.deleteBot !== null || !cacheId)
                     // TODO using DELETE is a workaround until INVALIDATE is fixed
                     // See https://github.com/apollographql/apollo-client/issues/7060
                     return DELETE;
 
                   return {
                     ...getBots,
-                    bots: getBots.bots.filter((bot) => bot.__ref !== id),
+                    bots: getBots.bots.filter((bot) => bot.__ref !== cacheId),
                   };
                 },
               },
             });
-            cache.evict({ id });
+            cache.evict({ id: cacheId });
           },
         },
       )

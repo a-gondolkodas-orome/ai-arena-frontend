@@ -2171,6 +2171,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ctrl/tinycolor@npm:^3.4.1":
+  version: 3.5.0
+  resolution: "@ctrl/tinycolor@npm:3.5.0"
+  checksum: 4f0cc0005b53ca7e42b5137ff7069f95f05873168534e1c04e64429070eeb5e04dd309b52fb437601235807af7dedd4c43bbfce1df5fb11bfd3fb3c05a0eb3a5
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:0.5.7":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -3645,6 +3652,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ng-matero/extensions@npm:15":
+  version: 15.1.0
+  resolution: "@ng-matero/extensions@npm:15.1.0"
+  dependencies:
+    "@ng-select/ng-select": ^10.0.0
+    ngx-color: ^8.0.0
+    photoviewer: ^3.6.0
+    tslib: ^2.4.0
+  peerDependencies:
+    "@angular/animations": ">=15.0.0"
+    "@angular/cdk": ">=15.0.0"
+    "@angular/common": ">=15.0.0"
+    "@angular/core": ">=15.0.0"
+    "@angular/material": ">=15.0.0"
+  checksum: e9ea08bc8ba9d8faa80dbc7c7fa2eeaa64556c3aabb04e1fa9dcad5eb860e138375a5d5fb1cf64724ed900a3dc1f36f5deb87749d5d24038df4ec29ffd2300b6
+  languageName: node
+  linkType: hard
+
+"@ng-select/ng-select@npm:^10.0.0":
+  version: 10.0.3
+  resolution: "@ng-select/ng-select@npm:10.0.3"
+  dependencies:
+    tslib: ^2.3.1
+  peerDependencies:
+    "@angular/common": <16.0.0
+    "@angular/core": <16.0.0
+    "@angular/forms": <16.0.0
+  checksum: 2388f264bc150e5f037694b59c7ff9efe58d49906019bc21c02f982bb260bc27aabdf3ed1052699ee9f2ea8fbe116c8c2cd8c95d14a35138e3a9ba04dc0f3eff
+  languageName: node
+  linkType: hard
+
 "@ngtools/webpack@npm:15.0.4":
   version: 15.0.4
   resolution: "@ngtools/webpack@npm:15.0.4"
@@ -4603,6 +4641,7 @@ __metadata:
     "@leanil/nanowar-visualizer": 0
     "@microsoft/fetch-event-source": ^2.0.1
     "@ng-bootstrap/ng-bootstrap": 14
+    "@ng-matero/extensions": 15
     "@popperjs/core": ^2.10.2
     "@types/dompurify": ^2.4.0
     "@types/jasmine": ~4.0.0
@@ -6169,6 +6208,13 @@ __metadata:
   version: 2.4.1
   resolution: "dompurify@npm:2.4.1"
   checksum: 1169177465b3cbb25a44322937fba549f6c4e1a91b83245d144471be26619c835cccf0f8e20aa78c25ac11a06efd17cc1b9db9cacadceb78a4c08a1029eafee5
+  languageName: node
+  linkType: hard
+
+"domq.js@npm:^0.6.7":
+  version: 0.6.7
+  resolution: "domq.js@npm:0.6.7"
+  checksum: 47e305cbfb50fdbb63e02908ca273d2b850b4220919b5d9fd29489c5260a96cf0c5ee254d31ceffa4b5a0496a97576a7940093ad8d044ea56ed4c26e9fef7be3
   languageName: node
   linkType: hard
 
@@ -8918,6 +8964,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"material-colors@npm:^1.2.6":
+  version: 1.2.6
+  resolution: "material-colors@npm:1.2.6"
+  checksum: 72d005ccccb82bab68eef3cd757e802668634fc86976dedb9fc564ce994f2d3258273766b7efecb7404a0031969e2d72201a1b74169763f0a53c0dd8d649209f
+  languageName: node
+  linkType: hard
+
 "media-typer@npm:0.3.0":
   version: 0.3.0
   resolution: "media-typer@npm:0.3.0"
@@ -9281,6 +9334,20 @@ __metadata:
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
+  languageName: node
+  linkType: hard
+
+"ngx-color@npm:^8.0.0":
+  version: 8.0.3
+  resolution: "ngx-color@npm:8.0.3"
+  dependencies:
+    "@ctrl/tinycolor": ^3.4.1
+    material-colors: ^1.2.6
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/common": ">=14.0.0-0"
+    "@angular/core": ">=14.0.0-0"
+  checksum: b27e5f3243400e512dd0196c40b2fdb595c88c5ac097e044c9704fbca89617822ffb2bd20b226feefc1c799ab677f64714dac7f9df77e65571bda2f4e7341647
   languageName: node
   linkType: hard
 
@@ -9975,6 +10042,15 @@ __metadata:
   version: 4.0.0
   resolution: "path-type@npm:4.0.0"
   checksum: 5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45
+  languageName: node
+  linkType: hard
+
+"photoviewer@npm:^3.6.0":
+  version: 3.6.6
+  resolution: "photoviewer@npm:3.6.6"
+  dependencies:
+    domq.js: ^0.6.7
+  checksum: a1a1a4bcd0a829147625e9078485a3ad66d11ca0a257ffaaebf39de67b48991eafdc9e257800f9cde75c91b16aa77d07149da4808164d442345dd9f60fd3072a
   languageName: node
   linkType: hard
 
@@ -11618,6 +11694,13 @@ __metadata:
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.3.1":
+  version: 2.5.0
+  resolution: "tslib@npm:2.5.0"
+  checksum: ae3ed5f9ce29932d049908ebfdf21b3a003a85653a9a140d614da6b767a93ef94f460e52c3d787f0e4f383546981713f165037dc2274df212ea9f8a4541004e1
   languageName: node
   linkType: hard
 

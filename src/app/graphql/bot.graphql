@@ -12,7 +12,7 @@ mutation CreateBot($botInput: BotInput!) {
       }
       uploadLink
     }
-    ... on AddBotError {
+    ... on CreateBotError {
       fieldErrors {
         name
         gameId
@@ -60,8 +60,8 @@ query GetBot($id: String!) {
   }
 }
 
-mutation DeleteBot($botId: String!) {
-  deleteBot(botId: $botId) {
+mutation DeleteBot($id: String!) {
+  deleteBot(id: $id) {
     __typename
     ... on GraphqlError {
       message

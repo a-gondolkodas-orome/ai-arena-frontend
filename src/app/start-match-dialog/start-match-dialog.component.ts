@@ -1,8 +1,8 @@
-import { Component, ElementRef, Inject, OnDestroy, ViewChild } from "@angular/core";
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import * as t from "io-ts";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder } from "@angular/forms";
-import { Bot, GetBotsGQL, Match, StartMatchGQL } from "../graphql/generated";
+import { Bot, CreateMatchGQL, GetBotsGQL, Match } from "../graphql/generated";
 import { NotificationService } from "../services/notification.service";
 import { decode } from "../../utils";
 import { combineLatest, filter, map, Observable, startWith, Subscription, tap } from "rxjs";
@@ -18,14 +18,14 @@ type BotHead = Pick<Bot, "id" | "name">;
   templateUrl: "./start-match-dialog.component.html",
   styleUrls: ["./start-match-dialog.component.scss"],
 })
-export class StartMatchDialogComponent implements OnDestroy {
+export class StartMatchDialogComponent implements OnInit, OnDestroy {
   static readonly startMatchDialogDataCodec = t.type({ gameId: t.string });
 
   constructor(
     protected dialogRef: MatDialogRef<StartMatchDialogComponent>,
     protected formBuilder: FormBuilder,
     protected getBots: GetBotsGQL,
-    protected startMatch: StartMatchGQL,
+    protected startMatch: CreateMatchGQL,
     protected notificationService: NotificationService,
     @Inject(MAT_DIALOG_DATA) unknownData: unknown,
   ) {
@@ -95,7 +95,7 @@ export class StartMatchDialogComponent implements OnDestroy {
               fields: {
                 getMatches: (cacheValue: unknown, { toReference, DELETE }) => {
                   const getMatches = decode(MatchListComponent.getMatchesCacheCodec, cacheValue);
-                  const match = data?.startMatch as Match;
+                  const match = data?.createMatch as Match;
                   let id;
                   if (match?.__typename !== "Match" || !(id = cache.identify(match))) return DELETE;
                   return {
@@ -115,7 +115,7 @@ export class StartMatchDialogComponent implements OnDestroy {
           this.notificationService.error("No data returned from match creation");
           return false;
         }),
-        map((data) => data.startMatch),
+        map((data) => data.createMatch),
         handleGraphqlAuthErrors(this.notificationService),
         handleValidationErrors(
           "StartMatchError" as const,

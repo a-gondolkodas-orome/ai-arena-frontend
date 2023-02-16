@@ -15,8 +15,8 @@ query GetGames {
   }
 }
 
-query FindGame($id: String!) {
-  findGame(id: $id) {
+query getGame($id: String!) {
+  getGame(id: $id) {
     __typename
     ... on Game {
       id

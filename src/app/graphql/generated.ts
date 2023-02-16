@@ -17,24 +17,6 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type AddBotError = GraphqlError & {
-  __typename?: "AddBotError";
-  fieldErrors: AddBotFieldErrors;
-  message: Scalars["String"];
-};
-
-export type AddBotFieldErrors = {
-  __typename?: "AddBotFieldErrors";
-  gameId?: Maybe<Array<Scalars["String"]>>;
-  name?: Maybe<Array<Scalars["String"]>>;
-};
-
-export type AddBotResponse =
-  | AddBotError
-  | BotWithUploadLink
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError;
-
 export type AuthError = GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type Bot = {
@@ -92,6 +74,12 @@ export type Contest = {
   status: Scalars["String"];
 };
 
+export type ContestInput = {
+  date: Scalars["DateTime"];
+  gameId: Scalars["String"];
+  name: Scalars["String"];
+};
+
 export type ContestResponse = Contest | GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type Contests = {
@@ -100,6 +88,61 @@ export type Contests = {
 };
 
 export type ContestsResponse = Contests | GraphqlAuthenticationError | GraphqlAuthorizationError;
+
+export type CreateBotError = GraphqlError & {
+  __typename?: "CreateBotError";
+  fieldErrors: CreateBotFieldErrors;
+  message: Scalars["String"];
+};
+
+export type CreateBotFieldErrors = {
+  __typename?: "CreateBotFieldErrors";
+  gameId?: Maybe<Array<Scalars["String"]>>;
+  name?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type CreateBotResponse =
+  | BotWithUploadLink
+  | CreateBotError
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError;
+
+export type CreateContestError = GraphqlError & {
+  __typename?: "CreateContestError";
+  fieldErrors: CreateContestFieldErrors;
+  message: Scalars["String"];
+};
+
+export type CreateContestFieldErrors = {
+  __typename?: "CreateContestFieldErrors";
+  date?: Maybe<Array<Scalars["String"]>>;
+  gameId?: Maybe<Array<Scalars["String"]>>;
+  name?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type CreateContestResponse =
+  | Contest
+  | CreateContestError
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError;
+
+export type CreateMatchError = GraphqlError & {
+  __typename?: "CreateMatchError";
+  fieldErrors: CreateMatchFieldErrors;
+  message: Scalars["String"];
+};
+
+export type CreateMatchFieldErrors = {
+  __typename?: "CreateMatchFieldErrors";
+  botIds?: Maybe<Array<Scalars["String"]>>;
+  gameId?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type CreateMatchResponse =
+  | CreateMatchError
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError
+  | Match;
 
 export type Credentials = {
   email: Scalars["String"];
@@ -113,14 +156,6 @@ export type Game = {
   name: Scalars["String"];
   picture: Scalars["String"];
   playerCount: PlayerCount;
-  shortDescription: Scalars["String"];
-};
-
-export type GameInput = {
-  fullDescription: Scalars["String"];
-  name: Scalars["String"];
-  picture: Scalars["String"];
-  playerCount: PlayerCountInput;
   shortDescription: Scalars["String"];
 };
 
@@ -159,7 +194,7 @@ export type Match = {
   bots: Array<Bot>;
   game: Game;
   id: Scalars["ID"];
-  result?: Maybe<MatchResult>;
+  result: MatchResult;
   runStatus: MatchRunStatus;
   user: User;
 };
@@ -201,36 +236,36 @@ export type MatchesResponse = GraphqlAuthenticationError | GraphqlAuthorizationE
 
 export type Mutation = {
   __typename?: "Mutation";
-  createBot: AddBotResponse;
-  createGame: GameResponse;
+  createBot: CreateBotResponse;
+  createContest: CreateContestResponse;
+  createMatch: CreateMatchResponse;
   deleteBot?: Maybe<AuthError>;
   deleteMatch?: Maybe<AuthError>;
   register: RegistrationResponse;
-  startMatch: StartMatchResponse;
 };
 
 export type MutationCreateBotArgs = {
   bot: BotInput;
 };
 
-export type MutationCreateGameArgs = {
-  game: GameInput;
+export type MutationCreateContestArgs = {
+  contestInput: ContestInput;
+};
+
+export type MutationCreateMatchArgs = {
+  matchInput: MatchInput;
 };
 
 export type MutationDeleteBotArgs = {
-  botId: Scalars["String"];
+  id: Scalars["String"];
 };
 
 export type MutationDeleteMatchArgs = {
-  matchId: Scalars["String"];
+  id: Scalars["String"];
 };
 
 export type MutationRegisterArgs = {
   registrationData: RegistrationInput;
-};
-
-export type MutationStartMatchArgs = {
-  matchInput: MatchInput;
 };
 
 export type PlayerCount = {
@@ -239,28 +274,19 @@ export type PlayerCount = {
   min: Scalars["Float"];
 };
 
-export type PlayerCountInput = {
-  max: Scalars["Float"];
-  min: Scalars["Float"];
-};
-
 export type Query = {
   __typename?: "Query";
-  findGame?: Maybe<GameResponse>;
   getBot?: Maybe<BotResponse>;
   getBots: BotsResponse;
   getContest?: Maybe<ContestResponse>;
   getContests: ContestsResponse;
+  getGame?: Maybe<GameResponse>;
   getGames: GamesResponse;
   getMatch: MatchResponse;
   getMatches: MatchesResponse;
+  getUsers: UsersResponse;
   login: LoginResponse;
   profile: UserResponse;
-  users: UsersResponse;
-};
-
-export type QueryFindGameArgs = {
-  id: Scalars["String"];
 };
 
 export type QueryGetBotArgs = {
@@ -272,6 +298,10 @@ export type QueryGetBotsArgs = {
 };
 
 export type QueryGetContestArgs = {
+  id: Scalars["String"];
+};
+
+export type QueryGetGameArgs = {
   id: Scalars["String"];
 };
 
@@ -320,25 +350,8 @@ export type RegistrationSuccess = {
 
 export enum Role {
   Admin = "ADMIN",
+  User = "USER",
 }
-
-export type StartMatchError = GraphqlError & {
-  __typename?: "StartMatchError";
-  fieldErrors: StartMatchFieldErrors;
-  message: Scalars["String"];
-};
-
-export type StartMatchFieldErrors = {
-  __typename?: "StartMatchFieldErrors";
-  botIds?: Maybe<Array<Scalars["String"]>>;
-  gameId?: Maybe<Array<Scalars["String"]>>;
-};
-
-export type StartMatchResponse =
-  | GraphqlAuthenticationError
-  | GraphqlAuthorizationError
-  | Match
-  | StartMatchError;
 
 export type User = {
   __typename?: "User";
@@ -413,15 +426,6 @@ export type CreateBotMutation = {
   __typename?: "Mutation";
   createBot:
     | {
-        __typename: "AddBotError";
-        message: string;
-        fieldErrors: {
-          __typename?: "AddBotFieldErrors";
-          name?: Array<string> | null;
-          gameId?: Array<string> | null;
-        };
-      }
-    | {
         __typename: "BotWithUploadLink";
         uploadLink: string;
         bot: {
@@ -433,6 +437,15 @@ export type CreateBotMutation = {
             stage: BotSubmitStage;
             log?: string | null;
           };
+        };
+      }
+    | {
+        __typename: "CreateBotError";
+        message: string;
+        fieldErrors: {
+          __typename?: "CreateBotFieldErrors";
+          name?: Array<string> | null;
+          gameId?: Array<string> | null;
         };
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
@@ -486,7 +499,7 @@ export type GetBotQuery = {
 };
 
 export type DeleteBotMutationVariables = Exact<{
-  botId: Scalars["String"];
+  id: Scalars["String"];
 }>;
 
 export type DeleteBotMutation = {
@@ -495,6 +508,67 @@ export type DeleteBotMutation = {
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
     | null;
+};
+
+export type CreateContestMutationVariables = Exact<{
+  contestInput: ContestInput;
+}>;
+
+export type CreateContestMutation = {
+  __typename?: "Mutation";
+  createContest:
+    | {
+        __typename: "Contest";
+        id: string;
+        name: string;
+        date: any;
+        status: string;
+        game: { __typename?: "Game"; id: string; name: string };
+        owner: { __typename?: "User"; id: string; username: string };
+        bots: Array<{
+          __typename?: "Bot";
+          id: string;
+          name: string;
+          user: { __typename?: "User"; id: string; username: string };
+          submitStatus: { __typename?: "BotSubmitStatus"; stage: BotSubmitStage };
+        }>;
+        matches: Array<{
+          __typename?: "Match";
+          bots: Array<{
+            __typename?: "Bot";
+            id: string;
+            name: string;
+            user: { __typename?: "User"; id: string; username: string };
+          }>;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result: { __typename?: "MatchResult"; log: string };
+        }>;
+      }
+    | {
+        __typename: "CreateContestError";
+        message: string;
+        fieldErrors: {
+          __typename?: "CreateContestFieldErrors";
+          gameId?: Array<string> | null;
+          name?: Array<string> | null;
+          date?: Array<string> | null;
+        };
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string };
+};
+
+export type GetContestsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetContestsQuery = {
+  __typename?: "Query";
+  getContests:
+    | {
+        __typename: "Contests";
+        contests: Array<{ __typename?: "Contest"; id: string; name: string }>;
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string };
 };
 
 export type GetGamesQueryVariables = Exact<{ [key: string]: never }>;
@@ -516,13 +590,13 @@ export type GetGamesQuery = {
     | { __typename: "GraphqlAuthorizationError"; message: string };
 };
 
-export type FindGameQueryVariables = Exact<{
+export type GetGameQueryVariables = Exact<{
   id: Scalars["String"];
 }>;
 
-export type FindGameQuery = {
+export type GetGameQuery = {
   __typename?: "Query";
-  findGame?:
+  getGame?:
     | {
         __typename: "Game";
         id: string;
@@ -537,25 +611,25 @@ export type FindGameQuery = {
     | null;
 };
 
-export type StartMatchMutationVariables = Exact<{
+export type CreateMatchMutationVariables = Exact<{
   matchInput: MatchInput;
 }>;
 
-export type StartMatchMutation = {
+export type CreateMatchMutation = {
   __typename?: "Mutation";
-  startMatch:
-    | { __typename: "GraphqlAuthenticationError"; message: string }
-    | { __typename: "GraphqlAuthorizationError"; message: string }
-    | { __typename: "Match"; id: string }
+  createMatch:
     | {
-        __typename: "StartMatchError";
+        __typename: "CreateMatchError";
         message: string;
         fieldErrors: {
-          __typename?: "StartMatchFieldErrors";
+          __typename?: "CreateMatchFieldErrors";
           gameId?: Array<string> | null;
           botIds?: Array<string> | null;
         };
-      };
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "Match"; id: string };
 };
 
 export type GetMatchesQueryVariables = Exact<{
@@ -589,13 +663,13 @@ export type GetMatchQuery = {
     | {
         __typename: "Match";
         id: string;
-        result?: { __typename?: "MatchResult"; log: string } | null;
+        result: { __typename?: "MatchResult"; log: string };
         runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
       };
 };
 
 export type DeleteMatchMutationVariables = Exact<{
-  matchId: Scalars["String"];
+  id: Scalars["String"];
 }>;
 
 export type DeleteMatchMutation = {
@@ -706,7 +780,7 @@ export const CreateBotDocument = gql`
         }
         uploadLink
       }
-      ... on AddBotError {
+      ... on CreateBotError {
         fieldErrors {
           name
           gameId
@@ -790,8 +864,8 @@ export class GetBotGQL extends Apollo.Query<GetBotQuery, GetBotQueryVariables> {
   }
 }
 export const DeleteBotDocument = gql`
-  mutation DeleteBot($botId: String!) {
-    deleteBot(botId: $botId) {
+  mutation DeleteBot($id: String!) {
+    deleteBot(id: $id) {
       __typename
       ... on GraphqlError {
         message
@@ -805,6 +879,106 @@ export const DeleteBotDocument = gql`
 })
 export class DeleteBotGQL extends Apollo.Mutation<DeleteBotMutation, DeleteBotMutationVariables> {
   override document = DeleteBotDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const CreateContestDocument = gql`
+  mutation CreateContest($contestInput: ContestInput!) {
+    createContest(contestInput: $contestInput) {
+      __typename
+      ... on Contest {
+        id
+        game {
+          id
+          name
+        }
+        owner {
+          id
+          username
+        }
+        name
+        date
+        bots {
+          id
+          user {
+            id
+            username
+          }
+          name
+          submitStatus {
+            stage
+          }
+        }
+        matches {
+          bots {
+            id
+            user {
+              id
+              username
+            }
+            name
+          }
+          runStatus {
+            stage
+            log
+          }
+          result {
+            log
+          }
+        }
+        status
+      }
+      ... on CreateContestError {
+        fieldErrors {
+          gameId
+          name
+          date
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class CreateContestGQL extends Apollo.Mutation<
+  CreateContestMutation,
+  CreateContestMutationVariables
+> {
+  override document = CreateContestDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const GetContestsDocument = gql`
+  query GetContests {
+    getContests {
+      __typename
+      ... on Contests {
+        contests {
+          id
+          name
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class GetContestsGQL extends Apollo.Query<GetContestsQuery, GetContestsQueryVariables> {
+  override document = GetContestsDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
@@ -839,9 +1013,9 @@ export class GetGamesGQL extends Apollo.Query<GetGamesQuery, GetGamesQueryVariab
     super(apollo);
   }
 }
-export const FindGameDocument = gql`
-  query FindGame($id: String!) {
-    findGame(id: $id) {
+export const GetGameDocument = gql`
+  query getGame($id: String!) {
+    getGame(id: $id) {
       __typename
       ... on Game {
         id
@@ -864,21 +1038,21 @@ export const FindGameDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class FindGameGQL extends Apollo.Query<FindGameQuery, FindGameQueryVariables> {
-  override document = FindGameDocument;
+export class GetGameGQL extends Apollo.Query<GetGameQuery, GetGameQueryVariables> {
+  override document = GetGameDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
   }
 }
-export const StartMatchDocument = gql`
-  mutation StartMatch($matchInput: MatchInput!) {
-    startMatch(matchInput: $matchInput) {
+export const CreateMatchDocument = gql`
+  mutation CreateMatch($matchInput: MatchInput!) {
+    createMatch(matchInput: $matchInput) {
       __typename
       ... on Match {
         id
       }
-      ... on StartMatchError {
+      ... on CreateMatchError {
         fieldErrors {
           gameId
           botIds
@@ -894,11 +1068,11 @@ export const StartMatchDocument = gql`
 @Injectable({
   providedIn: "root",
 })
-export class StartMatchGQL extends Apollo.Mutation<
-  StartMatchMutation,
-  StartMatchMutationVariables
+export class CreateMatchGQL extends Apollo.Mutation<
+  CreateMatchMutation,
+  CreateMatchMutationVariables
 > {
-  override document = StartMatchDocument;
+  override document = CreateMatchDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
@@ -965,8 +1139,8 @@ export class GetMatchGQL extends Apollo.Query<GetMatchQuery, GetMatchQueryVariab
   }
 }
 export const DeleteMatchDocument = gql`
-  mutation DeleteMatch($matchId: String!) {
-    deleteMatch(matchId: $matchId) {
+  mutation DeleteMatch($id: String!) {
+    deleteMatch(id: $id) {
       __typename
       ... on GraphqlError {
         message

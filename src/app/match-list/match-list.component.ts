@@ -63,28 +63,28 @@ export class MatchListComponent implements OnInit, OnDestroy {
 
   protected deleteMatchSubscription?: Subscription;
 
-  deleteMatch(matchId: string, event: MouseEvent) {
+  deleteMatch(id: string, event: MouseEvent) {
     event.stopPropagation();
     this.deleteMatchSubscription = this.deleteMatchMutation
       .mutate(
-        { matchId },
+        { id },
         {
           update: (cache, { data }) => {
-            const id = cache.identify({ __typename: "Match", id: matchId });
+            const cacheId = cache.identify({ __typename: "Match", id });
             cache.modify({
               fields: {
                 getMatches: (cacheValue: unknown, { DELETE }) => {
                   const getMatches = decode(MatchListComponent.getMatchesCacheCodec, cacheValue);
-                  if (data == null || data.deleteMatch !== null || !id) return DELETE;
+                  if (data == null || data.deleteMatch !== null || !cacheId) return DELETE;
 
                   return {
                     ...getMatches,
-                    matches: getMatches.matches.filter((match) => match.__ref !== id),
+                    matches: getMatches.matches.filter((match) => match.__ref !== cacheId),
                   };
                 },
               },
             });
-            cache.evict({ id });
+            cache.evict({ id: cacheId });
           },
         },
       )

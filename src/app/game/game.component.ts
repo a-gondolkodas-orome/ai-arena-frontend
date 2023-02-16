@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { filter, from, ignoreElements, map, Observable } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FindGameGQL, Game } from "../graphql/generated";
+import { GetGameGQL, Game } from "../graphql/generated";
 import { handleGraphqlAuthErrors } from "../error";
 import { NotificationService } from "../services/notification.service";
 import { marked } from "marked";
@@ -14,7 +14,7 @@ import * as DOMPurify from "dompurify";
 })
 export class GameComponent {
   constructor(
-    protected findGame: FindGameGQL,
+    protected findGame: GetGameGQL,
     protected route: ActivatedRoute,
     protected router: Router,
     protected notificationService: NotificationService,
@@ -25,7 +25,7 @@ export class GameComponent {
       this.game$ = from(this.handleBackToDashboard()).pipe(ignoreElements());
     } else {
       this.game$ = this.findGame.watch({ id: gameId }).valueChanges.pipe(
-        map((result) => result.data.findGame),
+        map((result) => result.data.getGame),
         filter(<T>(value: T): value is Exclude<T, null | undefined> => {
           if (value != null) return true;
           this.notificationService.error("Game not found");

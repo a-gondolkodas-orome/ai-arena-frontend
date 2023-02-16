@@ -7,10 +7,10 @@ import { Component } from "@angular/core";
 })
 export class EntityListComponent {
   entityTypes = [
-    { name: "Users", link: "users", enabled: false },
-    { name: "Games", link: "games", enabled: false },
-    { name: "Bots", link: "bots", enabled: false },
-    { name: "Matches", link: "matches", enabled: false },
-    { name: "Contests", link: "contests", enabled: true },
+    { name: "Users", uri: "users", enabled: false },
+    { name: "Games", uri: "games", enabled: false },
+    { name: "Bots", uri: "bots", enabled: false },
+    { name: "Matches", uri: "matches", enabled: false },
+    { name: "Contests", uri: "contests", enabled: true },
   ];
 }

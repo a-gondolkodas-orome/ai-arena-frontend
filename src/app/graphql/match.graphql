@@ -1,10 +1,10 @@
-mutation StartMatch($matchInput: MatchInput!) {
-  startMatch(matchInput: $matchInput) {
+mutation CreateMatch($matchInput: MatchInput!) {
+  createMatch(matchInput: $matchInput) {
     __typename
     ... on Match {
       id
     }
-    ... on StartMatchError {
+    ... on CreateMatchError {
       fieldErrors {
         gameId
         botIds
@@ -52,8 +52,8 @@ query GetMatch($id: String!) {
   }
 }
 
-mutation DeleteMatch($matchId: String!) {
-  deleteMatch(matchId: $matchId) {
+mutation DeleteMatch($id: String!) {
+  deleteMatch(id: $id) {
     __typename
     ... on GraphqlError {
       message

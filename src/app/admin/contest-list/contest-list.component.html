@@ -1,0 +1,11 @@
+<mat-list class="card-list">
+  <mat-list-item *ngFor="let contest of contests$ | async">
+    <div class="card-list-item-container">
+      <mat-card [routerLink]="contest.id">
+        <mat-card-content class="card-list-item-content">
+          <span>{{ contest.name }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-list-item>
+</mat-list>

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Apollo } from "apollo-angular";
-import { BehaviorSubject, map, Subscription } from "rxjs";
+import { map, ReplaySubject, Subscription } from "rxjs";
 import { LoginStatusService } from "./login-status.service";
 import { JwtToken } from "./jwt-token";
 import { GetProfileGQL, User } from "../graphql/generated";
@@ -27,7 +27,7 @@ export class AuthService {
     });
   }
 
-  userProfile$ = new BehaviorSubject<User | undefined>(undefined);
+  userProfile$ = new ReplaySubject<User | undefined>(1);
   protected getProfileSubscription?: Subscription;
 
   setProfile(token: string) {

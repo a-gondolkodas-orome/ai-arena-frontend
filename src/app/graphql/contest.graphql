@@ -1,0 +1,72 @@
+mutation CreateContest($contestInput: ContestInput!) {
+  createContest(contestInput: $contestInput) {
+    __typename
+    ... on Contest {
+      id
+      game {
+        id
+        name
+      }
+      owner {
+        id
+        username
+      }
+      name
+      date
+      bots {
+        id
+        user {
+          id
+          username
+        }
+        name
+        submitStatus {
+          stage
+        }
+      }
+      matches {
+        bots {
+          id
+          user {
+            id
+            username
+          }
+          name
+        }
+        runStatus {
+          stage
+          log
+        }
+        result {
+          log
+        }
+      }
+      status
+    }
+    ... on CreateContestError {
+      fieldErrors {
+        gameId
+        name
+        date
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+query GetContests {
+  getContests {
+    __typename
+    ... on Contests {
+      contests {
+        id
+        name
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
