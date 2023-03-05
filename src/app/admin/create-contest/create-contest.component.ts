@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { concatMap, filter, from, map, Observable, Subscription, tap } from "rxjs";
+import { concatMap, filter, from, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../../error";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { NotificationService } from "../../services/notification.service";
 import { CreateContestGQL, GetGamesGQL } from "../../graphql/generated";
 
@@ -16,7 +16,6 @@ export class CreateContestComponent implements OnInit, OnDestroy {
     protected notificationService: NotificationService,
     protected getGames: GetGamesGQL,
     protected createContest: CreateContestGQL,
-    protected route: ActivatedRoute,
     protected router: Router,
     protected formBuilder: FormBuilder,
   ) {
@@ -37,8 +36,6 @@ export class CreateContestComponent implements OnInit, OnDestroy {
   protected createContestSubscription?: Subscription;
 
   onSubmit() {
-    const x = this.createContestForm.getRawValue();
-    const y = this.createContestForm.value;
     this.createContestSubscription = this.createContest
       .mutate({ contestInput: this.createContestForm.getRawValue() })
       .pipe(
@@ -63,6 +60,6 @@ export class CreateContestComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.loginSubscription?.unsubscribe();
+    this.createContestSubscription?.unsubscribe();
   }
 }

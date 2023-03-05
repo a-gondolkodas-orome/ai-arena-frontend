@@ -1,10 +1,13 @@
-import { InMemoryCache, ApolloClientOptions, ApolloLink, Observable } from "@apollo/client/core";
+import { ApolloClientOptions, ApolloLink, InMemoryCache, Observable } from "@apollo/client/core";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { LoginStatusService } from "./login-status.service";
 import { possibleTypes } from "../apollo-possible-types";
 import { environment } from "../../environments/environment";
 import { NotificationService } from "./notification.service";
+import { decode } from "../../utils";
+import { aiArenaExceptionCodec } from "../error";
+import { ErrorType } from "../../common";
 
 export const GraphqlAuthMiddlewareProvider = {
   provide: APOLLO_OPTIONS,
@@ -26,9 +29,11 @@ export const GraphqlAuthMiddlewareProvider = {
             ) {
               loginStatusService.logout();
             } else if (result.errors) {
-              notificationService.error(
-                result.errors.reduce((msg: string, error) => msg + error.message, ""),
-              );
+              const aiArenaException = decode(aiArenaExceptionCodec, result.errors[0], null);
+              if (!aiArenaException || aiArenaException.type !== ErrorType.AUTHENTICATION_ERROR)
+                notificationService.error(
+                  result.errors.reduce((msg: string, error) => msg + error.message, ""),
+                );
             }
             observer.next(result);
           },

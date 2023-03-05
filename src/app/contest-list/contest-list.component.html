@@ -1,9 +1,12 @@
 <mat-list class="card-list">
   <mat-list-item *ngFor="let contest of contests$ | async">
     <div class="card-list-item-container">
-      <mat-card [routerLink]="contest.id">
+      <mat-card [routerLink]="['..', 'contests', contest.id]">
         <mat-card-content class="card-list-item-content">
-          <span>{{ contest.name }}</span>
+          <span>
+            {{ contest.name }}
+            of {{ contest.game.name }} ({{ contest.date | date: "short" }})
+          </span>
         </mat-card-content>
       </mat-card>
     </div>

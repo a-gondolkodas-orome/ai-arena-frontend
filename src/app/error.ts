@@ -2,6 +2,9 @@ import { filter, OperatorFunction } from "rxjs";
 import { NotificationService } from "./services/notification.service";
 import { GraphqlAuthenticationError, GraphqlAuthorizationError } from "./graphql/generated";
 import { FormGroup } from "@angular/forms";
+import * as t from "io-ts";
+import { enumCodec } from "../utils";
+import { ErrorType } from "../common";
 
 type WithoutAuthErrors<T> = Exclude<T, GraphqlAuthenticationError | GraphqlAuthorizationError>;
 
@@ -51,3 +54,8 @@ export function handleValidationErrors<T, E>(
     return false;
   });
 }
+
+export const aiArenaExceptionCodec = t.type({
+  type: enumCodec(ErrorType, "ErrorType"),
+  message: t.string,
+});

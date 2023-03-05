@@ -15,9 +15,7 @@ mutation Register($registrationInput: RegistrationInput!) {
     __typename
     ... on RegistrationSuccess {
       token
-      user {
-        id
-      }
+      userId
     }
     ... on RegistrationError {
       fieldErrors {

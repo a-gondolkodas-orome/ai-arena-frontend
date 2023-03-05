@@ -14,17 +14,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatSelectModule } from "@angular/material/select";
 import { MtxNativeDatetimeModule } from "@ng-matero/extensions/core";
 import { MtxDatetimepickerModule } from "@ng-matero/extensions/datetimepicker";
-import { ContestComponent } from "./contest/contest.component";
-import { ContestListComponent } from "./contest-list/contest-list.component";
 
 @NgModule({
-  declarations: [
-    EntityListComponent,
-    AdminComponent,
-    CreateContestComponent,
-    ContestComponent,
-    ContestListComponent,
-  ],
+  declarations: [EntityListComponent, AdminComponent, CreateContestComponent],
   imports: [
     AdminRoutingModule,
     CommonModule,

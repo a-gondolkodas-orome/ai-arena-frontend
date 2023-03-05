@@ -3,6 +3,6 @@
   <p>email: {{ user.email }}</p>
   <button mat-stroked-button (click)="onLogout()">Log out</button>
   <div id="admin-tools" *ngIf="user.isAdmin">
-    <button mat-stroked-button [routerLink]="'/admin'">Admin tools</button>
+    <button mat-stroked-button [routerLink]="'/admin'">Admin zone</button>
   </div>
 </div>

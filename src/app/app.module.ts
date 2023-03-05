@@ -37,6 +37,7 @@ import { MatchComponent } from "./match/match.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { BotComponent } from "./bot/bot.component";
 import { AppRoutingModule } from "./app-routing.module";
+import { ContestListComponent } from "./contest-list/contest-list.component";
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { AppRoutingModule } from "./app-routing.module";
     MatProgressSpinnerModule,
     NanowarVisualizerModule,
     AppRoutingModule,
+    ContestListComponent,
   ],
   providers: [
     GraphqlAuthMiddlewareProvider,

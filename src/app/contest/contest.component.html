@@ -1,0 +1,48 @@
+<div *ngIf="contestData$ | async as contestData">
+  <h1>{{ contestData.contest.name }}</h1>
+  <div>date: {{ contestData.contest.date | date: "short" }}</div>
+  <div>
+    status: {{ contestData.contest.status }}
+    <button
+      *ngIf="adminMode && contestData.contest.status === ContestStatus.Open"
+      (click)="onUpdateStatus(ContestStatus.Closed)"
+      mat-stroked-button
+    >
+      close registration
+    </button>
+    <button
+      *ngIf="adminMode && contestData.contest.status === ContestStatus.Closed"
+      (click)="onUpdateStatus(ContestStatus.Open)"
+      mat-stroked-button
+    >
+      open registration
+    </button>
+  </div>
+  <div>
+    registered users ({{ contestData.contest.bots.length }}):
+    <ul *ngIf="contestData.contest.bots.length">
+      <li *ngFor="let bot of contestData.contest.bots">{{ bot.user.username }} ({{ bot.name }})</li>
+    </ul>
+    <div *ngIf="!contestData.adminMode && contestData.contest.status === 'OPEN'">
+      <form [formGroup]="registerForm" (ngSubmit)="onRegisterToContest()">
+        <mat-form-field>
+          <mat-label>bot</mat-label>
+          <mat-select formControlName="botId" required>
+            <mat-option *ngFor="let bot of contestData.bots" [value]="bot.id">
+              {{ bot.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-stroked-button type="submit" [disabled]="registerForm.invalid">Register</button>
+      </form>
+      <button
+        *ngIf="!contestData.adminMode && contestData.isRegistered"
+        mat-stroked-button
+        (click)="onUnregister()"
+      >
+        Unregister
+      </button>
+    </div>
+  </div>
+  <div>matches: TODO</div>
+</div>

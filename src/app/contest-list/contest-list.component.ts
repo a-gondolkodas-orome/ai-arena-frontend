@@ -1,13 +1,19 @@
 import { Component, OnInit } from "@angular/core";
-import { Contest, GetContestsGQL } from "../../graphql/generated";
-import { NotificationService } from "../../services/notification.service";
+import { GetContestsGQL, GetContestsQuery } from "../graphql/generated";
+import { NotificationService } from "../services/notification.service";
 import { map, Observable } from "rxjs";
-import { handleGraphqlAuthErrors } from "../../error";
+import { handleGraphqlAuthErrors } from "../error";
+import { CommonModule } from "@angular/common";
+import { MatListModule } from "@angular/material/list";
+import { MatCardModule } from "@angular/material/card";
+import { RouterLink } from "@angular/router";
 
 @Component({
+  standalone: true,
   selector: "app-contest-list",
   templateUrl: "./contest-list.component.html",
   styleUrls: ["./contest-list.component.scss"],
+  imports: [CommonModule, MatListModule, MatCardModule, RouterLink],
 })
 export class ContestListComponent implements OnInit {
   constructor(
@@ -15,7 +21,9 @@ export class ContestListComponent implements OnInit {
     protected notificationService: NotificationService,
   ) {}
 
-  contests$?: Observable<Pick<Contest, "id" | "name">[]>;
+  contests$?: Observable<
+    Extract<GetContestsQuery["getContests"], { __typename: "Contests" }>["contests"]
+  >;
 
   ngOnInit() {
     this.contests$ = this.getContests.watch().valueChanges.pipe(

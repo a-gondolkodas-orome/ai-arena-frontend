@@ -8,6 +8,7 @@ import { GameComponent } from "./game/game.component";
 import { BotComponent } from "./bot/bot.component";
 import { MatchComponent } from "./match/match.component";
 import { AdminGuard } from "./auth/admin.guard";
+import { ContestComponent } from "./contest/contest.component";
 
 const appRoutes: Routes = [
   { path: "login", component: LoginComponent, title: "AI Arena - Login" },
@@ -37,6 +38,12 @@ const appRoutes: Routes = [
   {
     path: "match/:id",
     component: MatchComponent,
+    canActivate: [AuthGuard],
+    title: "AI Arena",
+  },
+  {
+    path: "contests/:id",
+    component: ContestComponent,
     canActivate: [AuthGuard],
     title: "AI Arena",
   },

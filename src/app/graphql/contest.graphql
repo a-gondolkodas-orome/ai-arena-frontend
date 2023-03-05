@@ -2,46 +2,7 @@ mutation CreateContest($contestInput: ContestInput!) {
   createContest(contestInput: $contestInput) {
     __typename
     ... on Contest {
-      id
-      game {
-        id
-        name
-      }
-      owner {
-        id
-        username
-      }
-      name
-      date
-      bots {
-        id
-        user {
-          id
-          username
-        }
-        name
-        submitStatus {
-          stage
-        }
-      }
-      matches {
-        bots {
-          id
-          user {
-            id
-            username
-          }
-          name
-        }
-        runStatus {
-          stage
-          log
-        }
-        result {
-          log
-        }
-      }
-      status
+      ...ContestDetails
     }
     ... on CreateContestError {
       fieldErrors {
@@ -63,10 +24,112 @@ query GetContests {
       contests {
         id
         name
+        game {
+          name
+        }
+        date
       }
     }
     ... on GraphqlError {
       message
     }
   }
+}
+
+query GetContest($id: String!) {
+  getContest(id: $id) {
+    __typename
+    ... on Contest {
+      ...ContestDetails
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+mutation RegisterToContest($registration: ContestRegistration!) {
+  registerToContest(registration: $registration) {
+    __typename
+    ... on Contest {
+      ...ContestDetails
+    }
+    ... on RegisterToContestError {
+      fieldErrors {
+        contestId
+        botId
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+mutation UnregisterFromContest($contestId: String!) {
+  unregisterFromContest(contestId: $contestId) {
+    __typename
+    ... on Contest {
+      ...ContestDetails
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+mutation UpdateContestStatus($contestId: String!, $status: ContestStatus!) {
+  updateStatus(contestId: $contestId, status: $status) {
+    __typename
+    ... on Contest {
+      ...ContestDetails
+    }
+    ... on UpdateContestStatusError {
+      from
+      to
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+fragment ContestDetails on Contest {
+  id
+  game {
+    id
+    name
+  }
+  owner {
+    id
+    username
+  }
+  name
+  date
+  bots {
+    id
+    user {
+      id
+      username
+    }
+    name
+  }
+  matches {
+    bots {
+      id
+      user {
+        id
+        username
+      }
+      name
+    }
+    runStatus {
+      stage
+      log
+    }
+    result {
+      log
+    }
+  }
+  status
 }

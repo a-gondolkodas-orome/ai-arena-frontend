@@ -4,8 +4,8 @@ import { AdminComponent } from "./admin/admin.component";
 import { EntityListComponent } from "./entity-list/entity-list.component";
 import { AdminGuard } from "../auth/admin.guard";
 import { CreateContestComponent } from "./create-contest/create-contest.component";
-import { ContestComponent } from "./contest/contest.component";
-import { ContestListComponent } from "./contest-list/contest-list.component";
+import { ContestComponent } from "../contest/contest.component";
+import { ContestListComponent } from "../contest-list/contest-list.component";
 
 const adminRoutes: Routes = [
   {
@@ -24,6 +24,7 @@ const adminRoutes: Routes = [
       {
         path: "contests/:id",
         component: ContestComponent,
+        data: { adminMode: true },
       },
       {
         path: "contests",
