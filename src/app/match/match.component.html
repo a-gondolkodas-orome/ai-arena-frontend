@@ -1,13 +1,24 @@
 <div *ngIf="match$ | async as match" class="row">
   <div class="col-xs-12 col-md-9">
     <lib-nanowar-visualizer
-      *ngIf="match.result; else matchInProgress"
+      *ngIf="match.result; else noResult"
       [jsonstring]="match.result.log"
     ></lib-nanowar-visualizer>
+    <ng-template #noResult [ngSwitch]="true">
+      <div *ngSwitchCase="match.runStatus.stage === MatchRunStage.RunSuccess">
+        ERROR: match finished without result
+      </div>
+      <div *ngSwitchCase="match.runStatus.stage.endsWith('ERROR')">
+        Something bad happened while running the match :(
+        <div>
+          {{ match.runStatus.log }}
+        </div>
+      </div>
+      <div *ngSwitchDefault>
+        <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+        Running...
+      </div>
+    </ng-template>
   </div>
-  <ng-template #matchInProgress>
-    <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
-    Running...
-  </ng-template>
   <div class="col-xs-12 col-md-3">game info placeholder</div>
 </div>

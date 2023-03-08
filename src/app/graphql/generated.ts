@@ -260,6 +260,7 @@ export type Mutation = {
   deleteMatch?: Maybe<AuthError>;
   register: RegistrationResponse;
   registerToContest: RegisterToContestResponse;
+  startContest: StartContestResponse;
   unregisterFromContest: UnregisterFromContestResponse;
   updateStatus: UpdateContestStatusResponse;
 };
@@ -290,6 +291,10 @@ export type MutationRegisterArgs = {
 
 export type MutationRegisterToContestArgs = {
   registration: ContestRegistration;
+};
+
+export type MutationStartContestArgs = {
+  contestId: Scalars["String"];
 };
 
 export type MutationUnregisterFromContestArgs = {
@@ -404,6 +409,19 @@ export enum Role {
   User = "USER",
 }
 
+export type StartContestError = GraphqlError & {
+  __typename?: "StartContestError";
+  message: Scalars["String"];
+  status: ContestStatus;
+};
+
+export type StartContestResponse =
+  | Contest
+  | ContestNotFoundError
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError
+  | StartContestError;
+
 export type UnregisterFromContestResponse =
   | Contest
   | ContestNotFoundError
@@ -412,9 +430,9 @@ export type UnregisterFromContestResponse =
 
 export type UpdateContestStatusError = GraphqlError & {
   __typename?: "UpdateContestStatusError";
-  from: Scalars["String"];
+  from: ContestStatus;
   message: Scalars["String"];
-  to: Scalars["String"];
+  to: ContestStatus;
 };
 
 export type UpdateContestStatusResponse =
@@ -802,7 +820,51 @@ export type UpdateContestStatusMutation = {
     | { __typename: "ContestNotFoundError"; message: string }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
-    | { __typename: "UpdateContestStatusError"; from: string; to: string; message: string };
+    | {
+        __typename: "UpdateContestStatusError";
+        from: ContestStatus;
+        to: ContestStatus;
+        message: string;
+      };
+};
+
+export type StartContestMutationVariables = Exact<{
+  contestId: Scalars["String"];
+}>;
+
+export type StartContestMutation = {
+  __typename?: "Mutation";
+  startContest:
+    | {
+        __typename: "Contest";
+        id: string;
+        name: string;
+        date: Date;
+        status: ContestStatus;
+        game: { __typename?: "Game"; id: string; name: string };
+        owner: { __typename?: "User"; id: string; username: string };
+        bots: Array<{
+          __typename?: "Bot";
+          id: string;
+          name: string;
+          user: { __typename?: "User"; id: string; username: string };
+        }>;
+        matches?: Array<{
+          __typename?: "Match";
+          bots: Array<{
+            __typename?: "Bot";
+            id: string;
+            name: string;
+            user: { __typename?: "User"; id: string; username: string };
+          }>;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result?: { __typename?: "MatchResult"; log: string } | null;
+        }> | null;
+      }
+    | { __typename: "ContestNotFoundError"; message: string }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "StartContestError"; status: ContestStatus; message: string };
 };
 
 export type ContestDetailsFragment = {
@@ -1364,6 +1426,37 @@ export class UpdateContestStatusGQL extends Apollo.Mutation<
   UpdateContestStatusMutationVariables
 > {
   override document = UpdateContestStatusDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const StartContestDocument = gql`
+  mutation StartContest($contestId: String!) {
+    startContest(contestId: $contestId) {
+      __typename
+      ... on Contest {
+        ...ContestDetails
+      }
+      ... on StartContestError {
+        status
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+  ${ContestDetailsFragmentDoc}
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class StartContestGQL extends Apollo.Mutation<
+  StartContestMutation,
+  StartContestMutationVariables
+> {
+  override document = StartContestDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

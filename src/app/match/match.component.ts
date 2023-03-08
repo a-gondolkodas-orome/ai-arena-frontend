@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { GetMatchGQL, Match } from "../graphql/generated";
+import { GetMatchGQL, GetMatchQuery, MatchRunStage } from "../graphql/generated";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
 import { concatMap, EMPTY, filter, map, Observable, Subscription } from "rxjs";
@@ -7,14 +7,14 @@ import { handleGraphqlAuthErrors } from "../error";
 import { Location } from "@angular/common";
 import { Sse } from "../services/sse";
 
-type MatchInfo = Pick<Match, "result">;
-
 @Component({
   selector: "app-match",
   templateUrl: "./match.component.html",
   styleUrls: ["./match.component.scss"],
 })
 export class MatchComponent implements OnInit, OnDestroy {
+  readonly MatchRunStage = MatchRunStage;
+
   constructor(
     protected getMatch: GetMatchGQL,
     protected route: ActivatedRoute,
@@ -50,7 +50,7 @@ export class MatchComponent implements OnInit, OnDestroy {
     }
   }
 
-  match$?: Observable<MatchInfo>;
+  match$?: Observable<Extract<GetMatchQuery["getMatch"], { __typename: "Match" }>>;
   protected sseSubscription?: Subscription;
 
   handleBackToGame() {

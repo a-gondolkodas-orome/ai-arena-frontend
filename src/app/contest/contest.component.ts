@@ -8,6 +8,7 @@ import {
   GetContestGQL,
   GetContestQuery,
   RegisterToContestGQL,
+  StartContestGQL,
   UnregisterFromContestGQL,
   UpdateContestStatusGQL,
   User,
@@ -64,6 +65,7 @@ export class ContestComponent implements OnInit, OnDestroy {
     protected register: RegisterToContestGQL,
     protected unregister: UnregisterFromContestGQL,
     protected updateStatus: UpdateContestStatusGQL,
+    protected startContest: StartContestGQL,
     protected route: ActivatedRoute,
     protected router: Router,
     protected formBuilder: FormBuilder,
@@ -143,8 +145,18 @@ export class ContestComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  protected startContestSubscription?: Subscription;
+
+  onStartContest() {
+    this.startContestSubscription = this.startContest
+      .mutate({ contestId: this.contestId })
+      .subscribe();
+  }
+
   ngOnDestroy() {
     this.registrationSubscription?.unsubscribe();
     this.unregistrationSubscription?.unsubscribe();
+    this.updateStatusSubscription?.unsubscribe();
+    this.startContestSubscription?.unsubscribe();
   }
 }

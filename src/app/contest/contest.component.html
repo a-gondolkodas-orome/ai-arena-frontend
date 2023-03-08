@@ -44,5 +44,14 @@
       </button>
     </div>
   </div>
+  <button
+    *ngIf="
+      adminMode && [ContestStatus.Open, ContestStatus.Closed].includes(contestData.contest.status)
+    "
+    (click)="onStartContest()"
+    mat-stroked-button
+  >
+    start contest
+  </button>
   <div>matches: TODO</div>
 </div>

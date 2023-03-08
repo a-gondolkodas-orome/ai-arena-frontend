@@ -94,6 +94,21 @@ mutation UpdateContestStatus($contestId: String!, $status: ContestStatus!) {
   }
 }
 
+mutation StartContest($contestId: String!) {
+  startContest(contestId: $contestId) {
+    __typename
+    ... on Contest {
+      ...ContestDetails
+    }
+    ... on StartContestError {
+      status
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
 fragment ContestDetails on Contest {
   id
   game {
