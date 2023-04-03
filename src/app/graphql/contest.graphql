@@ -48,6 +48,20 @@ query GetContest($id: String!) {
   }
 }
 
+query GetContestMatches($id: String!) {
+  getContest(id: $id) {
+    __typename
+    ... on Contest {
+      matches {
+        ...MatchHead
+      }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
 mutation RegisterToContest($registration: ContestRegistration!) {
   registerToContest(registration: $registration) {
     __typename
@@ -130,21 +144,7 @@ fragment ContestDetails on Contest {
     name
   }
   matches {
-    bots {
-      id
-      user {
-        id
-        username
-      }
-      name
-    }
-    runStatus {
-      stage
-      log
-    }
-    result {
-      log
-    }
+    ...MatchDetails
   }
   status
 }

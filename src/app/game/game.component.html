@@ -7,7 +7,7 @@
   </mat-toolbar>
   <div class="row">
     <app-bot-list [game]="selectedGame" class="col-12 col-xl-6"></app-bot-list>
-    <app-match-list [game]="selectedGame" class="col-12 col-xl-6"></app-match-list>
+    <app-match-list [context]="selectedGame" class="col-12 col-xl-6"></app-match-list>
   </div>
   <div [innerHTML]="renderGameDescription(selectedGame.fullDescription)"></div>
 </div>

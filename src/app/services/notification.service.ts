@@ -39,7 +39,7 @@ export class NotificationService {
       duration,
       verticalPosition: "top",
       horizontalPosition: "right",
-      panelClass: ["notification-service", panelClass],
+      panelClass: ["verbatim", panelClass],
     });
   }
 }

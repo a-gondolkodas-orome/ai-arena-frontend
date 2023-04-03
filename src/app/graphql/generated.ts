@@ -226,6 +226,7 @@ export type MatchResponse = GraphqlAuthenticationError | GraphqlAuthorizationErr
 export type MatchResult = {
   __typename?: "MatchResult";
   log: Scalars["String"];
+  scoreJson: Scalars["String"];
 };
 
 export enum MatchRunStage {
@@ -618,14 +619,15 @@ export type CreateContestMutation = {
         }>;
         matches?: Array<{
           __typename?: "Match";
+          id: string;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
           bots: Array<{
             __typename?: "Bot";
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
           }>;
-          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-          result?: { __typename?: "MatchResult"; log: string } | null;
         }> | null;
       }
     | {
@@ -684,14 +686,42 @@ export type GetContestQuery = {
         }>;
         matches?: Array<{
           __typename?: "Match";
+          id: string;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
           bots: Array<{
             __typename?: "Bot";
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
           }>;
-          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-          result?: { __typename?: "MatchResult"; log: string } | null;
+        }> | null;
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | null;
+};
+
+export type GetContestMatchesQueryVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type GetContestMatchesQuery = {
+  __typename?: "Query";
+  getContest?:
+    | {
+        __typename: "Contest";
+        matches?: Array<{
+          __typename?: "Match";
+          id: string;
+          bots: Array<{
+            __typename?: "Bot";
+            id: string;
+            name: string;
+            user: { __typename?: "User"; id: string; username: string };
+          }>;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage };
+          result?: { __typename?: "MatchResult"; scoreJson: string } | null;
         }> | null;
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
@@ -722,14 +752,15 @@ export type RegisterToContestMutation = {
         }>;
         matches?: Array<{
           __typename?: "Match";
+          id: string;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
           bots: Array<{
             __typename?: "Bot";
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
           }>;
-          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-          result?: { __typename?: "MatchResult"; log: string } | null;
         }> | null;
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
@@ -768,14 +799,15 @@ export type UnregisterFromContestMutation = {
         }>;
         matches?: Array<{
           __typename?: "Match";
+          id: string;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
           bots: Array<{
             __typename?: "Bot";
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
           }>;
-          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-          result?: { __typename?: "MatchResult"; log: string } | null;
         }> | null;
       }
     | { __typename: "ContestNotFoundError"; message: string }
@@ -807,14 +839,15 @@ export type UpdateContestStatusMutation = {
         }>;
         matches?: Array<{
           __typename?: "Match";
+          id: string;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
           bots: Array<{
             __typename?: "Bot";
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
           }>;
-          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-          result?: { __typename?: "MatchResult"; log: string } | null;
         }> | null;
       }
     | { __typename: "ContestNotFoundError"; message: string }
@@ -851,14 +884,15 @@ export type StartContestMutation = {
         }>;
         matches?: Array<{
           __typename?: "Match";
+          id: string;
+          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+          result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
           bots: Array<{
             __typename?: "Bot";
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
           }>;
-          runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-          result?: { __typename?: "MatchResult"; log: string } | null;
         }> | null;
       }
     | { __typename: "ContestNotFoundError"; message: string }
@@ -883,14 +917,15 @@ export type ContestDetailsFragment = {
   }>;
   matches?: Array<{
     __typename?: "Match";
+    id: string;
+    runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+    result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
     bots: Array<{
       __typename?: "Bot";
       id: string;
       name: string;
       user: { __typename?: "User"; id: string; username: string };
     }>;
-    runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-    result?: { __typename?: "MatchResult"; log: string } | null;
   }> | null;
 };
 
@@ -969,7 +1004,14 @@ export type GetMatchesQuery = {
         matches: Array<{
           __typename?: "Match";
           id: string;
+          bots: Array<{
+            __typename?: "Bot";
+            id: string;
+            name: string;
+            user: { __typename?: "User"; id: string; username: string };
+          }>;
           runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage };
+          result?: { __typename?: "MatchResult"; scoreJson: string } | null;
         }>;
       };
 };
@@ -1003,6 +1045,65 @@ export type DeleteMatchMutation = {
     | null;
 };
 
+export type MatchHeadFragment = {
+  __typename?: "Match";
+  id: string;
+  bots: Array<{
+    __typename?: "Bot";
+    id: string;
+    name: string;
+    user: { __typename?: "User"; id: string; username: string };
+  }>;
+  runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage };
+  result?: { __typename?: "MatchResult"; scoreJson: string } | null;
+};
+
+export type MatchDetailsFragment = {
+  __typename?: "Match";
+  id: string;
+  runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+  result?: { __typename?: "MatchResult"; log: string; scoreJson: string } | null;
+  bots: Array<{
+    __typename?: "Bot";
+    id: string;
+    name: string;
+    user: { __typename?: "User"; id: string; username: string };
+  }>;
+};
+
+export const MatchHeadFragmentDoc = gql`
+  fragment MatchHead on Match {
+    id
+    bots {
+      id
+      user {
+        id
+        username
+      }
+      name
+    }
+    runStatus {
+      stage
+    }
+    result {
+      scoreJson
+    }
+  }
+`;
+export const MatchDetailsFragmentDoc = gql`
+  fragment MatchDetails on Match {
+    ...MatchHead
+    runStatus {
+      stage
+      log
+    }
+    result {
+      log
+      scoreJson
+    }
+  }
+  ${MatchHeadFragmentDoc}
+`;
 export const ContestDetailsFragmentDoc = gql`
   fragment ContestDetails on Contest {
     id
@@ -1025,24 +1126,11 @@ export const ContestDetailsFragmentDoc = gql`
       name
     }
     matches {
-      bots {
-        id
-        user {
-          id
-          username
-        }
-        name
-      }
-      runStatus {
-        stage
-        log
-      }
-      result {
-        log
-      }
+      ...MatchDetails
     }
     status
   }
+  ${MatchDetailsFragmentDoc}
 `;
 export const LoginDocument = gql`
   query Login($credentials: Credentials!) {
@@ -1337,6 +1425,36 @@ export class GetContestGQL extends Apollo.Query<GetContestQuery, GetContestQuery
     super(apollo);
   }
 }
+export const GetContestMatchesDocument = gql`
+  query GetContestMatches($id: String!) {
+    getContest(id: $id) {
+      __typename
+      ... on Contest {
+        matches {
+          ...MatchHead
+        }
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+  ${MatchHeadFragmentDoc}
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class GetContestMatchesGQL extends Apollo.Query<
+  GetContestMatchesQuery,
+  GetContestMatchesQueryVariables
+> {
+  override document = GetContestMatchesDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const RegisterToContestDocument = gql`
   mutation RegisterToContest($registration: ContestRegistration!) {
     registerToContest(registration: $registration) {
@@ -1562,10 +1680,7 @@ export const GetMatchesDocument = gql`
       __typename
       ... on Matches {
         matches {
-          id
-          runStatus {
-            stage
-          }
+          ...MatchHead
         }
       }
       ... on GraphqlError {
@@ -1573,6 +1688,7 @@ export const GetMatchesDocument = gql`
       }
     }
   }
+  ${MatchHeadFragmentDoc}
 `;
 
 @Injectable({

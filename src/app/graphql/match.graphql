@@ -21,10 +21,7 @@ query GetMatches($gameId: String!) {
     __typename
     ... on Matches {
       matches {
-        id
-        runStatus {
-          stage
-        }
+        ...MatchHead
       }
     }
     ... on GraphqlError {
@@ -58,5 +55,35 @@ mutation DeleteMatch($id: String!) {
     ... on GraphqlError {
       message
     }
+  }
+}
+
+fragment MatchHead on Match {
+  id
+  bots {
+    id
+    user {
+      id
+      username
+    }
+    name
+  }
+  runStatus {
+    stage
+  }
+  result {
+    scoreJson
+  }
+}
+
+fragment MatchDetails on Match {
+  ...MatchHead
+  runStatus {
+    stage
+    log
+  }
+  result {
+    log
+    scoreJson
   }
 }

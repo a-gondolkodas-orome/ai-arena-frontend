@@ -13,8 +13,8 @@ body {
 /* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
 
-.notification-service {
-  white-space: pre-wrap;
+.verbatim {
+  white-space: pre-line;
 }
 
 .notification-service-success {

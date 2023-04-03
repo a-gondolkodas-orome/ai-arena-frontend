@@ -3,7 +3,7 @@
   <div mat-dialog-content>
     <mat-form-field appearance="fill">
       <mat-label>Bots</mat-label>
-      <mat-chip-grid #bots aria-label="bot selection">
+      <mat-chip-grid #bots aria-label="bot selection" required>
         <mat-chip *ngFor="let bot of selectedBots" (removed)="removeBot(bot.id)">
           {{ bot.name }}
           <button matChipRemove>

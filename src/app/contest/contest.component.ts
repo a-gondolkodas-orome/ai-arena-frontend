@@ -4,9 +4,7 @@ import {
   BotSubmitStage,
   ContestStatus,
   GetBotsGQL,
-  GetBotsQuery,
   GetContestGQL,
-  GetContestQuery,
   RegisterToContestGQL,
   StartContestGQL,
   UnregisterFromContestGQL,
@@ -23,12 +21,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { decode } from "../../utils";
 import * as t from "io-ts";
 import { AuthService } from "../services/auth.service";
-
-type GetContestQueryResult = Exclude<
-  Extract<GetContestQuery["getContest"], { __typename: "Contest" }>,
-  null | undefined
->;
-type GetBotsQueryResult = Extract<GetBotsQuery["getBots"], { __typename: "Bots" }>["bots"];
+import { MatchListComponent } from "../match-list/match-list.component";
+import { GetBotsQueryResult, GetContestQueryResult } from "../../types";
 
 type ContestData =
   | { adminMode: true; contest: GetContestQueryResult; bots?: undefined }
@@ -51,6 +45,7 @@ type ContestData =
     ReactiveFormsModule,
     MatSelectModule,
     MatButtonModule,
+    MatchListComponent,
   ],
 })
 export class ContestComponent implements OnInit, OnDestroy {

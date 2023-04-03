@@ -1,11 +1,12 @@
 import { Component } from "@angular/core";
 import { filter, from, ignoreElements, map, Observable } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
-import { GetGameGQL, Game } from "../graphql/generated";
+import { GetGameGQL } from "../graphql/generated";
 import { handleGraphqlAuthErrors } from "../error";
 import { NotificationService } from "../services/notification.service";
 import { marked } from "marked";
 import * as DOMPurify from "dompurify";
+import { GetGameQueryResult } from "../../types";
 
 @Component({
   selector: "app-game",
@@ -14,7 +15,7 @@ import * as DOMPurify from "dompurify";
 })
 export class GameComponent {
   constructor(
-    protected findGame: GetGameGQL,
+    protected getGame: GetGameGQL,
     protected route: ActivatedRoute,
     protected router: Router,
     protected notificationService: NotificationService,
@@ -24,7 +25,7 @@ export class GameComponent {
       this.notificationService.error("No game id in path");
       this.game$ = from(this.handleBackToDashboard()).pipe(ignoreElements());
     } else {
-      this.game$ = this.findGame.watch({ id: gameId }).valueChanges.pipe(
+      this.game$ = this.getGame.watch({ id: gameId }).valueChanges.pipe(
         map((result) => result.data.getGame),
         filter(<T>(value: T): value is Exclude<T, null | undefined> => {
           if (value != null) return true;
@@ -36,7 +37,7 @@ export class GameComponent {
     }
   }
 
-  game$: Observable<Game>;
+  game$: Observable<GetGameQueryResult>;
 
   async handleBackToDashboard() {
     await this.router.navigate([""]);

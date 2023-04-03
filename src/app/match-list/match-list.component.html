@@ -1,30 +1,43 @@
 <mat-list class="card-list">
   <div mat-subheader id="match-list-header">
     Matches
-    <mat-icon class="start-match-icon" (click)="startMatch()">add</mat-icon>
+    <mat-icon *ngIf="enableCreateMatch" class="start-match-icon" (click)="startMatch()"
+      >add</mat-icon
+    >
   </div>
   <div id="match-list">
     <div id="match-list-items-container">
-      <mat-list-item *ngFor="let match of matches$ | async">
-        <div class="card-list-item-container">
-          <mat-card [routerLink]="['/match', match.id]">
-            <mat-card-content class="card-list-item-content {{ match.evalStatus }}">
-              <span>
-                {{ match.id }}
-              </span>
-              <mat-progress-spinner
-                [mode]="'indeterminate'"
-                [diameter]="15"
-                [hidden]="match.evalStatus !== 'eval-in-progress'"
-              >
-              </mat-progress-spinner>
-              <button mat-icon-button (click)="deleteMatch(match.id, $event)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-list-item>
+      <ng-container *ngIf="matches$ | async as matches">
+        <ng-container *ngIf="matches !== MATCH_LIST__UNAUTHORIZED; else matchesUnauthorized">
+          <mat-list-item *ngFor="let match of matches">
+            <div class="card-list-item-container">
+              <mat-card [routerLink]="['/match', match.id]">
+                <mat-card-content class="card-list-item-content {{ match.evalStatus }}">
+                  <span>
+                    <mat-chip-listbox>
+                      <mat-chip-option *ngFor="let bot of match.scoreboard"
+                        >{{ bot.name }} ({{ bot.score }})</mat-chip-option
+                      >
+                    </mat-chip-listbox>
+                  </span>
+                  <mat-progress-spinner
+                    [mode]="'indeterminate'"
+                    [diameter]="15"
+                    [hidden]="match.evalStatus !== 'eval-in-progress'"
+                  >
+                  </mat-progress-spinner>
+                  <button mat-icon-button (click)="deleteMatch(match.id, $event)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-list-item>
+        </ng-container>
+        <ng-template #matchesUnauthorized>
+          <div>Not authorized to see these matches</div>
+        </ng-template>
+      </ng-container>
     </div>
   </div>
 </mat-list>

@@ -10,7 +10,7 @@
       </div>
       <div *ngSwitchCase="match.runStatus.stage.endsWith('ERROR')">
         Something bad happened while running the match :(
-        <div>
+        <div class="verbatim">
           {{ match.runStatus.log }}
         </div>
       </div>

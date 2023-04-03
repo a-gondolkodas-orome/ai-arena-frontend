@@ -53,5 +53,8 @@
   >
     start contest
   </button>
-  <div>matches: TODO</div>
+  <app-match-list
+    *ngIf="contestData.contest.status === ContestStatus.Finished"
+    [context]="contestData.contest"
+  ></app-match-list>
 </div>

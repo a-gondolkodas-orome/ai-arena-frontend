@@ -34,12 +34,14 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   protected data: t.TypeOf<typeof StartMatchDialogComponent.startMatchDialogDataCodec>;
-  startMatchForm = this.formBuilder.group({
-    selectBot: this.formBuilder.nonNullable.control<BotHead | string>(""),
-  });
   allBots$?: Observable<BotHead[]>;
   filteredBots$?: Observable<BotHead[]>;
   selectedBots: BotHead[] = [];
+  startMatchForm = this.formBuilder.group({
+    selectBot: this.formBuilder.nonNullable.control<BotHead | string>("", () => {
+      return this.selectedBots.length ? null : { required: true };
+    }),
+  });
 
   @ViewChild("botInput") botInput!: ElementRef<HTMLInputElement>;
 
@@ -64,6 +66,7 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
     if (index >= 0) {
       this.selectedBots.splice(index, 1);
     }
+    this.startMatchForm.controls.selectBot.updateValueAndValidity();
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {

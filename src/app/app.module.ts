@@ -50,7 +50,6 @@ import { ContestListComponent } from "./contest-list/contest-list.component";
     SidebarComponent,
     BotListComponent,
     AddBotDialogComponent,
-    MatchListComponent,
     StartMatchDialogComponent,
     MatchComponent,
     BotComponent,
@@ -79,6 +78,7 @@ import { ContestListComponent } from "./contest-list/contest-list.component";
     NanowarVisualizerModule,
     AppRoutingModule,
     ContestListComponent,
+    MatchListComponent,
   ],
   providers: [
     GraphqlAuthMiddlewareProvider,
