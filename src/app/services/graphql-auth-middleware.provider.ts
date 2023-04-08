@@ -2,7 +2,7 @@ import { ApolloClientOptions, ApolloLink, InMemoryCache, Observable } from "@apo
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { LoginStatusService } from "./login-status.service";
-import { possibleTypes } from "../apollo-possible-types";
+import { possibleTypes, typePolicies } from "../apollo-cache-config";
 import { environment } from "../../environments/environment";
 import { NotificationService } from "./notification.service";
 import { decode } from "../../utils";
@@ -54,6 +54,7 @@ export const GraphqlAuthMiddlewareProvider = {
       link,
       cache: new InMemoryCache({
         possibleTypes,
+        typePolicies,
       }),
     };
   },
