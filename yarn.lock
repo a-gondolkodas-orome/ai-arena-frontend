@@ -3866,6 +3866,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tinkoff/ng-dompurify@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@tinkoff/ng-dompurify@npm:4.0.0"
+  dependencies:
+    tslib: ^2.0.0
+  peerDependencies:
+    "@angular/core": ">=12.0.0"
+    "@angular/platform-browser": ">=12.0.0"
+    "@types/dompurify": ">=2.3.0"
+    dompurify: ">= 2.3.0"
+  checksum: 1e91c3c63884ae87c4beadacf7ee282eefe44560fc486aa1b1ed5f4e7af92da100839df792a37f3f38e49da7ff2b9dcf8fb275a355e2a9a1734f74555ad06105
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -4643,6 +4657,7 @@ __metadata:
     "@ng-bootstrap/ng-bootstrap": 14
     "@ng-matero/extensions": 15
     "@popperjs/core": ^2.10.2
+    "@tinkoff/ng-dompurify": ^4.0.0
     "@types/dompurify": ^2.4.0
     "@types/jasmine": ~4.0.0
     "@types/marked": ^4.0.7
