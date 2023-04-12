@@ -16,6 +16,11 @@ export const typePolicies: TypePolicies = {
           return mergeObjects(existing, incoming);
         },
       },
+      runStatus: {
+        merge(existing, incoming, { mergeObjects }) {
+          return mergeObjects(existing, incoming);
+        },
+      },
     },
   },
 };
