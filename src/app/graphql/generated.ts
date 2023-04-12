@@ -71,6 +71,7 @@ export type Contest = {
   matches?: Maybe<Array<Match>>;
   name: Scalars["String"];
   owner: User;
+  scoreJson: Scalars["String"];
   status: ContestStatus;
 };
 
@@ -97,6 +98,7 @@ export enum ContestStatus {
   Finished = "FINISHED",
   Open = "OPEN",
   Running = "RUNNING",
+  RunError = "RUN_ERROR",
 }
 
 export type Contests = {
@@ -609,6 +611,7 @@ export type CreateContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
+        scoreJson: string;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -676,6 +679,7 @@ export type GetContestQuery = {
         name: string;
         date: Date;
         status: ContestStatus;
+        scoreJson: string;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -742,6 +746,7 @@ export type RegisterToContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
+        scoreJson: string;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -789,6 +794,7 @@ export type UnregisterFromContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
+        scoreJson: string;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -829,6 +835,7 @@ export type UpdateContestStatusMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
+        scoreJson: string;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -874,6 +881,7 @@ export type StartContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
+        scoreJson: string;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -907,6 +915,7 @@ export type ContestDetailsFragment = {
   name: string;
   date: Date;
   status: ContestStatus;
+  scoreJson: string;
   game: { __typename?: "Game"; id: string; name: string };
   owner: { __typename?: "User"; id: string; username: string };
   bots: Array<{
@@ -1129,6 +1138,7 @@ export const ContestDetailsFragmentDoc = gql`
       ...MatchDetails
     }
     status
+    scoreJson
   }
   ${MatchDetailsFragmentDoc}
 `;

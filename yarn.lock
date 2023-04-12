@@ -2811,16 +2811,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@leanil/nanowar-visualizer@npm:0":
-  version: 0.0.2
-  resolution: "@leanil/nanowar-visualizer@npm:0.0.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40leanil%2Fnanowar-visualizer%2F0.0.2%2F1d325e404d117c257e12e0b9ae9e7d3a5f287772"
+"@leanil/nanowar-visualizer@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "@leanil/nanowar-visualizer@npm:0.0.11::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40leanil%2Fnanowar-visualizer%2F0.0.11%2F3d281a04888d98e49098552ac40568a7c525d249"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 14
-    "@angular/core": 14
+    "@angular/common": ^15.0.0
+    "@angular/core": ^15.0.0
     p5: 1
-  checksum: 5706af1f0d85ece2ba8980c39b19c287568545fe0a984259f3898654a24a257163c25852a985d6a94108d394ab6f3eca27305a1ec3e7cba3f29be9455b9703f4
+  checksum: 8f287b440416210748fe47139f551924ee230ffd93f2f9523e48b4aa36639155d207f79ae5752eacde1714a65fc1d68e6cffed766fab7495b74a0a006d333cef
   languageName: node
   linkType: hard
 
@@ -4652,7 +4652,7 @@ __metadata:
     "@graphql-codegen/typescript": ^2.7.3
     "@graphql-codegen/typescript-apollo-angular": ^3.5.3
     "@graphql-codegen/typescript-operations": ^2.5.3
-    "@leanil/nanowar-visualizer": 0
+    "@leanil/nanowar-visualizer": ^0.0.11
     "@microsoft/fetch-event-source": ^2.0.1
     "@ng-bootstrap/ng-bootstrap": 14
     "@ng-matero/extensions": 15
@@ -4664,7 +4664,7 @@ __metadata:
     "@types/node": ^18.7.23
     "@typescript-eslint/eslint-plugin": ^5.38.0
     "@typescript-eslint/parser": ^5.38.0
-    apollo-angular: 4.0.1
+    apollo-angular: 4
     bootstrap: ^5.2.3
     bootstrap-icons: ^1.9.1
     dompurify: ^2.4.1
@@ -4812,18 +4812,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-angular@npm:4.0.1":
-  version: 4.0.1
-  resolution: "apollo-angular@npm:4.0.1"
+"apollo-angular@npm:4":
+  version: 4.2.1
+  resolution: "apollo-angular@npm:4.2.1"
   dependencies:
     tslib: ^2.0.0
   peerDependencies:
-    "@angular/core": ^14.0.0
+    "@angular/core": ^14.0.0 || ^15.0.0
     "@apollo/client": ^3.0.0
     graphql: ^15.0.0 || ^16.0.0
     rxjs: ^6.0.0 || ^7.0.0
-    zone.js: ">=0.10.0 <0.12.0"
-  checksum: bb7f160647fa7d4e1c351bae91530bfc5ed841578340d3e283fe8d6b8a8738e5180e22f18a4fb54068f0cf41cbef1fb804270969c96182127c76f1446bcf624b
+  checksum: a20f933349be78bb4a82bfbe5709106e2ebc256c24a261d08f0c7dfc8176cad720d08d2b56e197fa9ebf2c6f1cd4a6a054f444ee7929fa8f49c24838db2098ed
   languageName: node
   linkType: hard
 

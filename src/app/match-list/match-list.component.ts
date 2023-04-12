@@ -23,6 +23,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatButtonModule } from "@angular/material/button";
 import { GetContestQueryResult, GetGameQueryResult } from "../../types";
 import { MatChipsModule } from "@angular/material/chips";
+import { scoresCodec } from "../../common";
 
 @Component({
   standalone: true,
@@ -60,6 +61,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
   readonly MATCH_LIST__UNAUTHORIZED = "MATCH_LIST__UNAUTHORIZED" as const;
 
   enableCreateMatch = false;
+  enableDeleteMatch = false;
   matches$?: Observable<
     | (MatchHeadFragment & {
         evalStatus: string;
@@ -71,6 +73,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.enableCreateMatch = this.context.__typename === "Game";
+    this.enableDeleteMatch = this.context.__typename === "Game";
     const matches$ =
       this.context.__typename === "Game"
         ? this.getMatches.watch({ gameId: this.context.id }).valueChanges.pipe(
@@ -92,14 +95,10 @@ export class MatchListComponent implements OnInit, OnDestroy {
       map(
         (matches) =>
           matches?.map((match) => {
-            const scores =
-              (match.result && decodeJson(t.record(t.string, t.number), match.result.scoreJson)) ||
-              undefined;
-            const scoreboard = scores && this.getScoreboard(match, scores);
             return {
               ...match,
               evalStatus: getEvalStatus(match.runStatus.stage),
-              scoreboard,
+              scoreboard: this.getScoreboard(match),
             };
           }) ?? this.MATCH_LIST__UNAUTHORIZED,
       ),
@@ -113,7 +112,9 @@ export class MatchListComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  protected getScoreboard(match: MatchHeadFragment, scores: { [key: string]: number }) {
+  protected getScoreboard(match: MatchHeadFragment) {
+    if (!match.result) return undefined;
+    const scores = decodeJson(scoresCodec, match.result.scoreJson);
     const scoreboard = [];
     const botCounter = new Map<string, number>();
     for (const bot of match.bots) {

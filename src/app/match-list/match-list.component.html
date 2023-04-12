@@ -26,7 +26,11 @@
                     [hidden]="match.evalStatus !== 'eval-in-progress'"
                   >
                   </mat-progress-spinner>
-                  <button mat-icon-button (click)="deleteMatch(match.id, $event)">
+                  <button
+                    mat-icon-button
+                    *ngIf="enableDeleteMatch"
+                    (click)="deleteMatch(match.id, $event)"
+                  >
                     <mat-icon>delete</mat-icon>
                   </button>
                 </mat-card-content>

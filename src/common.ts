@@ -15,3 +15,5 @@ export enum ErrorType {
   AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR",
   AUTHORIZATION_ERROR = "AUTHORIZATION_ERROR",
 }
+
+export const scoresCodec = t.record(t.string, t.number);

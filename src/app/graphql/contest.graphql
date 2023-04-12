@@ -147,4 +147,5 @@ fragment ContestDetails on Contest {
     ...MatchDetails
   }
   status
+  scoreJson
 }

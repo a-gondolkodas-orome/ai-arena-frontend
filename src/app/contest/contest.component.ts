@@ -18,17 +18,28 @@ import { handleGraphqlAuthErrors } from "../error";
 import { AsyncPipe, CommonModule, DatePipe } from "@angular/common";
 import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
-import { decode } from "../../utils";
+import { decode, decodeJson } from "../../utils";
 import * as t from "io-ts";
 import { AuthService } from "../services/auth.service";
 import { MatchListComponent } from "../match-list/match-list.component";
 import { GetBotsQueryResult, GetContestQueryResult } from "../../types";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { scoresCodec } from "../../common";
+import { MatTableModule } from "@angular/material/table";
 
 type ContestData =
-  | { adminMode: true; contest: GetContestQueryResult; bots?: undefined }
+  | {
+      adminMode: true;
+      contest: GetContestQueryResult & {
+        scoreBoard?: { place: number; username: string; score: number }[];
+      };
+      bots?: undefined;
+    }
   | {
       adminMode: false;
-      contest: GetContestQueryResult;
+      contest: GetContestQueryResult & {
+        scoreBoard?: { place: number; username: string; score: number }[];
+      };
       bots: GetBotsQueryResult;
       isRegistered: boolean;
     };
@@ -46,11 +57,14 @@ type ContestData =
     MatSelectModule,
     MatButtonModule,
     MatchListComponent,
+    MatTooltipModule,
+    MatTableModule,
   ],
 })
 export class ContestComponent implements OnInit, OnDestroy {
   static readonly routeDataCodec = t.type({ adminMode: t.boolean });
   ContestStatus = ContestStatus;
+  scoreBoardColumns = ["place", "username", "score"];
 
   constructor(
     protected notificationService: NotificationService,
@@ -94,7 +108,7 @@ export class ContestComponent implements OnInit, OnDestroy {
         this.adminMode
           ? map<[GetContestQueryResult, User], ContestData>(([contest]) => ({
               adminMode: true as const,
-              contest,
+              contest: { ...contest, scoreBoard: this.getScoreboard(contest) },
             }))
           : switchMap(([contest, user]) =>
               this.getBots.watch({ gameId: contest.game.id }).valueChanges.pipe(
@@ -102,7 +116,7 @@ export class ContestComponent implements OnInit, OnDestroy {
                 handleGraphqlAuthErrors(this.notificationService),
                 map((result) => ({
                   adminMode: false as const,
-                  contest,
+                  contest: { ...contest, scoreBoard: this.getScoreboard(contest) },
                   bots: result.bots.filter(
                     (bot) => bot.submitStatus.stage === BotSubmitStage.CheckSuccess,
                   ),
@@ -112,6 +126,25 @@ export class ContestComponent implements OnInit, OnDestroy {
             ),
       );
     }
+  }
+
+  protected getScoreboard(contest: GetContestQueryResult) {
+    if (!contest.scoreJson) return undefined;
+    const scores = decodeJson(scoresCodec, contest.scoreJson);
+    const scoreboard = [];
+    for (const bot of contest.bots) {
+      scoreboard.push({
+        username: bot.user.username,
+        score: scores[bot.id],
+        place: 0,
+      });
+    }
+    scoreboard.sort((a, b) => b.score - a.score);
+    scoreboard[0].place = 1;
+    for (let i = 1; i < scoreboard.length; ++i)
+      scoreboard[i].place =
+        scoreboard[i].score === scoreboard[i - 1].score ? scoreboard[i - 1].place : i + 1;
+    return scoreboard;
   }
 
   protected registrationSubscription?: Subscription;
