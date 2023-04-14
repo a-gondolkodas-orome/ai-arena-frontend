@@ -31,7 +31,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "./node_modules/@leanil/nanowar-visualizer/assets",
+                "input": "./node_modules/@Kristofy/nanowar-visualizer/assets",
                 "output": "./assets/"
               }
             ],

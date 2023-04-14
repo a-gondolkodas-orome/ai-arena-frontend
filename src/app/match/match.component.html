@@ -3,6 +3,7 @@
     <lib-nanowar-visualizer
       *ngIf="match.result; else noResult"
       [jsonstring]="match.result.log"
+      [bot_id]="'0'"
     ></lib-nanowar-visualizer>
     <ng-template #noResult [ngSwitch]="true">
       <div *ngSwitchCase="match.runStatus.stage === MatchRunStage.RunSuccess">

@@ -24,6 +24,7 @@
   "author": "András Leitereg",
   "license": "UNLICENSED",
   "dependencies": {
+    "@Kristofy/nanowar-visualizer": "^0.0.11",
     "@angular-material-components/file-input": "9",
     "@angular/animations": "15",
     "@angular/cdk": "15.0.3",
@@ -37,7 +38,9 @@
     "@angular/platform-browser-dynamic": "15",
     "@angular/router": "15",
     "@apollo/client": "^3.0.0",
-    "@leanil/nanowar-visualizer": "^0.0.11",
+    "@fortawesome/angular-fontawesome": "^0.12.1",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@ng-bootstrap/ng-bootstrap": "14",
     "@ng-matero/extensions": "15",

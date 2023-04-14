@@ -5,6 +5,19 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@Kristofy/nanowar-visualizer@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "@Kristofy/nanowar-visualizer@npm:0.0.11::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fnanowar-visualizer%2F0.0.11%2F967bb83aed176aa1e2e9e7e4019488520a087b21"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/common": ^15.0.0
+    "@angular/core": ^15.0.0
+    p5: 1
+  checksum: 20165af146e463e7a244f3f0aebb5bd984d2389a8a6cb4d7bdfc5f5ea127a6d6cea060fbea8c22c68979da267d04602ca98cd7df18e3cb49b0d858ebc13636cf
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:2.2.0, @ampproject/remapping@npm:^2.1.0":
   version: 2.2.0
   resolution: "@ampproject/remapping@npm:2.2.0"
@@ -2216,6 +2229,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fortawesome/angular-fontawesome@npm:^0.12.1":
+  version: 0.12.1
+  resolution: "@fortawesome/angular-fontawesome@npm:0.12.1"
+  dependencies:
+    tslib: ^2.4.1
+  peerDependencies:
+    "@angular/core": ^15.0.0
+    "@fortawesome/fontawesome-svg-core": ~1.2.27 || ~1.3.0-beta2 || ^6.1.0
+  checksum: 45417d35af9c35c11700fa7fcb9e0c3d3f4c772fd0ac7511b0512856c8adf9f65f9aeec1113464a2181d6b59f13f379da27cbca346e90c854a7075bfa9d2eb67
+  languageName: node
+  linkType: hard
+
+"@fortawesome/fontawesome-common-types@npm:6.4.0":
+  version: 6.4.0
+  resolution: "@fortawesome/fontawesome-common-types@npm:6.4.0"
+  checksum: a9b79136caa615352bd921cfe2710516321b402cd76c3f0ae68e579a7e3d7645c5a5c0ecd7516c0b207adeeffd1d2174978638d8c0d3c8c937d66fca4f2ff556
+  languageName: node
+  linkType: hard
+
+"@fortawesome/fontawesome-svg-core@npm:^6.4.0":
+  version: 6.4.0
+  resolution: "@fortawesome/fontawesome-svg-core@npm:6.4.0"
+  dependencies:
+    "@fortawesome/fontawesome-common-types": 6.4.0
+  checksum: 5d4e6c15f814f5ce29053b666d0c7d194dc8ba173d128a38cc5856403a09d4e817e54956d30ed8d48d621f2f5ebcc71756f4e8fe5c5a091c636fc728fcb2362b
+  languageName: node
+  linkType: hard
+
+"@fortawesome/free-solid-svg-icons@npm:^6.4.0":
+  version: 6.4.0
+  resolution: "@fortawesome/free-solid-svg-icons@npm:6.4.0"
+  dependencies:
+    "@fortawesome/fontawesome-common-types": 6.4.0
+  checksum: efdd1688620be3d52aacaeac36c955571962e174ae981fc697b6e92fb0996b00166d02e7729a59ea93713a514e2c8d564ab1aa79c9653b4cfed0263e4874d070
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -2808,19 +2858,6 @@ __metadata:
     "@jridgewell/resolve-uri": ^3.0.3
     "@jridgewell/sourcemap-codec": ^1.4.10
   checksum: 38917e9c2b014d469a9f51c016ed506acbe44dd16ec2f6f99b553ebf3764d22abadbf992f2367b6d2b3511f3eae8ed3a8963f6c1030093fda23efd35ecab2bae
-  languageName: node
-  linkType: hard
-
-"@leanil/nanowar-visualizer@npm:^0.0.11":
-  version: 0.0.11
-  resolution: "@leanil/nanowar-visualizer@npm:0.0.11::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40leanil%2Fnanowar-visualizer%2F0.0.11%2F3d281a04888d98e49098552ac40568a7c525d249"
-  dependencies:
-    tslib: ^2.3.0
-  peerDependencies:
-    "@angular/common": ^15.0.0
-    "@angular/core": ^15.0.0
-    p5: 1
-  checksum: 8f287b440416210748fe47139f551924ee230ffd93f2f9523e48b4aa36639155d207f79ae5752eacde1714a65fc1d68e6cffed766fab7495b74a0a006d333cef
   languageName: node
   linkType: hard
 
@@ -4632,6 +4669,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ai-arena-frontend@workspace:."
   dependencies:
+    "@Kristofy/nanowar-visualizer": ^0.0.11
     "@angular-devkit/build-angular": 15
     "@angular-material-components/file-input": 9
     "@angular/animations": 15
@@ -4648,11 +4686,13 @@ __metadata:
     "@angular/platform-browser-dynamic": 15
     "@angular/router": 15
     "@apollo/client": ^3.0.0
+    "@fortawesome/angular-fontawesome": ^0.12.1
+    "@fortawesome/fontawesome-svg-core": ^6.4.0
+    "@fortawesome/free-solid-svg-icons": ^6.4.0
     "@graphql-codegen/cli": ^2.13.1
     "@graphql-codegen/typescript": ^2.7.3
     "@graphql-codegen/typescript-apollo-angular": ^3.5.3
     "@graphql-codegen/typescript-operations": ^2.5.3
-    "@leanil/nanowar-visualizer": ^0.0.11
     "@microsoft/fetch-event-source": ^2.0.1
     "@ng-bootstrap/ng-bootstrap": 14
     "@ng-matero/extensions": 15
@@ -11711,7 +11751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.3.1":
+"tslib@npm:^2.3.1, tslib@npm:^2.4.1":
   version: 2.5.0
   resolution: "tslib@npm:2.5.0"
   checksum: ae3ed5f9ce29932d049908ebfdf21b3a003a85653a9a140d614da6b767a93ef94f460e52c3d787f0e4f383546981713f165037dc2274df212ea9f8a4541004e1
