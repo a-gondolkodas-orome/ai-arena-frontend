@@ -1,4 +1,4 @@
-import { NgModule, Sanitizer } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppComponent } from "./app.component";
@@ -38,7 +38,6 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { BotComponent } from "./bot/bot.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { ContestListComponent } from "./contest-list/contest-list.component";
-import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
 
 @NgModule({
   declarations: [
@@ -84,7 +83,6 @@ import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
   providers: [
     GraphqlAuthMiddlewareProvider,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: Sanitizer, useClass: NgDompurifySanitizer },
   ],
   bootstrap: [AppComponent],
 })

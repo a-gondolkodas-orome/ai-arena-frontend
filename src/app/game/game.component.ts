@@ -7,6 +7,7 @@ import { NotificationService } from "../services/notification.service";
 import { marked } from "marked";
 import * as DOMPurify from "dompurify";
 import { GetGameQueryResult } from "../../types";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: "app-game",
@@ -19,6 +20,7 @@ export class GameComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected notificationService: NotificationService,
+    protected sanitizer: DomSanitizer,
   ) {
     const gameId = this.route.snapshot.paramMap.get("id");
     if (gameId === null) {
@@ -44,6 +46,6 @@ export class GameComponent {
   }
 
   protected renderGameDescription(rawDescription: string) {
-    return DOMPurify.sanitize(marked.parse(rawDescription)); // security threat?
+    return this.sanitizer.bypassSecurityTrustHtml(DOMPurify.sanitize(marked.parse(rawDescription)));
   }
 }
