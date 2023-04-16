@@ -35,6 +35,7 @@ query GetBots($gameId: String!) {
           stage
           log
         }
+        deleted
       }
     }
     ... on GraphqlError {

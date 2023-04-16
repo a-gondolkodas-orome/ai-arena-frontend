@@ -21,6 +21,7 @@ export type AuthError = GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type Bot = {
   __typename?: "Bot";
+  deleted: Scalars["Boolean"];
   game: Game;
   id: Scalars["ID"];
   name: Scalars["String"];
@@ -71,7 +72,7 @@ export type Contest = {
   matches?: Maybe<Array<Match>>;
   name: Scalars["String"];
   owner: User;
-  scoreJson: Scalars["String"];
+  scoreJson?: Maybe<Scalars["String"]>;
   status: ContestStatus;
 };
 
@@ -553,6 +554,7 @@ export type GetBotsQuery = {
           __typename?: "Bot";
           id: string;
           name: string;
+          deleted: boolean;
           submitStatus: {
             __typename?: "BotSubmitStatus";
             stage: BotSubmitStage;
@@ -611,7 +613,7 @@ export type CreateContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
-        scoreJson: string;
+        scoreJson?: string | null;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -679,7 +681,7 @@ export type GetContestQuery = {
         name: string;
         date: Date;
         status: ContestStatus;
-        scoreJson: string;
+        scoreJson?: string | null;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -746,7 +748,7 @@ export type RegisterToContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
-        scoreJson: string;
+        scoreJson?: string | null;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -794,7 +796,7 @@ export type UnregisterFromContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
-        scoreJson: string;
+        scoreJson?: string | null;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -835,7 +837,7 @@ export type UpdateContestStatusMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
-        scoreJson: string;
+        scoreJson?: string | null;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -881,7 +883,7 @@ export type StartContestMutation = {
         name: string;
         date: Date;
         status: ContestStatus;
-        scoreJson: string;
+        scoreJson?: string | null;
         game: { __typename?: "Game"; id: string; name: string };
         owner: { __typename?: "User"; id: string; username: string };
         bots: Array<{
@@ -915,7 +917,7 @@ export type ContestDetailsFragment = {
   name: string;
   date: Date;
   status: ContestStatus;
-  scoreJson: string;
+  scoreJson?: string | null;
   game: { __typename?: "Game"; id: string; name: string };
   owner: { __typename?: "User"; id: string; username: string };
   bots: Array<{
@@ -1275,6 +1277,7 @@ export const GetBotsDocument = gql`
             stage
             log
           }
+          deleted
         }
       }
       ... on GraphqlError {

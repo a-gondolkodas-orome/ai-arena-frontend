@@ -24,7 +24,7 @@
   "author": "András Leitereg",
   "license": "UNLICENSED",
   "dependencies": {
-    "@Kristofy/nanowar-visualizer": "^0.0.12",
+    "@Kristofy/nanowar-visualizer": "^0.0.15",
     "@angular-material-components/file-input": "9",
     "@angular/animations": "15",
     "@angular/cdk": "15.0.3",

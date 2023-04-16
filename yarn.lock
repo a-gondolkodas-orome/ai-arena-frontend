@@ -5,16 +5,19 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@Kristofy/nanowar-visualizer@npm:^0.0.12":
-  version: 0.0.12
-  resolution: "@Kristofy/nanowar-visualizer@npm:0.0.12::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fnanowar-visualizer%2F0.0.12%2Fec6ba4a50e7e987055ea3175cd4a93434b7d46e6"
+"@Kristofy/nanowar-visualizer@npm:^0.0.15":
+  version: 0.0.15
+  resolution: "@Kristofy/nanowar-visualizer@npm:0.0.15::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fnanowar-visualizer%2F0.0.15%2F9c9db7a2ec82e33fe66d386cf49897c318a5a51c"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
     "@angular/common": ^15.0.0
     "@angular/core": ^15.0.0
+    "@fortawesome/angular-fontawesome": ^0.12.1
+    "@fortawesome/fontawesome-svg-core": ^6.4.0
+    "@fortawesome/free-solid-svg-icons": ^6.4.0
     p5: 1
-  checksum: 2572b5e0d5d953a8eca96a04f5770e21a97471af5ebbc35359f274df5ceac253e270da9dc991253942b399661caf1284d2fc493598c75eef2c0fb4eb49956380
+  checksum: ce4511d9f55b72ca8c153308fe7a94ef99589fbe3aad484db2c293c73d657b60f7e47ae2395e63a64a3ffe30b8f7505a791e207346e5a5caf9ee62f76bb06e87
   languageName: node
   linkType: hard
 
@@ -3903,20 +3906,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tinkoff/ng-dompurify@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@tinkoff/ng-dompurify@npm:4.0.0"
-  dependencies:
-    tslib: ^2.0.0
-  peerDependencies:
-    "@angular/core": ">=12.0.0"
-    "@angular/platform-browser": ">=12.0.0"
-    "@types/dompurify": ">=2.3.0"
-    dompurify: ">= 2.3.0"
-  checksum: 1e91c3c63884ae87c4beadacf7ee282eefe44560fc486aa1b1ed5f4e7af92da100839df792a37f3f38e49da7ff2b9dcf8fb275a355e2a9a1734f74555ad06105
-  languageName: node
-  linkType: hard
-
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -4669,7 +4658,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ai-arena-frontend@workspace:."
   dependencies:
-    "@Kristofy/nanowar-visualizer": ^0.0.12
+    "@Kristofy/nanowar-visualizer": ^0.0.15
     "@angular-devkit/build-angular": 15
     "@angular-material-components/file-input": 9
     "@angular/animations": 15
@@ -4697,7 +4686,6 @@ __metadata:
     "@ng-bootstrap/ng-bootstrap": 14
     "@ng-matero/extensions": 15
     "@popperjs/core": ^2.10.2
-    "@tinkoff/ng-dompurify": ^4.0.0
     "@types/dompurify": ^2.4.0
     "@types/jasmine": ~4.0.0
     "@types/marked": ^4.0.7

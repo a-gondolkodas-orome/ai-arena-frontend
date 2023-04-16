@@ -38,10 +38,12 @@ export class BotListComponent implements OnInit, OnDestroy {
       map((result) => result.data.getBots),
       handleGraphqlAuthErrors(this.notificationService),
       map((getBots) =>
-        getBots.bots.map((bot) => ({
-          ...bot,
-          evalStatus: getEvalStatus(bot.submitStatus.stage.toString()),
-        })),
+        getBots.bots
+          .filter((bot) => !bot.deleted)
+          .map((bot) => ({
+            ...bot,
+            evalStatus: getEvalStatus(bot.submitStatus.stage.toString()),
+          })),
       ),
     );
     this.sseSubscription = Sse.botEvents
@@ -87,7 +89,7 @@ export class BotListComponent implements OnInit, OnDestroy {
                 },
               },
             });
-            cache.evict({ id: cacheId });
+            cache.modify({ id: cacheId, fields: { deleted: () => true } });
           },
         },
       )
