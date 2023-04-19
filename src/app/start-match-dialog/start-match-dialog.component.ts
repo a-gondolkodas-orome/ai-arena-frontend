@@ -1,15 +1,25 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import * as t from "io-ts";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder } from "@angular/forms";
-import { Bot, CreateMatchGQL, GetBotsGQL, Match } from "../graphql/generated";
+import { AbstractControl, FormBuilder } from "@angular/forms";
+import {
+  Bot,
+  CreateMatchGQL,
+  GameMap,
+  GetBotsGQL,
+  GetGameGQL,
+  Match,
+  PlayerCount,
+} from "../graphql/generated";
 import { NotificationService } from "../services/notification.service";
-import { decode } from "../../utils";
+import { decode, notNull } from "../../utils";
 import { combineLatest, filter, map, Observable, startWith, Subscription, tap } from "rxjs";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
 import { MatchListComponent } from "../match-list/match-list.component";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { GetGameQueryResult } from "../../types";
+import { ErrorStateMatcher } from "@angular/material/core";
 
 type BotHead = Pick<Bot, "id" | "name">;
 
@@ -24,6 +34,7 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
   constructor(
     protected dialogRef: MatDialogRef<StartMatchDialogComponent>,
     protected formBuilder: FormBuilder,
+    protected getGame: GetGameGQL,
     protected getBots: GetBotsGQL,
     protected startMatch: CreateMatchGQL,
     protected notificationService: NotificationService,
@@ -34,30 +45,54 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   protected data: t.TypeOf<typeof StartMatchDialogComponent.startMatchDialogDataCodec>;
-  allBots$?: Observable<BotHead[]>;
-  filteredBots$?: Observable<BotHead[]>;
+  game$!: Observable<GetGameQueryResult>;
+  allBots$!: Observable<BotHead[]>;
+  startMatchData$!: Observable<{ game: GetGameQueryResult; bots: BotHead[] }>;
   selectedBots: BotHead[] = [];
+  protected mapControl = this.formBuilder.control<GameMap | undefined>(undefined);
   startMatchForm = this.formBuilder.group({
+    map: this.mapControl,
     selectBot: this.formBuilder.nonNullable.control<BotHead | string>("", () => {
-      return this.selectedBots.length ? null : { required: true };
+      const playerCount: PlayerCount | undefined = this.mapControl.value?.playerCount;
+      if (!playerCount) return { noMapSelected: true };
+      if (this.selectedBots.length < playerCount.min) return { notEnoughPlayers: playerCount.min };
+      if (this.selectedBots.length > playerCount.max) return { tooManyPlayers: playerCount.max };
+      return null;
     }),
   });
-
+  selectBotErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control: AbstractControl | null) => {
+      return this.selectBotTouched && !!control?.invalid;
+    },
+  };
   @ViewChild("botInput") botInput!: ElementRef<HTMLInputElement>;
 
   ngOnInit() {
+    this.game$ = this.getGame.watch({ id: this.data.gameId }).valueChanges.pipe(
+      map((result) => result.data.getGame),
+      filter(<T>(value: T): value is Exclude<T, null | undefined> => {
+        if (value != null) return true;
+        this.notificationService.error("Game not found");
+        return false;
+      }),
+      handleGraphqlAuthErrors(this.notificationService),
+      tap((game) => this.startMatchForm.controls.map.setValue(game.maps[0])),
+    );
     this.allBots$ = this.getBots.watch({ gameId: this.data.gameId }).valueChanges.pipe(
       map((result) => result.data.getBots),
       handleGraphqlAuthErrors(this.notificationService),
       map((getBots) => getBots.bots),
     );
-    this.filteredBots$ = combineLatest([
+    this.startMatchData$ = combineLatest([
+      this.game$,
       this.allBots$,
       this.startMatchForm.controls.selectBot.valueChanges.pipe(startWith("")),
     ]).pipe(
-      map(([allBots, filter]) =>
-        typeof filter === "string" ? this.filterBots(allBots, filter) : allBots.slice(),
-      ),
+      map(([game, allBots, filter]) => {
+        const bots =
+          typeof filter === "string" ? this.filterBots(allBots, filter) : allBots.slice();
+        return { game, bots };
+      }),
     );
   }
 
@@ -69,10 +104,12 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
     this.startMatchForm.controls.selectBot.updateValueAndValidity();
   }
 
+  selectBotTouched = false;
   selected(event: MatAutocompleteSelectedEvent): void {
     this.selectedBots.push(event.option.value);
     this.botInput.nativeElement.value = "";
     this.startMatchForm.controls.selectBot.setValue("");
+    this.selectBotTouched = true;
   }
 
   protected filterBots(allBots: BotHead[], value: string) {
@@ -89,6 +126,7 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
         {
           matchInput: {
             gameId: this.data.gameId,
+            mapName: notNull(this.startMatchForm.controls.map.value?.name),
             botIds: this.selectedBots.map(({ id }) => id),
           },
         },

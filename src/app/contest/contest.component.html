@@ -31,6 +31,12 @@
     </button>
   </div>
   <div>
+    maps:
+    <ul>
+      <li *ngFor="let mapName of contestData.contest.mapNames">{{ mapName }}</li>
+    </ul>
+  </div>
+  <div>
     registered users ({{ contestData.contest.bots.length }}):
     <ul *ngIf="contestData.contest.bots.length">
       <li *ngFor="let bot of contestData.contest.bots">{{ bot.user.username }} ({{ bot.name }})</li>

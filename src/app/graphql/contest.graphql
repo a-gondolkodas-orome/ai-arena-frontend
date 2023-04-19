@@ -129,6 +129,7 @@ fragment ContestDetails on Contest {
     id
     name
   }
+  mapNames
   owner {
     id
     username

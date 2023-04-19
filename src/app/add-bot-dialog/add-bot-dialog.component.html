@@ -16,7 +16,7 @@
         placeholder="source file"
       ></ngx-mat-file-input>
       <mat-error *ngIf="addBotForm.get('sourceFile')?.getError('maxSize') as sizeError">
-        The file size must not exceed {{ sourceFileMaxSize }} KB.
+        The file size must not exceed {{ sourceFileMaxSize / 1000 }} KB.
       </mat-error>
     </mat-form-field>
   </div>

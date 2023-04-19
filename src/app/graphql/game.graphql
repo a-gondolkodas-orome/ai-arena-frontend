@@ -3,10 +3,7 @@ query GetGames {
     __typename
     ... on Games {
       games {
-        id
-        name
-        picture
-        shortDescription
+        ...GameHead
       }
     }
     ... on GraphqlError {
@@ -19,18 +16,32 @@ query getGame($id: String!) {
   getGame(id: $id) {
     __typename
     ... on Game {
-      id
-      name
-      shortDescription
-      picture
+      ...GameHead
       fullDescription
       playerCount {
         min
         max
       }
+      maps {
+        name
+        playerCount {
+          min
+          max
+        }
+      }
     }
     ... on GraphqlError {
       message
     }
+  }
+}
+
+fragment GameHead on Game {
+  id
+  name
+  picture
+  shortDescription
+  maps {
+    name
   }
 }

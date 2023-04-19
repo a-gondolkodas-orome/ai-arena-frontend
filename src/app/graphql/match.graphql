@@ -60,6 +60,7 @@ mutation DeleteMatch($id: String!) {
 
 fragment MatchHead on Match {
   id
+  mapName
   bots {
     id
     user {

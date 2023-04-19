@@ -15,9 +15,10 @@
                 <mat-card-content class="card-list-item-content {{ match.evalStatus }}">
                   <span>
                     <mat-chip-listbox>
-                      <mat-chip-option *ngFor="let bot of match.scoreboard"
-                        >{{ bot.name }} ({{ bot.score }})</mat-chip-option
-                      >
+                      <mat-chip-option *ngFor="let bot of match.scoreboard">
+                        {{ bot.name }}: {{ bot.score }}
+                      </mat-chip-option>
+                      <mat-chip-option>map: {{ match.mapName }}</mat-chip-option>
                     </mat-chip-listbox>
                   </span>
                   <mat-progress-spinner

@@ -12,6 +12,7 @@ export class NotificationService {
 
   success(message: string, duration = 5 * Time.second) {
     if (message.length > NotificationService.SNACKBAR_MAX_LENGTH) {
+      // eslint-disable-next-line no-console
       console.log(message);
       message = message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
     }
@@ -20,6 +21,7 @@ export class NotificationService {
 
   error(message: string, duration = 5 * Time.second) {
     if (message.length > NotificationService.SNACKBAR_MAX_LENGTH) {
+      // eslint-disable-next-line no-console
       console.error(message);
       message = message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
     }
@@ -28,6 +30,7 @@ export class NotificationService {
 
   info(message: string, duration = 5 * Time.second) {
     if (message.length > NotificationService.SNACKBAR_MAX_LENGTH) {
+      // eslint-disable-next-line no-console
       console.info(message);
       message = message.substring(0, NotificationService.SNACKBAR_MAX_LENGTH) + "…";
     }

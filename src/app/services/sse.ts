@@ -36,15 +36,14 @@ export class Sse {
             );
         }
       },
+      // eslint-disable-next-line no-console
       onerror: (error: unknown) => console.error("SSE error", error),
+      // eslint-disable-next-line no-console
     }).catch((error) => console.error("SSE error", error));
   }
 
   static close() {
-    if (!this.isOpen) {
-      console.warn("Sse.close: already closed");
-      return;
-    }
+    if (!this.isOpen) return;
     this.abortController.abort();
     this.isOpen = false;
   }

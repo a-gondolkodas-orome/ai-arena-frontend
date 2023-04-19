@@ -10,9 +10,17 @@ export namespace Time {
   export const day = 24 * hour;
 }
 
-export function notNull<T>(value: T): Exclude<T, null | undefined> {
-  if (value === null || value === undefined) throw new Error(`notNull: value is ${value}`);
+export function notNull<T>(value: T, message?: string) {
+  if (value === null || value === undefined)
+    throw new Error(message ?? `notNull: value is ${value}`);
   return value as Exclude<T, null | undefined>;
+}
+
+export function formNotNull<T>(form: T) {
+  for (const field in form) {
+    notNull(form[field], `formNotNull: ${field} is ${form[field]}`);
+  }
+  return form as { [P in keyof T]: NonNullable<T[P]> };
 }
 
 export function catchWithInfo(promise: Promise<unknown>, filename: string, location: string) {

@@ -1,29 +1,61 @@
-<form [formGroup]="startMatchForm" (ngSubmit)="onSubmit()">
+<form
+  [formGroup]="startMatchForm"
+  *ngIf="startMatchData$ | async as startMatchData"
+  (ngSubmit)="onSubmit()"
+>
   <h1 mat-dialog-title>Start a match</h1>
   <div mat-dialog-content>
-    <mat-form-field appearance="fill">
-      <mat-label>Bots</mat-label>
-      <mat-chip-grid #bots aria-label="bot selection" required>
-        <mat-chip *ngFor="let bot of selectedBots" (removed)="removeBot(bot.id)">
-          {{ bot.name }}
-          <button matChipRemove>
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip>
-        <input
-          placeholder="Select bot..."
-          #botInput
+    <p>
+      <mat-form-field>
+        <mat-label>Map</mat-label>
+        <mat-select formControlName="map" required>
+          <mat-option *ngFor="let map of startMatchData.game.maps" [value]="map">
+            {{ map.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Bots</mat-label>
+        <mat-chip-grid
+          #bots
+          aria-label="bot selection"
           [formControl]="startMatchForm.controls.selectBot"
-          [matAutocomplete]="auto"
-          [matChipInputFor]="bots"
-        />
-      </mat-chip-grid>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option *ngFor="let bot of filteredBots$ | async" [value]="bot">
-          {{ bot.name }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+        >
+          <mat-chip *ngFor="let bot of selectedBots" (removed)="removeBot(bot.id)">
+            {{ bot.name }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <input
+            matInput
+            placeholder="Select bot..."
+            #botInput
+            [formControl]="startMatchForm.controls.selectBot"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="bots"
+            [errorStateMatcher]="selectBotErrorStateMatcher"
+          />
+        </mat-chip-grid>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let bot of startMatchData.bots" [value]="bot">
+            {{ bot.name }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error
+          *ngIf="startMatchForm.controls.selectBot.errors?.['notEnoughPlayers'] as playerCountMin"
+        >
+          Select at least {{ playerCountMin }} bots to play on this map.
+        </mat-error>
+        <mat-error
+          *ngIf="startMatchForm.controls.selectBot.getError('tooManyPlayers') as playerCountMax"
+        >
+          Select at most {{ playerCountMax }} bots to play on this map.
+        </mat-error>
+      </mat-form-field>
+    </p>
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
