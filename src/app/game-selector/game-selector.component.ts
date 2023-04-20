@@ -26,10 +26,4 @@ export class GameSelectorComponent {
   }
 
   games: Observable<GamePreview[]>;
-
-  async handleSelection(selectedGame: GamePreview) {
-    await this.router.navigate(["game", selectedGame.id], {
-      state: selectedGame,
-    });
-  }
 }

@@ -6,8 +6,8 @@
   <div id="bot-list">
     <div id="bot-list-items-container">
       <mat-list-item *ngFor="let bot of bots$ | async">
-        <div class="card-list-item-container">
-          <mat-card [routerLink]="['/bot', bot.id]">
+        <a class="card-list-item-container button-link" [routerLink]="['/bot', bot.id]">
+          <mat-card>
             <mat-card-content class="card-list-item-content {{ bot.evalStatus }}">
               <span>{{ bot.name }}</span>
               <mat-progress-spinner
@@ -21,7 +21,7 @@
               </button>
             </mat-card-content>
           </mat-card>
-        </div>
+        </a>
       </mat-list-item>
     </div>
   </div>

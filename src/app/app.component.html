@@ -2,7 +2,9 @@
   <div *ngIf="userProfile | async; else noUserProfile">
     <div class="row">
       <div class="col-8">
-        <h1 routerLink="" class="home-button">AI Arena</h1>
+        <a routerLink="" class="button-link">
+          <h1>AI Arena</h1>
+        </a>
       </div>
       <div class="col-4">
         <app-sidebar></app-sidebar>

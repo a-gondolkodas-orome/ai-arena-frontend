@@ -1,17 +1,17 @@
 <mat-list class="card-list">
   <div mat-subheader id="match-list-header">
     Matches
-    <mat-icon *ngIf="enableCreateMatch" class="start-match-icon" (click)="startMatch()"
-      >add</mat-icon
-    >
+    <mat-icon *ngIf="enableCreateMatch" class="start-match-icon" (click)="startMatch()">
+      add
+    </mat-icon>
   </div>
   <div id="match-list">
     <div id="match-list-items-container">
       <ng-container *ngIf="matches$ | async as matches">
         <ng-container *ngIf="matches !== MATCH_LIST__UNAUTHORIZED; else matchesUnauthorized">
           <mat-list-item *ngFor="let match of matches">
-            <div class="card-list-item-container">
-              <mat-card [routerLink]="['/match', match.id]">
+            <a class="card-list-item-container button-link" [routerLink]="['/match', match.id]">
+              <mat-card>
                 <mat-card-content class="card-list-item-content {{ match.evalStatus }}">
                   <span>
                     <mat-chip-listbox>
@@ -36,7 +36,7 @@
                   </button>
                 </mat-card-content>
               </mat-card>
-            </div>
+            </a>
           </mat-list-item>
         </ng-container>
         <ng-template #matchesUnauthorized>

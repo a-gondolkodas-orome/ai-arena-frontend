@@ -4,6 +4,8 @@
     <br />
     email: {{ user.email }}
   </div>
-  <button *ngIf="user.isAdmin" mat-stroked-button [routerLink]="'/admin'">Admin zone</button>
+  <a [routerLink]="'/admin'" class="button-link">
+    <button *ngIf="user.isAdmin" mat-stroked-button>Admin zone</button>
+  </a>
   <button mat-stroked-button (click)="onLogout()">Log out</button>
 </div>

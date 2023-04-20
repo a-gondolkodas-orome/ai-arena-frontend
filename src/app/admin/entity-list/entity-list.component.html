@@ -1,18 +1,22 @@
 <mat-list class="card-list">
   <mat-list-item *ngFor="let entityType of entityTypes">
-    <div class="card-list-item-container">
-      <mat-card [routerLink]="entityType.enabled ? entityType.uri : null">
+    <a
+      class="card-list-item-container button-link"
+      [routerLink]="entityType.enabled ? entityType.uri : null"
+    >
+      <mat-card>
         <mat-card-content class="card-list-item-content {{ entityType.enabled ? '' : 'disabled' }}">
           <span>{{ entityType.name }}</span>
           <button
             mat-icon-button
             [disabled]="!entityType.enabled"
             [routerLink]="[entityType.uri, 'create']"
+            (click)="(false)"
           >
             <mat-icon>add</mat-icon>
           </button>
         </mat-card-content>
       </mat-card>
-    </div>
+    </a>
   </mat-list-item>
 </mat-list>
