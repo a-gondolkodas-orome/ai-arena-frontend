@@ -1,8 +1,9 @@
 <div *ngIf="user$ | async as user" class="sidebar">
-  <p>Logged in as: {{ user.username }}</p>
-  <p>email: {{ user.email }}</p>
-  <button mat-stroked-button (click)="onLogout()">Log out</button>
-  <div id="admin-tools" *ngIf="user.isAdmin">
-    <button mat-stroked-button [routerLink]="'/admin'">Admin zone</button>
+  <div>
+    username: {{ user.username }}
+    <br />
+    email: {{ user.email }}
   </div>
+  <button *ngIf="user.isAdmin" mat-stroked-button [routerLink]="'/admin'">Admin zone</button>
+  <button mat-stroked-button (click)="onLogout()">Log out</button>
 </div>

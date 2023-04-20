@@ -1,15 +1,14 @@
 <div class="container">
   <div *ngIf="userProfile | async; else noUserProfile">
-    <h1 routerLink="" class="home-button">AI Arena</h1>
     <div class="row">
-      <div class="col-10">
-        <router-outlet></router-outlet>
+      <div class="col-8">
+        <h1 routerLink="" class="home-button">AI Arena</h1>
       </div>
-      <!--    TODO hide sidebar on small screens-->
-      <div class="col-2">
+      <div class="col-4">
         <app-sidebar></app-sidebar>
       </div>
     </div>
+    <router-outlet></router-outlet>
   </div>
   <ng-template #noUserProfile>
     <router-outlet></router-outlet>
