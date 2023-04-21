@@ -1,18 +1,13 @@
 <div class="container">
-  <div *ngIf="userProfile | async; else noUserProfile">
-    <div class="row">
-      <div class="col-8">
-        <a routerLink="" class="button-link">
-          <h1>AI Arena</h1>
-        </a>
-      </div>
-      <div class="col-4">
-        <app-sidebar></app-sidebar>
-      </div>
+  <div class="row">
+    <div class="col-8">
+      <a routerLink="" class="button-link">
+        <h1>AI Arena</h1>
+      </a>
     </div>
-    <router-outlet></router-outlet>
+    <div class="col-4" *ngIf="!(hideUserInfo$ | async) && (userProfile$ | async)">
+      <app-sidebar></app-sidebar>
+    </div>
   </div>
-  <ng-template #noUserProfile>
-    <router-outlet></router-outlet>
-  </ng-template>
+  <router-outlet (activate)="onActivate($event)"></router-outlet>
 </div>

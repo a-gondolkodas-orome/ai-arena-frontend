@@ -8,6 +8,7 @@ import { NotificationService } from "./notification.service";
 import { decode } from "../../utils";
 import { aiArenaExceptionCodec } from "../error";
 import { ErrorType } from "../../common";
+import { JwtToken } from "./jwt-token";
 
 export const GraphqlAuthMiddlewareProvider = {
   provide: APOLLO_OPTIONS,
@@ -25,7 +26,8 @@ export const GraphqlAuthMiddlewareProvider = {
               result.data &&
               Object.values(result.data).some(
                 (value) => value?.__typename === "GraphqlAuthenticationError",
-              )
+              ) &&
+              JwtToken.get()
             ) {
               loginStatusService.logout();
             } else if (result.errors) {

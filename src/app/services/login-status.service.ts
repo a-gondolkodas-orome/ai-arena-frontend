@@ -5,10 +5,12 @@ import { Subject } from "rxjs";
   providedIn: "root",
 })
 export class LoginStatusService {
-  loginStatus$ = new Subject<{ type: "login"; token: string } | { type: "logout" }>();
+  loginStatus$ = new Subject<
+    { type: "login"; token: string; returnUrl?: string } | { type: "logout" }
+  >();
 
-  login(token: string) {
-    this.loginStatus$.next({ type: "login", token });
+  login(token: string, returnUrl?: string) {
+    this.loginStatus$.next({ type: "login", token, returnUrl });
   }
 
   logout() {

@@ -1,11 +1,12 @@
 import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { concatMap, filter, from, map, Subscription } from "rxjs";
+import { filter, map, Subscription, tap } from "rxjs";
 import { RegisterGQL } from "../graphql/generated";
 import { LoginStatusService } from "../services/login-status.service";
 import { Router } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
 import { handleGraphqlAuthErrors, handleValidationErrors } from "../error";
+import { symbolHideUserInfo } from "../../types";
 
 @Component({
   selector: "app-registration",
@@ -20,6 +21,8 @@ export class RegistrationComponent implements OnDestroy {
     protected loginStatusService: LoginStatusService,
     protected router: Router,
   ) {}
+
+  [symbolHideUserInfo] = true;
 
   registrationForm = this.formBuilder.nonNullable.group({
     username: "",
@@ -47,9 +50,8 @@ export class RegistrationComponent implements OnDestroy {
           this.notificationService,
           this.registrationForm,
         ),
-        concatMap((register) => {
+        tap((register) => {
           this.loginStatusService.login(register.token);
-          return from(this.router.navigate([""]));
         }),
       )
       .subscribe();

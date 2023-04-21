@@ -16,9 +16,8 @@ export class Sse {
   static matchEvents = new Subject<MatchUpdateEvent>();
 
   static open(token: string) {
-    if (this.isOpen) {
-      throw new Error("Sse.open: already open");
-    }
+    this.close();
+    this.abortController = new AbortController();
     fetchEventSource(environment.backendUrl + "/sse", {
       headers: { Authorization: `Bearer ${token}` },
       onmessage: (message) => {
@@ -38,16 +37,16 @@ export class Sse {
       },
       // eslint-disable-next-line no-console
       onerror: (error: unknown) => console.error("SSE error", error),
+      signal: this.abortController.signal,
       // eslint-disable-next-line no-console
     }).catch((error) => console.error("SSE error", error));
   }
 
   static close() {
-    if (!this.isOpen) return;
+    if (!this.abortController) return;
     this.abortController.abort();
-    this.isOpen = false;
+    this.abortController = undefined;
   }
 
-  protected static isOpen = false;
-  protected static abortController = new AbortController();
+  protected static abortController?: AbortController;
 }

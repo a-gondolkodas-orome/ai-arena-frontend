@@ -1,11 +1,12 @@
 import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { concatMap, from, map, Subscription } from "rxjs";
+import { map, Subscription, tap } from "rxjs";
 import { LoginGQL } from "../graphql/generated";
 import { LoginStatusService } from "../services/login-status.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
 import { handleGraphqlAuthErrors } from "../error";
+import { symbolHideUserInfo } from "../../types";
 
 @Component({
   selector: "app-login",
@@ -20,9 +21,10 @@ export class LoginComponent implements OnDestroy {
     protected loginGQL: LoginGQL,
     protected notificationService: NotificationService,
     protected loginStatusService: LoginStatusService,
-    protected router: Router,
     protected route: ActivatedRoute,
   ) {}
+
+  [symbolHideUserInfo] = true;
 
   loginForm = this.formBuilder.nonNullable.group({
     email: "",
@@ -38,12 +40,11 @@ export class LoginComponent implements OnDestroy {
       .pipe(
         map((result) => result.data.login),
         handleGraphqlAuthErrors(this.notificationService),
-        concatMap((login) => {
-          this.loginStatusService.login(login.token);
-          return from(
-            this.router.navigate([
-              this.route.snapshot.queryParamMap.get(LoginComponent.QUERY_PARAM__RETURN_URL) ?? "",
-            ]),
+        tap((login) => {
+          this.loginStatusService.login(
+            login.token,
+            this.route.snapshot.queryParamMap.get(LoginComponent.QUERY_PARAM__RETURN_URL) ??
+              undefined,
           );
         }),
       )

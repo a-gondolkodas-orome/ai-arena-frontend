@@ -1,7 +1,8 @@
 import { Component } from "@angular/core";
 import { AuthService } from "./services/auth.service";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { User } from "./graphql/generated";
+import { symbolHideUserInfo } from "../types";
 
 @Component({
   selector: "app-root",
@@ -10,8 +11,15 @@ import { User } from "./graphql/generated";
 })
 export class AppComponent {
   constructor(protected authService: AuthService) {
-    this.userProfile = authService.userProfile$.asObservable();
+    this.userProfile$ = authService.userProfile$.asObservable();
   }
 
-  userProfile: Observable<User | undefined>;
+  hideUserInfo$ = new BehaviorSubject<boolean>(false);
+  userProfile$: Observable<User | undefined>;
+
+  onActivate(component: unknown) {
+    this.hideUserInfo$.next(
+      !!(component as { [symbolHideUserInfo]?: boolean })[symbolHideUserInfo],
+    );
+  }
 }
