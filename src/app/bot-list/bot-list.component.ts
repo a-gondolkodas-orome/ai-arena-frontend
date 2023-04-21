@@ -75,7 +75,7 @@ export class BotListComponent implements OnInit, OnDestroy {
             const cacheId = cache.identify({ __typename: "Bot", id });
             cache.modify({
               fields: {
-                getBots: (cacheValue: unknown, { DELETE }) => {
+                getBots: (cacheValue: unknown, { DELETE }: { DELETE: unknown }) => {
                   const getBots = decode(BotListComponent.getBotsCacheCodec, cacheValue);
                   if (data == null || data.deleteBot !== null || !cacheId)
                     // TODO using DELETE is a workaround until INVALIDATE is fixed

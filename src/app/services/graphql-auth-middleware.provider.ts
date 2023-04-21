@@ -7,7 +7,7 @@ import { environment } from "../../environments/environment";
 import { NotificationService } from "./notification.service";
 import { decode } from "../../utils";
 import { aiArenaExceptionCodec } from "../error";
-import { ErrorType } from "../../common";
+import { ErrorType, GqlValue } from "../../common";
 import { JwtToken } from "./jwt-token";
 
 export const GraphqlAuthMiddlewareProvider = {
@@ -25,7 +25,8 @@ export const GraphqlAuthMiddlewareProvider = {
             if (
               result.data &&
               Object.values(result.data).some(
-                (value) => value?.__typename === "GraphqlAuthenticationError",
+                (value: unknown) =>
+                  (value as GqlValue)?.__typename === "GraphqlAuthenticationError",
               ) &&
               JwtToken.get()
             ) {

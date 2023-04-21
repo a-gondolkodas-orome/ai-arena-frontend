@@ -7,7 +7,7 @@ import { LoginComponent } from "../login/login.component";
 export class AuthGuard implements CanActivate {
   constructor(protected router: Router) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return JwtToken.get()
       ? true
       : this.router.createUrlTree(["/login"], {

@@ -11,6 +11,7 @@ import { BotWithUploadLink, CreateBotGQL } from "../graphql/generated";
 import { NotificationService } from "../services/notification.service";
 import { environment } from "../../environments/environment";
 import { BotListComponent } from "../bot-list/bot-list.component";
+import { ToReferenceFunction } from "@apollo/client/cache/core/types/common";
 
 @Component({
   selector: "app-add-bot-dialog",
@@ -62,7 +63,16 @@ export class AddBotDialogComponent implements OnDestroy {
           update: (cache, { data }) => {
             cache.modify({
               fields: {
-                getBots: (cacheValue: unknown, { toReference, DELETE }) => {
+                getBots: (
+                  cacheValue: unknown,
+                  {
+                    toReference,
+                    DELETE,
+                  }: {
+                    toReference: ToReferenceFunction;
+                    DELETE: unknown;
+                  },
+                ) => {
                   const getBots = decode(BotListComponent.getBotsCacheCodec, cacheValue);
                   const botWithUploadLink = data?.createBot as BotWithUploadLink;
                   let id;

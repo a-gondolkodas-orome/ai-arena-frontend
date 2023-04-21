@@ -154,7 +154,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
             const cacheId = cache.identify({ __typename: "Match", id });
             cache.modify({
               fields: {
-                getMatches: (cacheValue: unknown, { DELETE }) => {
+                getMatches: (cacheValue: unknown, { DELETE }: { DELETE: unknown }) => {
                   const getMatches = decode(MatchListComponent.getMatchesCacheCodec, cacheValue);
                   if (data == null || data.deleteMatch !== null || !cacheId) return DELETE;
 

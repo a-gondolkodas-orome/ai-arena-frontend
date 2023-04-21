@@ -20,8 +20,9 @@ import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import { GetGameQueryResult } from "../../types";
 import { ErrorStateMatcher } from "@angular/material/core";
-
+import { ToReferenceFunction } from "@apollo/client/cache/core/types/common";
 type BotHead = Pick<Bot, "id" | "name">;
+const botHeadCodec = t.type({ id: t.string, name: t.string });
 
 @Component({
   selector: "app-start-match-dialog",
@@ -106,7 +107,7 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
 
   selectBotTouched = false;
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedBots.push(event.option.value);
+    this.selectedBots.push(decode(botHeadCodec, event.option.value));
     this.botInput.nativeElement.value = "";
     this.startMatchForm.controls.selectBot.setValue("");
     this.selectBotTouched = true;
@@ -134,7 +135,10 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
           update: (cache, { data }) => {
             cache.modify({
               fields: {
-                getMatches: (cacheValue: unknown, { toReference, DELETE }) => {
+                getMatches: (
+                  cacheValue: unknown,
+                  { toReference, DELETE }: { toReference: ToReferenceFunction; DELETE: unknown },
+                ) => {
                   const getMatches = decode(MatchListComponent.getMatchesCacheCodec, cacheValue);
                   const match = data?.createMatch as Match;
                   let id;

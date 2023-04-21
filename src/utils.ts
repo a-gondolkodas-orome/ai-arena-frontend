@@ -12,7 +12,7 @@ export namespace Time {
 
 export function notNull<T>(value: T, message?: string) {
   if (value === null || value === undefined)
-    throw new Error(message ?? `notNull: value is ${value}`);
+    throw new Error(message ?? `notNull: value is ${undefined}`);
   return value as Exclude<T, null | undefined>;
 }
 
@@ -24,8 +24,8 @@ export function formNotNull<T>(form: T) {
 }
 
 export function catchWithInfo(promise: Promise<unknown>, filename: string, location: string) {
-  promise.catch((error) => {
-    throw new Error(`${error.message()} at ${filename} - ${location}`);
+  promise.catch((error: Error) => {
+    throw new Error(`${error.message} at ${filename} - ${location}`);
   });
 }
 

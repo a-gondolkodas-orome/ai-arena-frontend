@@ -12,12 +12,12 @@ export const typePolicies: TypePolicies = {
   Match: {
     fields: {
       result: {
-        merge(existing, incoming, { mergeObjects }) {
+        merge(existing, incoming, { mergeObjects }): unknown {
           return mergeObjects(existing, incoming);
         },
       },
       runStatus: {
-        merge(existing, incoming, { mergeObjects }) {
+        merge(existing, incoming, { mergeObjects }): unknown {
           return mergeObjects(existing, incoming);
         },
       },

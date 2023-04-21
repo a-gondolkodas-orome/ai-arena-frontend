@@ -12,7 +12,7 @@ import {
   User,
 } from "../graphql/generated";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { combineLatest, filter, map, Observable, Subscription, switchMap } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { AsyncPipe, CommonModule, DatePipe } from "@angular/common";
@@ -78,13 +78,11 @@ export class ContestComponent implements OnInit, OnDestroy {
     protected route: ActivatedRoute,
     protected router: Router,
     protected formBuilder: FormBuilder,
-  ) {
-    this.registerForm = this.formBuilder.nonNullable.group({ botId: "" });
-  }
+  ) {}
 
   contestData$!: Observable<ContestData>;
   adminMode = false;
-  registerForm!: FormGroup;
+  registerForm = this.formBuilder.nonNullable.group({ botId: "" });
   contestId!: string;
 
   ngOnInit() {
