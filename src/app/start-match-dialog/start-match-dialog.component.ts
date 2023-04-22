@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AbstractControl, FormBuilder } from "@angular/forms";
 import {
   Bot,
+  BotSubmitStage,
   CreateMatchGQL,
   GameMap,
   GetBotsGQL,
@@ -82,7 +83,9 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
     this.allBots$ = this.getBots.watch({ gameId: this.data.gameId }).valueChanges.pipe(
       map((result) => result.data.getBots),
       handleGraphqlAuthErrors(this.notificationService),
-      map((getBots) => getBots.bots),
+      map((getBots) =>
+        getBots.bots.filter((bot) => bot.submitStatus.stage === BotSubmitStage.CheckSuccess),
+      ),
     );
     this.startMatchData$ = combineLatest([
       this.game$,
