@@ -80,13 +80,15 @@ export class StartMatchDialogComponent implements OnInit, OnDestroy {
       handleGraphqlAuthErrors(this.notificationService),
       tap((game) => this.startMatchForm.controls.map.setValue(game.maps[0])),
     );
-    this.allBots$ = this.getBots.watch({ gameId: this.data.gameId }).valueChanges.pipe(
-      map((result) => result.data.getBots),
-      handleGraphqlAuthErrors(this.notificationService),
-      map((getBots) =>
-        getBots.bots.filter((bot) => bot.submitStatus.stage === BotSubmitStage.CheckSuccess),
-      ),
-    );
+    this.allBots$ = this.getBots
+      .watch({ gameId: this.data.gameId, includeTestBots: true })
+      .valueChanges.pipe(
+        map((result) => result.data.getBots),
+        handleGraphqlAuthErrors(this.notificationService),
+        map((getBots) =>
+          getBots.bots.filter((bot) => bot.submitStatus.stage === BotSubmitStage.CheckSuccess),
+        ),
+      );
     this.startMatchData$ = combineLatest([
       this.game$,
       this.allBots$,

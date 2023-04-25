@@ -81,6 +81,7 @@ export class AddBotDialogComponent implements OnDestroy {
                     !(id = cache.identify(botWithUploadLink.bot))
                   )
                     return DELETE;
+                  // Not ideal, because we can't sort the system bots to the end, like the backend does
                   return {
                     ...getBots,
                     bots: [...getBots.bots, toReference(id)],

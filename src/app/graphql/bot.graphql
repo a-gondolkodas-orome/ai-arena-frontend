@@ -24,8 +24,8 @@ mutation CreateBot($botInput: BotInput!) {
   }
 }
 
-query GetBots($gameId: String!) {
-  getBots(gameId: $gameId) {
+query GetBots($gameId: String!, $includeTestBots: Boolean!) {
+  getBots(gameId: $gameId, includeTestBots: $includeTestBots) {
     __typename
     ... on Bots {
       bots {

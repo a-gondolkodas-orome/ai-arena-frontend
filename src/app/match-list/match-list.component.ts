@@ -65,7 +65,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
   matches$?: Observable<
     | (MatchHeadFragment & {
         evalStatus: string;
-        scoreboard?: { id: string; name: string; score: number }[];
+        scoreboard?: { id: string; name: string; score: number | null }[];
       })[]
     | typeof this.MATCH_LIST__UNAUTHORIZED
   >;
@@ -113,21 +113,33 @@ export class MatchListComponent implements OnInit, OnDestroy {
   }
 
   protected getScoreboard(match: MatchHeadFragment) {
-    if (!match.result) return undefined;
-    const scores = decodeJson(scoresCodec, match.result.scoreJson);
-    const scoreboard = [];
-    const botCounter = new Map<string, number>();
-    for (const bot of match.bots) {
-      const index = botCounter.get(bot.id) ?? 0;
-      botCounter.set(bot.id, index + 1);
-      const score = scores[index ? `${bot.id}.${index}` : bot.id];
-      scoreboard.push({
-        id: bot.id,
-        name: this.context.__typename === "Game" ? bot.name : bot.user.username,
-        score,
-      });
+    const DELETED_BOT_NAME = "<deleted bot>";
+    if (!match.result) {
+      return match.bots.map((bot) => ({
+        id: bot?.id ?? "",
+        name: bot?.name ?? DELETED_BOT_NAME,
+        score: null,
+      }));
     }
-    return scoreboard.sort((a, b) => b.score - a.score);
+    const botsById = new Map(
+      match.bots
+        .filter((bot): bot is Exclude<typeof bot, null> => bot !== null)
+        .map((bot) => [bot.id, bot]),
+    );
+    const scores = decodeJson(scoresCodec, match.result.scoreJson);
+    return Object.entries(scores)
+      .map(([id, score]) => {
+        const indexedId = id.match(/^(?<id>[0-9a-f]{24})\.\d+$/);
+        if (indexedId?.groups) id = indexedId.groups["id"];
+        const bot = botsById.get(id);
+        const name = !bot
+          ? DELETED_BOT_NAME
+          : this.context.__typename === "Game"
+          ? bot.name
+          : bot.user.username;
+        return { id, name, score };
+      })
+      .sort((a, b) => b.score - a.score);
   }
 
   startMatch() {

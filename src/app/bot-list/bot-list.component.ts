@@ -34,18 +34,20 @@ export class BotListComponent implements OnInit, OnDestroy {
   protected sseSubscription?: Subscription;
 
   ngOnInit() {
-    this.bots$ = this.getBots.watch({ gameId: this.game.id }).valueChanges.pipe(
-      map((result) => result.data.getBots),
-      handleGraphqlAuthErrors(this.notificationService),
-      map((getBots) =>
-        getBots.bots
-          .filter((bot) => !bot.deleted)
-          .map((bot) => ({
-            ...bot,
-            evalStatus: getEvalStatus(bot.submitStatus.stage.toString()),
-          })),
-      ),
-    );
+    this.bots$ = this.getBots
+      .watch({ gameId: this.game.id, includeTestBots: false })
+      .valueChanges.pipe(
+        map((result) => result.data.getBots),
+        handleGraphqlAuthErrors(this.notificationService),
+        map((getBots) =>
+          getBots.bots
+            .filter((bot) => !bot.deleted)
+            .map((bot) => ({
+              ...bot,
+              evalStatus: getEvalStatus(bot.submitStatus.stage.toString()),
+            })),
+        ),
+      );
     this.sseSubscription = Sse.botEvents
       .pipe(
         concatMap((event) =>

@@ -16,7 +16,7 @@
                 [hidden]="bot.evalStatus !== 'eval-in-progress'"
               >
               </mat-progress-spinner>
-              <button mat-icon-button (click)="deleteBot(bot.id, $event)">
+              <button mat-icon-button (click)="deleteBot(bot.id, $event); (false)">
                 <mat-icon>delete</mat-icon>
               </button>
             </mat-card-content>

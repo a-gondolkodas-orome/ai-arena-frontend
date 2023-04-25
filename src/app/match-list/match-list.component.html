@@ -16,7 +16,7 @@
                   <span>
                     <mat-chip-listbox>
                       <mat-chip-option *ngFor="let bot of match.scoreboard">
-                        {{ bot.name }}: {{ bot.score }}
+                        {{ bot.name }}: {{ bot.score ?? "?" }}
                       </mat-chip-option>
                       <mat-chip-option>map: {{ match.mapName }}</mat-chip-option>
                     </mat-chip-listbox>
@@ -30,7 +30,7 @@
                   <button
                     mat-icon-button
                     *ngIf="enableDeleteMatch"
-                    (click)="deleteMatch(match.id, $event)"
+                    (click)="deleteMatch(match.id, $event); (false)"
                   >
                     <mat-icon>delete</mat-icon>
                   </button>

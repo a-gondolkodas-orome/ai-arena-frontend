@@ -109,18 +109,20 @@ export class ContestComponent implements OnInit, OnDestroy {
               contest: { ...contest, scoreBoard: this.getScoreboard(contest) },
             }))
           : switchMap(([contest, user]) =>
-              this.getBots.watch({ gameId: contest.game.id }).valueChanges.pipe(
-                map((result) => result.data.getBots),
-                handleGraphqlAuthErrors(this.notificationService),
-                map((result) => ({
-                  adminMode: false as const,
-                  contest: { ...contest, scoreBoard: this.getScoreboard(contest) },
-                  bots: result.bots.filter(
-                    (bot) => bot.submitStatus.stage === BotSubmitStage.CheckSuccess,
-                  ),
-                  isRegistered: contest.bots.some((bot) => bot.user.id === user.id),
-                })),
-              ),
+              this.getBots
+                .watch({ gameId: contest.game.id, includeTestBots: true })
+                .valueChanges.pipe(
+                  map((result) => result.data.getBots),
+                  handleGraphqlAuthErrors(this.notificationService),
+                  map((result) => ({
+                    adminMode: false as const,
+                    contest: { ...contest, scoreBoard: this.getScoreboard(contest) },
+                    bots: result.bots.filter(
+                      (bot) => bot.submitStatus.stage === BotSubmitStage.CheckSuccess,
+                    ),
+                    isRegistered: contest.bots.some((bot) => bot.user.id === user.id),
+                  })),
+                ),
             ),
       );
     }

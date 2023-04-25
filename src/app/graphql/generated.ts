@@ -221,7 +221,7 @@ export type LoginSuccess = {
 
 export type Match = {
   __typename?: "Match";
-  bots: Array<Bot>;
+  bots: Array<Maybe<Bot>>;
   game: Game;
   id: Scalars["ID"];
   mapName: Scalars["String"];
@@ -349,6 +349,7 @@ export type QueryGetBotArgs = {
 
 export type QueryGetBotsArgs = {
   gameId: Scalars["String"];
+  includeTestBots: Scalars["Boolean"];
 };
 
 export type QueryGetContestArgs = {
@@ -555,6 +556,7 @@ export type CreateBotMutation = {
 
 export type GetBotsQueryVariables = Exact<{
   gameId: Scalars["String"];
+  includeTestBots: Scalars["Boolean"];
 }>;
 
 export type GetBotsQuery = {
@@ -646,7 +648,7 @@ export type CreateContestMutation = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
         }> | null;
       }
     | {
@@ -716,7 +718,7 @@ export type GetContestQuery = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
         }> | null;
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
@@ -742,7 +744,7 @@ export type GetContestMatchesQuery = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
           runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage };
           result?: { __typename?: "MatchResult"; scoreJson: string } | null;
         }> | null;
@@ -786,7 +788,7 @@ export type RegisterToContestMutation = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
         }> | null;
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
@@ -836,7 +838,7 @@ export type UnregisterFromContestMutation = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
         }> | null;
       }
     | { __typename: "ContestNotFoundError"; message: string }
@@ -879,7 +881,7 @@ export type UpdateContestStatusMutation = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
         }> | null;
       }
     | { __typename: "ContestNotFoundError"; message: string }
@@ -927,7 +929,7 @@ export type StartContestMutation = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
         }> | null;
       }
     | { __typename: "ContestNotFoundError"; message: string }
@@ -963,7 +965,7 @@ export type ContestDetailsFragment = {
       id: string;
       name: string;
       user: { __typename?: "User"; id: string; username: string };
-    }>;
+    } | null>;
   }> | null;
 };
 
@@ -1063,7 +1065,7 @@ export type GetMatchesQuery = {
             id: string;
             name: string;
             user: { __typename?: "User"; id: string; username: string };
-          }>;
+          } | null>;
           runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage };
           result?: { __typename?: "MatchResult"; scoreJson: string } | null;
         }>;
@@ -1108,7 +1110,7 @@ export type MatchHeadFragment = {
     id: string;
     name: string;
     user: { __typename?: "User"; id: string; username: string };
-  }>;
+  } | null>;
   runStatus: { __typename?: "MatchRunStatus"; stage: MatchRunStage };
   result?: { __typename?: "MatchResult"; scoreJson: string } | null;
 };
@@ -1124,7 +1126,7 @@ export type MatchDetailsFragment = {
     id: string;
     name: string;
     user: { __typename?: "User"; id: string; username: string };
-  }>;
+  } | null>;
 };
 
 export const MatchHeadFragmentDoc = gql`
@@ -1324,8 +1326,8 @@ export class CreateBotGQL extends Apollo.Mutation<CreateBotMutation, CreateBotMu
   }
 }
 export const GetBotsDocument = gql`
-  query GetBots($gameId: String!) {
-    getBots(gameId: $gameId) {
+  query GetBots($gameId: String!, $includeTestBots: Boolean!) {
+    getBots(gameId: $gameId, includeTestBots: $includeTestBots) {
       __typename
       ... on Bots {
         bots {
