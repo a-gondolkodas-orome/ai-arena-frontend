@@ -24,7 +24,7 @@
   "author": "András Leitereg",
   "license": "UNLICENSED",
   "dependencies": {
-    "@Kristofy/nanowar-visualizer": "^0.0.15",
+    "@Kristofy/nanowar-visualizer": "^0.0.21",
     "@angular-material-components/file-input": "9",
     "@angular/animations": "15",
     "@angular/cdk": "15.0.3",
@@ -45,6 +45,7 @@
     "@ng-bootstrap/ng-bootstrap": "14",
     "@ng-matero/extensions": "15",
     "@popperjs/core": "^2.10.2",
+    "@types/p5": "^1.6.1",
     "apollo-angular": "4",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.9.1",

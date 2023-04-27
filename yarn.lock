@@ -5,9 +5,9 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@Kristofy/nanowar-visualizer@npm:^0.0.15":
-  version: 0.0.15
-  resolution: "@Kristofy/nanowar-visualizer@npm:0.0.15::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fnanowar-visualizer%2F0.0.15%2F9c9db7a2ec82e33fe66d386cf49897c318a5a51c"
+"@Kristofy/nanowar-visualizer@npm:^0.0.21":
+  version: 0.0.21
+  resolution: "@Kristofy/nanowar-visualizer@npm:0.0.21::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fnanowar-visualizer%2F0.0.21%2F3b693e68471afb6da4f2a17d44bef74598c3caf0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
@@ -17,7 +17,7 @@ __metadata:
     "@fortawesome/fontawesome-svg-core": ^6.4.0
     "@fortawesome/free-solid-svg-icons": ^6.4.0
     p5: 1
-  checksum: ce4511d9f55b72ca8c153308fe7a94ef99589fbe3aad484db2c293c73d657b60f7e47ae2395e63a64a3ffe30b8f7505a791e207346e5a5caf9ee62f76bb06e87
+  checksum: ac4af3631012592b059c3138611716c9d1e61c1be55263eb6cd4d09d950b1147564498ca09f5a753f035c80f95fecc4f2462b3a33e4108a61b0cff1f58d1a261
   languageName: node
   linkType: hard
 
@@ -4126,6 +4126,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/p5@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "@types/p5@npm:1.6.1"
+  checksum: 539d550bba85a1bf1ed4acc082d3beb8ca23ef5eeb94836eabd6a5c50ba69462d3452fb9671b7c0e05f580b45c11d5ff6178a346827757606142831c1b0f254d
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -4658,7 +4665,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ai-arena-frontend@workspace:."
   dependencies:
-    "@Kristofy/nanowar-visualizer": ^0.0.15
+    "@Kristofy/nanowar-visualizer": ^0.0.21
     "@angular-devkit/build-angular": 15
     "@angular-material-components/file-input": 9
     "@angular/animations": 15
@@ -4690,6 +4697,7 @@ __metadata:
     "@types/jasmine": ~4.0.0
     "@types/marked": ^4.0.7
     "@types/node": ^18.7.23
+    "@types/p5": ^1.6.1
     "@typescript-eslint/eslint-plugin": ^5.38.0
     "@typescript-eslint/parser": ^5.38.0
     apollo-angular: 4

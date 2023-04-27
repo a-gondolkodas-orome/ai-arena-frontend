@@ -1,4 +1,4 @@
-<div *ngIf="match$ | async as match" class="row">
+<div *ngIf="match$ | async as match" class="row full-height">
   <lib-nanowar-visualizer
     *ngIf="match.result; else noResult"
     [jsonstring]="match.result.log"
