@@ -16,6 +16,11 @@ Install yarn (package manager): https://yarnpkg.com/getting-started/install
 
 Clone the repository: `git clone https://github.com/leanil/ai-arena-frontend.git`
 
+Create a personal access token on GitHub for installing the visualizer modules.
+https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages
+
+Run `yarn npm login --scope Kristofy` and provide you GitHub username & token.
+
 Install the dependencies: run `yarn` in the repo directory (`ai-arena-frontend`)
 
 ## Development server
