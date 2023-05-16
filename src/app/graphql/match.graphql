@@ -34,14 +34,7 @@ query GetMatch($id: String!) {
   getMatch(id: $id) {
     __typename
     ... on Match {
-      id
-      result {
-        log
-      }
-      runStatus {
-        stage
-        log
-      }
+      ...MatchDetails
     }
     ... on GraphqlError {
       message
@@ -62,12 +55,17 @@ fragment MatchHead on Match {
   id
   mapName
   bots {
-    id
-    user {
+    ... on Bot {
       id
-      username
+      user {
+        id
+        username
+      }
+      name
     }
-    name
+    ... on DeletedBot {
+      id
+    }
   }
   runStatus {
     stage

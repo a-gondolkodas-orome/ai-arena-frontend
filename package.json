@@ -15,7 +15,7 @@
     "eslint:check": "yarn run eslint --report-unused-disable-directives src/",
     "eslint:fix": "yarn run eslint:check --fix",
     "postinstall": "husky install",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen && yarn run prettier --write src/app/graphql/generated.ts"
   },
   "repository": {
     "type": "git",

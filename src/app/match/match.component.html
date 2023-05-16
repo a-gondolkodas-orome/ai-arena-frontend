@@ -1,8 +1,8 @@
-<div *ngIf="match$ | async as match" class="row full-height">
+<div *ngIf="matchWithWatchBot$ | async as match" class="row full-height">
   <lib-nanowar-visualizer
     *ngIf="match.result; else noResult"
     [jsonstring]="match.result.log"
-    [bot_id]="'0'"
+    [bot_id]="match.watchBotId ?? match.bots[0].id"
   ></lib-nanowar-visualizer>
   <ng-template #noResult [ngSwitch]="true">
     <div *ngSwitchCase="match.runStatus.stage === MatchRunStage.RunSuccess">

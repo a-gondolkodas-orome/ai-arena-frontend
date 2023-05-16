@@ -137,12 +137,17 @@ fragment ContestDetails on Contest {
   name
   date
   bots {
-    id
-    user {
+    ... on Bot {
       id
-      username
+      user {
+        id
+        username
+      }
+      name
     }
-    name
+    ... on DeletedBot {
+      id
+    }
   }
   matches {
     ...MatchDetails

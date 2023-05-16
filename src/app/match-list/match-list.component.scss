@@ -13,5 +13,9 @@
 
   #match-list-items-container {
     width: 80%;
+
+    .deleted-bot {
+      text-decoration: line-through;
+    }
   }
 }

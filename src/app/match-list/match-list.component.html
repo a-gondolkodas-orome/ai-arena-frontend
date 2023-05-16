@@ -15,8 +15,12 @@
                 <mat-card-content class="card-list-item-content {{ match.evalStatus }}">
                   <span>
                     <mat-chip-listbox>
-                      <mat-chip-option *ngFor="let bot of match.scoreboard">
-                        {{ bot.name }}: {{ bot.score ?? "?" }}
+                      <mat-chip-option
+                        *ngFor="let bot of match.scoreboard"
+                        [ngClass]="{ 'deleted-bot': bot.name == null }"
+                      >
+                        {{ bot.name ?? bot.id.substring(0, 8) }}
+                        {{ bot.score != null ? ": " + bot.score : "" }}
                       </mat-chip-option>
                       <mat-chip-option>map: {{ match.mapName }}</mat-chip-option>
                     </mat-chip-listbox>

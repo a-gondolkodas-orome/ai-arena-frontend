@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { GetMatchGQL, GetMatchQuery, MatchRunStage } from "../graphql/generated";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
-import { concatMap, EMPTY, filter, map, Observable, Subscription } from "rxjs";
+import { combineLatest, concatMap, EMPTY, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { Location } from "@angular/common";
 import { Sse } from "../services/sse";
+import { AuthService } from "../services/auth.service";
 
 @Component({
   selector: "app-match",
@@ -20,6 +21,7 @@ export class MatchComponent implements OnInit, OnDestroy {
     protected route: ActivatedRoute,
     protected router: Router,
     protected notificationService: NotificationService,
+    protected authService: AuthService,
     protected location: Location,
   ) {}
 
@@ -27,11 +29,11 @@ export class MatchComponent implements OnInit, OnDestroy {
     const matchId = this.route.snapshot.paramMap.get("id");
     if (matchId === null) {
       this.notificationService.error("No match id in path");
-      this.match$ = EMPTY;
+      this.matchWithWatchBot$ = EMPTY;
       this.handleBackToGame();
     } else {
       const matchQuery = this.getMatch.watch({ id: matchId });
-      this.match$ = matchQuery.valueChanges.pipe(
+      const match$ = matchQuery.valueChanges.pipe(
         map((result) => result.data.getMatch),
         filter(<T>(value: T): value is Exclude<T, null | undefined> => {
           if (value != null) return true;
@@ -39,6 +41,17 @@ export class MatchComponent implements OnInit, OnDestroy {
           return false;
         }),
         handleGraphqlAuthErrors(this.notificationService),
+      );
+      const user$ = this.authService.userProfile$.pipe(
+        filter((user): user is Exclude<typeof user, undefined> => user !== undefined),
+      );
+      this.matchWithWatchBot$ = combineLatest([match$, user$]).pipe(
+        map(([match, user]) => {
+          const userBot = match.bots.find(
+            (bot) => bot.__typename === "Bot" && bot.user.id === user.id,
+          );
+          return { ...match, watchBotId: userBot?.id };
+        }),
       );
       this.sseSubscription = Sse.matchEvents
         .pipe(
@@ -50,7 +63,9 @@ export class MatchComponent implements OnInit, OnDestroy {
     }
   }
 
-  match$?: Observable<Extract<GetMatchQuery["getMatch"], { __typename: "Match" }>>;
+  matchWithWatchBot$!: Observable<
+    Extract<GetMatchQuery["getMatch"], { __typename: "Match" }> & { watchBotId?: string }
+  >;
   protected sseSubscription?: Subscription;
 
   handleBackToGame() {

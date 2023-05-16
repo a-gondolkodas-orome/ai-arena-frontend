@@ -39,7 +39,12 @@
   <div>
     registered users ({{ contestData.contest.bots.length }}):
     <ul *ngIf="contestData.contest.bots.length">
-      <li *ngFor="let bot of contestData.contest.bots">{{ bot.user.username }} ({{ bot.name }})</li>
+      <li *ngFor="let bot of contestData.contest.bots">
+        <span *ngIf="bot.__typename === 'DeletedBot'" class="deleted-bot">{{
+          bot.id.substring(0, 8)
+        }}</span>
+        <span *ngIf="bot.__typename === 'Bot'">{{ bot.user.username }} ({{ bot.name }})</span>
+      </li>
     </ul>
     <div *ngIf="!contestData.adminMode && contestData.contest.status === 'OPEN'">
       <form [formGroup]="registerForm" (ngSubmit)="onRegisterToContest()">

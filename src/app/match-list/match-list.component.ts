@@ -65,7 +65,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
   matches$?: Observable<
     | (MatchHeadFragment & {
         evalStatus: string;
-        scoreboard?: { id: string; name: string; score: number | null }[];
+        scoreboard?: { id: string; name: string | null; score: number | null }[];
       })[]
     | typeof this.MATCH_LIST__UNAUTHORIZED
   >;
@@ -113,11 +113,10 @@ export class MatchListComponent implements OnInit, OnDestroy {
   }
 
   protected getScoreboard(match: MatchHeadFragment) {
-    const DELETED_BOT_NAME = "<deleted bot>";
     if (!match.result) {
       return match.bots.map((bot) => ({
-        id: bot?.id ?? "",
-        name: bot?.name ?? DELETED_BOT_NAME,
+        id: bot.id,
+        name: bot.__typename === "Bot" ? bot.name : null,
         score: null,
       }));
     }
@@ -132,11 +131,13 @@ export class MatchListComponent implements OnInit, OnDestroy {
         const indexedId = id.match(/^(?<id>[0-9a-f]{24})\.\d+$/);
         if (indexedId?.groups) id = indexedId.groups["id"];
         const bot = botsById.get(id);
-        const name = !bot
-          ? DELETED_BOT_NAME
-          : this.context.__typename === "Game"
-          ? bot.name
-          : bot.user.username;
+        if (!bot) this.notificationService.error("Unknown bot id in match scores: " + id);
+        const name =
+          !bot || bot.__typename == "DeletedBot"
+            ? null
+            : this.context.__typename === "Game"
+            ? bot.name
+            : bot.user.username;
         return { id, name, score };
       })
       .sort((a, b) => b.score - a.score);

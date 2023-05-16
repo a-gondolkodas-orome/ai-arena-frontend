@@ -31,14 +31,14 @@ type ContestData =
   | {
       adminMode: true;
       contest: GetContestQueryResult & {
-        scoreBoard?: { place: number; username: string; score: number }[];
+        scoreBoard?: { place: number; username: string | null; botId: string; score: number }[];
       };
       bots?: undefined;
     }
   | {
       adminMode: false;
       contest: GetContestQueryResult & {
-        scoreBoard?: { place: number; username: string; score: number }[];
+        scoreBoard?: { place: number; username: string | null; botId: string; score: number }[];
       };
       bots: GetBotsQueryResult;
       isRegistered: boolean;
@@ -110,7 +110,7 @@ export class ContestComponent implements OnInit, OnDestroy {
             }))
           : switchMap(([contest, user]) =>
               this.getBots
-                .watch({ gameId: contest.game.id, includeTestBots: true })
+                .watch({ gameId: contest.game.id, includeTestBots: false })
                 .valueChanges.pipe(
                   map((result) => result.data.getBots),
                   handleGraphqlAuthErrors(this.notificationService),
@@ -120,7 +120,9 @@ export class ContestComponent implements OnInit, OnDestroy {
                     bots: result.bots.filter(
                       (bot) => bot.submitStatus.stage === BotSubmitStage.CheckSuccess,
                     ),
-                    isRegistered: contest.bots.some((bot) => bot.user.id === user.id),
+                    isRegistered: contest.bots.some(
+                      (bot) => bot.__typename === "Bot" && bot.user.id === user.id,
+                    ),
                   })),
                 ),
             ),
@@ -134,7 +136,8 @@ export class ContestComponent implements OnInit, OnDestroy {
     const scoreboard = [];
     for (const bot of contest.bots) {
       scoreboard.push({
-        username: bot.user.username,
+        username: bot.__typename === "Bot" ? bot.user.username : null,
+        botId: bot.id,
         score: scores[bot.id],
         place: 0,
       });
