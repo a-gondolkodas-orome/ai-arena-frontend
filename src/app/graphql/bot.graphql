@@ -54,6 +54,10 @@ query GetBot($id: String!) {
         stage
         log
       }
+      source {
+        fileName
+        contentBase64
+      }
     }
     ... on GraphqlError {
       message

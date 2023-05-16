@@ -25,6 +25,7 @@ export type Bot = {
   game: Game;
   id: Scalars["ID"];
   name: Scalars["String"];
+  source: File;
   submitStatus: BotSubmitStatus;
   user: User;
 };
@@ -177,6 +178,12 @@ export type Credentials = {
 export type DeletedBot = {
   __typename: "DeletedBot";
   id: Scalars["ID"];
+};
+
+export type File = {
+  __typename: "File";
+  contentBase64: Scalars["String"];
+  fileName: Scalars["String"];
 };
 
 export type Game = {
@@ -599,6 +606,7 @@ export type GetBotQuery = {
         id: string;
         name: string;
         submitStatus: { __typename: "BotSubmitStatus"; stage: BotSubmitStage; log?: string | null };
+        source: { __typename: "File"; fileName: string; contentBase64: string };
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
@@ -1444,6 +1452,10 @@ export const GetBotDocument = gql`
         submitStatus {
           stage
           log
+        }
+        source {
+          fileName
+          contentBase64
         }
       }
       ... on GraphqlError {

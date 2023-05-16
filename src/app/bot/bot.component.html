@@ -13,4 +13,17 @@
   <div class="check-log">
     {{ bot.submitStatus.log }}
   </div>
+  <ng-container *ngIf="bot.source as source">
+    <a
+      href="data:{{ source.fileName.endsWith('.zip') ? 'application/zip' : 'text/plain' }};base64,{{
+        source.contentBase64
+      }}"
+      [download]="source.fileName"
+    >
+      source code
+    </a>
+    <ng-container *ngIf="source.fileName.endsWith('.cpp')">
+      <pre><code>{{ Buffer.from(source.contentBase64, "base64").toString() }}</code></pre>
+    </ng-container>
+  </ng-container>
 </div>

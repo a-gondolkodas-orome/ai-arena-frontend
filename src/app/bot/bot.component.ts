@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Bot, GetBotGQL } from "../graphql/generated";
+import { GetBotGQL } from "../graphql/generated";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NotificationService } from "../services/notification.service";
 import { Location } from "@angular/common";
@@ -7,8 +7,10 @@ import { concatMap, EMPTY, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { Sse } from "../services/sse";
 import { getEvalStatus, notNull } from "../../utils";
+import { GetBotQueryResult } from "../../types";
+import { Buffer } from "buffer";
 
-type BotInfo = Pick<Bot, "name" | "submitStatus"> & { evalStatus: string };
+type BotInfo = GetBotQueryResult & { evalStatus: string };
 
 @Component({
   selector: "app-bot",
@@ -62,4 +64,6 @@ export class BotComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sseSubscription?.unsubscribe();
   }
+
+  protected readonly Buffer = Buffer;
 }
