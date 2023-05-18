@@ -4703,6 +4703,7 @@ __metadata:
     apollo-angular: "npm:4"
     bootstrap: "npm:^5.2.3"
     bootstrap-icons: "npm:^1.9.1"
+    dayjs: "npm:^1.11.7"
     dompurify: "npm:^2.4.1"
     eslint: "npm:^8.23.1"
     eslint-config-prettier: "npm:^8.5.0"
@@ -6022,6 +6023,13 @@ __metadata:
   version: 4.0.14
   resolution: "date-format@npm:4.0.14"
   checksum: 15cf6e343536e2e2a9483e009382b1e7488775c855aa9b9b4bb0ccc8906b4647c97f1debf782c8b2fd53bdacfad8bf42bd83b1fa27292d5036e07cdcee80842e
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.7":
+  version: 1.11.7
+  resolution: "dayjs@npm:1.11.7"
+  checksum: e4befd8f695eeb2fbe2f887c0f6e2a8a498dfba89eb4b4d87c036167e4ae36871dda584a24c15db9b68fcf19688199f934c38095c629abcc30f8adb60f0723ce
   languageName: node
   linkType: hard
 

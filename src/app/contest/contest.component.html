@@ -76,8 +76,29 @@
   >
     start contest
   </button>
+  <div *ngIf="contestData.contest.status === ContestStatus.Running && contestData.contest.progress">
+    Match evaluation progress: {{ contestData.contest.progress.completedMatchCount }} /
+    {{ contestData.contest.progress.totalMatchCount }}
+    <mat-progress-bar
+      mode="determinate"
+      [value]="
+        (contestData.contest.progress.completedMatchCount /
+          contestData.contest.progress.totalMatchCount) *
+        100
+      "
+    >
+    </mat-progress-bar>
+    <ng-container *ngIf="contestData.contest.progress.timeRemaining as timeRemaining">
+      Estimated time remaining:
+      {{ dayjs.duration!(contestData.contest.progress.timeRemaining).humanize() }}
+    </ng-container>
+  </div>
   <app-match-list
-    *ngIf="[ContestStatus.Finished, ContestStatus.RunError].includes(contestData.contest.status)"
+    *ngIf="
+      [ContestStatus.Running, ContestStatus.Finished, ContestStatus.RunError].includes(
+        contestData.contest.status
+      )
+    "
     [context]="contestData.contest"
   ></app-match-list>
   <div *ngIf="contestData.contest.scoreBoard">

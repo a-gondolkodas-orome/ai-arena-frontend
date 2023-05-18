@@ -13,12 +13,12 @@ import {
 } from "../graphql/generated";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
-import { combineLatest, filter, map, Observable, Subscription, switchMap } from "rxjs";
+import { combineLatest, filter, map, Observable, Subscription, switchMap, tap } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { AsyncPipe, CommonModule, DatePipe } from "@angular/common";
 import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
-import { decode, decodeJson } from "../../utils";
+import { decode, decodeJson, Time } from "../../utils";
 import * as t from "io-ts";
 import { AuthService } from "../services/auth.service";
 import { MatchListComponent } from "../match-list/match-list.component";
@@ -26,6 +26,13 @@ import { GetBotsQueryResult, GetContestQueryResult } from "../../types";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { scoresCodec } from "../../common";
 import { MatTableModule } from "@angular/material/table";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 type ContestData =
   | {
@@ -59,6 +66,7 @@ type ContestData =
     MatchListComponent,
     MatTooltipModule,
     MatTableModule,
+    MatProgressBarModule,
   ],
 })
 export class ContestComponent implements OnInit, OnDestroy {
@@ -92,7 +100,8 @@ export class ContestComponent implements OnInit, OnDestroy {
     if (contestId === null) this.notificationService.error("No contest id in path");
     else {
       this.contestId = contestId;
-      const contest$ = this.getContest.watch({ id: contestId }).valueChanges.pipe(
+      const contestQuery = this.getContest.watch({ id: contestId });
+      const contest$ = contestQuery.valueChanges.pipe(
         map((result) => result.data.getContest),
         filter(<T>(value: T): value is Exclude<T, null | undefined> => {
           if (value != null) return true;
@@ -100,6 +109,13 @@ export class ContestComponent implements OnInit, OnDestroy {
           return false;
         }),
         handleGraphqlAuthErrors(this.notificationService),
+        tap((contest) => {
+          if ([ContestStatus.Open, ContestStatus.Closed].includes(contest.status))
+            contestQuery.startPolling(10 * Time.second);
+          else if (contest.status === ContestStatus.Running)
+            contestQuery.startPolling(3 * Time.second);
+          else contestQuery.stopPolling();
+        }),
       );
       const user$ = this.authService.userProfile$.pipe(filter((user): user is User => !!user));
       this.contestData$ = combineLatest([contest$, user$]).pipe(
@@ -190,4 +206,6 @@ export class ContestComponent implements OnInit, OnDestroy {
     this.updateStatusSubscription?.unsubscribe();
     this.startContestSubscription?.unsubscribe();
   }
+
+  protected readonly dayjs = dayjs;
 }
