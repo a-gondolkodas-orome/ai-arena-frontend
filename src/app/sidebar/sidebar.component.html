@@ -1,9 +1,5 @@
 <div *ngIf="user$ | async as user" class="sidebar">
-  <div>
-    username: {{ user.username }}
-    <br />
-    email: {{ user.email }}
-  </div>
+  <div>username: {{ user.username }}</div>
   <a [routerLink]="'/admin'" class="button-link">
     <button *ngIf="user.isAdmin" mat-stroked-button>Admin zone</button>
   </a>

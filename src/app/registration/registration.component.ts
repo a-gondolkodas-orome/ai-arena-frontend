@@ -26,7 +26,7 @@ export class RegistrationComponent implements OnDestroy {
 
   registrationForm = this.formBuilder.nonNullable.group({
     username: "",
-    email: "",
+    // email: "",
     password: "",
   });
   hidePassword = true;
@@ -34,8 +34,9 @@ export class RegistrationComponent implements OnDestroy {
   protected registerSubscription?: Subscription;
 
   onSubmit() {
+    const formValues = this.registrationForm.getRawValue();
     this.registerSubscription = this.register
-      .mutate({ registrationInput: this.registrationForm.getRawValue() })
+      .mutate({ registrationInput: { ...formValues, email: formValues.username } })
       .pipe(
         map((result) => result.data),
         filter((value): value is Exclude<typeof value, null | undefined> => {
