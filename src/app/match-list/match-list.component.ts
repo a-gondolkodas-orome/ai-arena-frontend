@@ -8,7 +8,7 @@ import {
 } from "../graphql/generated";
 import { MatDialog } from "@angular/material/dialog";
 import { NotificationService } from "../services/notification.service";
-import { concatMap, filter, map, Observable, Subscription } from "rxjs";
+import { combineLatest, concatMap, filter, map, Observable, Subscription } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { StartMatchDialogComponent } from "../start-match-dialog/start-match-dialog.component";
 import * as t from "io-ts";
@@ -23,7 +23,10 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatButtonModule } from "@angular/material/button";
 import { GetContestQueryResult, GetGameQueryResult } from "../../types";
 import { MatChipsModule } from "@angular/material/chips";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { scoresCodec } from "../../common";
+import { FormsModule } from "@angular/forms";
+import { AuthService } from "../services/auth.service";
 
 @Component({
   standalone: true,
@@ -39,6 +42,8 @@ import { scoresCodec } from "../../common";
     MatProgressSpinnerModule,
     MatButtonModule,
     MatChipsModule,
+    MatCheckboxModule,
+    FormsModule,
   ],
 })
 export class MatchListComponent implements OnInit, OnDestroy {
@@ -55,6 +60,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
     protected getMatch: GetMatchGQL,
     protected getContestMatches: GetContestMatchesGQL,
     protected notificationService: NotificationService,
+    protected authService: AuthService,
     protected deleteMatchMutation: DeleteMatchGQL,
   ) {}
 
@@ -62,10 +68,12 @@ export class MatchListComponent implements OnInit, OnDestroy {
 
   enableCreateMatch = false;
   enableDeleteMatch = false;
+  filterOwnMatches?: boolean;
   matches$?: Observable<
     | (MatchHeadFragment & {
         evalStatus: string;
         scoreboard?: { id: string; name: string | null; score: number | null }[];
+        isOwnMatch: boolean;
       })[]
     | typeof this.MATCH_LIST__UNAUTHORIZED
   >;
@@ -91,14 +99,20 @@ export class MatchListComponent implements OnInit, OnDestroy {
             handleGraphqlAuthErrors(this.notificationService),
             map((getContest) => getContest.matches),
           );
-    this.matches$ = matches$.pipe(
+    const user$ = this.authService.userProfile$.pipe(
+      filter((user): user is Exclude<typeof user, undefined> => user !== undefined),
+    );
+    this.matches$ = combineLatest([matches$, user$]).pipe(
       map(
-        (matches) =>
+        ([matches, user]) =>
           matches?.map((match) => {
             return {
               ...match,
               evalStatus: getEvalStatus(match.runStatus.stage),
               scoreboard: this.getScoreboard(match),
+              isOwnMatch: match.bots.some(
+                (bot) => bot.__typename === "Bot" && bot.user.id === user.id,
+              ),
             };
           }) ?? this.MATCH_LIST__UNAUTHORIZED,
       ),
@@ -110,6 +124,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
         ),
       )
       .subscribe();
+    if (this.context.__typename === "Contest") this.filterOwnMatches = false;
   }
 
   protected getScoreboard(match: MatchHeadFragment) {

@@ -4,13 +4,20 @@
     <mat-icon *ngIf="enableCreateMatch" class="start-match-icon" (click)="startMatch()">
       add
     </mat-icon>
+    <mat-checkbox *ngIf="filterOwnMatches !== undefined" [(ngModel)]="filterOwnMatches">
+      Filter own matches
+    </mat-checkbox>
   </div>
   <div id="match-list">
     <div id="match-list-items-container">
       <ng-container *ngIf="matches$ | async as matches">
         <ng-container *ngIf="matches !== MATCH_LIST__UNAUTHORIZED; else matchesUnauthorized">
           <mat-list-item *ngFor="let match of matches">
-            <a class="card-list-item-container button-link" [routerLink]="['/match', match.id]">
+            <a
+              class="card-list-item-container button-link"
+              *ngIf="!filterOwnMatches || match.isOwnMatch"
+              [routerLink]="['/match', match.id]"
+            >
               <mat-card>
                 <mat-card-content class="card-list-item-content {{ match.evalStatus }}">
                   <span>
