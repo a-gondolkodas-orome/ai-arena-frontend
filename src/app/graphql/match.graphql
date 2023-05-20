@@ -70,9 +70,7 @@ fragment MatchHead on Match {
   runStatus {
     stage
   }
-  result {
-    scoreJson
-  }
+  scoreJson
 }
 
 fragment MatchDetails on Match {
@@ -81,8 +79,6 @@ fragment MatchDetails on Match {
     stage
     log
   }
-  result {
-    log
-    scoreJson
-  }
+  logString
+  scoreJson
 }

@@ -128,7 +128,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
   }
 
   protected getScoreboard(match: MatchHeadFragment) {
-    if (!match.result) {
+    if (!match.scoreJson) {
       return match.bots.map((bot) => ({
         id: bot.id,
         name: bot.__typename === "Bot" ? bot.name : null,
@@ -140,7 +140,7 @@ export class MatchListComponent implements OnInit, OnDestroy {
         .filter((bot): bot is Exclude<typeof bot, null> => bot !== null)
         .map((bot) => [bot.id, bot]),
     );
-    const scores = decodeJson(scoresCodec, match.result.scoreJson);
+    const scores = decodeJson(scoresCodec, match.scoreJson);
     return Object.entries(scores)
       .map(([id, score]) => {
         const indexedId = id.match(/^(?<id>[0-9a-f]{24})\.\d+$/);

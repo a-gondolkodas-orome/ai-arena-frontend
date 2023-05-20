@@ -246,9 +246,10 @@ export type Match = {
   bots: Array<BotOrDeleted>;
   game: Game;
   id: Scalars["ID"];
+  logString?: Maybe<Scalars["String"]>;
   mapName: Scalars["String"];
-  result?: Maybe<MatchResult>;
   runStatus: MatchRunStatus;
+  scoreJson?: Maybe<Scalars["String"]>;
   user: User;
 };
 
@@ -259,12 +260,6 @@ export type MatchInput = {
 };
 
 export type MatchResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | Match;
-
-export type MatchResult = {
-  __typename: "MatchResult";
-  log: Scalars["String"];
-  scoreJson: Scalars["String"];
-};
 
 export enum MatchRunStage {
   PrepareBotsDone = "PREPARE_BOTS_DONE",
@@ -663,6 +658,7 @@ export type CreateContestMutation = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -673,7 +669,6 @@ export type CreateContestMutation = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }> | null;
         progress?: {
           __typename: "ContestProgress";
@@ -745,6 +740,7 @@ export type GetContestQuery = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -755,7 +751,6 @@ export type GetContestQuery = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }> | null;
         progress?: {
           __typename: "ContestProgress";
@@ -782,6 +777,7 @@ export type GetContestMatchesQuery = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -792,7 +788,6 @@ export type GetContestMatchesQuery = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }> | null;
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
@@ -830,6 +825,7 @@ export type RegisterToContestMutation = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -840,7 +836,6 @@ export type RegisterToContestMutation = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }> | null;
         progress?: {
           __typename: "ContestProgress";
@@ -892,6 +887,7 @@ export type UnregisterFromContestMutation = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -902,7 +898,6 @@ export type UnregisterFromContestMutation = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }> | null;
         progress?: {
           __typename: "ContestProgress";
@@ -947,6 +942,7 @@ export type UpdateContestStatusMutation = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -957,7 +953,6 @@ export type UpdateContestStatusMutation = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }> | null;
         progress?: {
           __typename: "ContestProgress";
@@ -1007,6 +1002,7 @@ export type StartContestMutation = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -1017,7 +1013,6 @@ export type StartContestMutation = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }> | null;
         progress?: {
           __typename: "ContestProgress";
@@ -1055,6 +1050,7 @@ export type ContestDetailsFragment = {
     __typename: "Match";
     id: string;
     mapName: string;
+    scoreJson?: string | null;
     bots: Array<
       | {
           __typename: "Bot";
@@ -1065,7 +1061,6 @@ export type ContestDetailsFragment = {
       | { __typename: "DeletedBot"; id: string }
     >;
     runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-    result?: { __typename: "MatchResult"; scoreJson: string } | null;
   }> | null;
   progress?: {
     __typename: "ContestProgress";
@@ -1166,6 +1161,7 @@ export type GetMatchesQuery = {
           __typename: "Match";
           id: string;
           mapName: string;
+          scoreJson?: string | null;
           bots: Array<
             | {
                 __typename: "Bot";
@@ -1176,7 +1172,6 @@ export type GetMatchesQuery = {
             | { __typename: "DeletedBot"; id: string }
           >;
           runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-          result?: { __typename: "MatchResult"; scoreJson: string } | null;
         }>;
       };
 };
@@ -1192,10 +1187,11 @@ export type GetMatchQuery = {
     | { __typename: "GraphqlAuthorizationError"; message: string }
     | {
         __typename: "Match";
+        logString?: string | null;
+        scoreJson?: string | null;
         id: string;
         mapName: string;
         runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-        result?: { __typename: "MatchResult"; log: string; scoreJson: string } | null;
         bots: Array<
           | {
               __typename: "Bot";
@@ -1224,6 +1220,7 @@ export type MatchHeadFragment = {
   __typename: "Match";
   id: string;
   mapName: string;
+  scoreJson?: string | null;
   bots: Array<
     | {
         __typename: "Bot";
@@ -1234,15 +1231,15 @@ export type MatchHeadFragment = {
     | { __typename: "DeletedBot"; id: string }
   >;
   runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage };
-  result?: { __typename: "MatchResult"; scoreJson: string } | null;
 };
 
 export type MatchDetailsFragment = {
   __typename: "Match";
+  logString?: string | null;
+  scoreJson?: string | null;
   id: string;
   mapName: string;
   runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
-  result?: { __typename: "MatchResult"; log: string; scoreJson: string } | null;
   bots: Array<
     | {
         __typename: "Bot";
@@ -1274,9 +1271,7 @@ export const MatchHeadFragmentDoc = gql`
     runStatus {
       stage
     }
-    result {
-      scoreJson
-    }
+    scoreJson
   }
 `;
 export const ContestDetailsFragmentDoc = gql`
@@ -1337,10 +1332,8 @@ export const MatchDetailsFragmentDoc = gql`
       stage
       log
     }
-    result {
-      log
-      scoreJson
-    }
+    logString
+    scoreJson
   }
   ${MatchHeadFragmentDoc}
 `;
