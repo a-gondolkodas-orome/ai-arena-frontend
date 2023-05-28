@@ -1,0 +1,50 @@
+# Check out https://hub.docker.com/_/node to select a new base image
+FROM node:16-slim AS builder
+
+# Set to a non-root built-in user `node`
+USER node
+
+## Create app directory (with user `node`)
+#RUN mkdir -p /home/node/app/nanowar-visualizer
+#
+#WORKDIR /home/node/app/nanowar-visualizer
+#
+## Install app dependencies (npm)
+#COPY --chown=node nanowar-visualizer/package*.json ./
+#
+#RUN npm ci
+#
+## Bundle app source code
+#COPY --chown=node nanowar-visualizer/. .
+#
+## Based on start.sh
+#RUN npx ng build nanowar-visualizer
+#RUN npx ng build nanowar-visualizer-app
+#RUN cp -avr projects/nanowar-visualizer/src/assets dist/nanowar-visualizer-app/
+
+# Create app directory (with user `node`)
+RUN mkdir -p /home/node/app
+
+WORKDIR /home/node/app
+
+# Install app dependencies (yarn)
+COPY --chown=node .yarn ./.yarn
+COPY --chown=node .yarnrc.yml yarn.lock package.json ./
+
+#RUN --mount=type=cache,target=/home/node/.yarn YARN_CACHE_FOLDER=/home/node/.yarn \
+#  yarn install --immutable
+
+ARG NPM_AUTH_TOKEN
+RUN yarn config set npmAuthToken ${NPM_AUTH_TOKEN}
+RUN yarn install --immutable
+
+# Bundle app source code
+COPY --chown=node . .
+
+RUN yarn run build
+
+# Second stage
+FROM nginx
+COPY --from=builder /home/node/app/dist /usr/share/nginx/html
+
+EXPOSE 80
