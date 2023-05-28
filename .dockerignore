@@ -1,0 +1,13 @@
+*
+
+!.yarn
+!.yarnrc.yml
+!yarn.lock
+
+!src
+!angular.json
+!package.json
+!tsconfig.app.json
+!tsconfig.json
+
+!nginx
