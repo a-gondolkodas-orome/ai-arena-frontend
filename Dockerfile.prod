@@ -45,6 +45,6 @@ RUN yarn run build
 
 # Second stage
 FROM nginx
-COPY --from=builder /home/node/app/dist /usr/share/nginx/html
+COPY --from=builder /home/node/app/dist/ai-arena-frontend /usr/share/nginx/html
 
 EXPOSE 80
