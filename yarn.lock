@@ -5,9 +5,9 @@ __metadata:
   version: 7
   cacheKey: 9
 
-"@Kristofy/nanowar-visualizer@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@Kristofy/nanowar-visualizer@npm:1.0.1::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fnanowar-visualizer%2F1.0.1%2Fefaec1600c3dc256211be3558fdd584cf5b2b2a4"
+"@Kristofy/nanowar-visualizer@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@Kristofy/nanowar-visualizer@npm:1.0.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fnanowar-visualizer%2F1.0.2%2F30a3220cfa205d88316f349345176f3534c3317b"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
@@ -17,7 +17,7 @@ __metadata:
     "@fortawesome/fontawesome-svg-core": ^6.4.0
     "@fortawesome/free-solid-svg-icons": ^6.4.0
     p5: 1
-  checksum: 45d3ab6edbbccfa9596ef77e7c4d573475692989d36343fc466210bf104fe999649b41405b7f3c8a033375ad785f9ba7aeecb613288ae58e352ceae136cd29ed
+  checksum: 4e3a94f844e69fe63e51c15b23a83e59ef49a42e390714408b1cdf2b7c969f1d4feb9eab1366c78070afaed9ac7a296d5533b6f31b89572f940fc1eb0ed1cc5d
   languageName: node
   linkType: hard
 
@@ -4665,7 +4665,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ai-arena-frontend@workspace:."
   dependencies:
-    "@Kristofy/nanowar-visualizer": "npm:^1.0.1"
+    "@Kristofy/nanowar-visualizer": "npm:^1.0.2"
     "@angular-devkit/build-angular": "npm:15"
     "@angular-material-components/file-input": "npm:9"
     "@angular/animations": "npm:15"

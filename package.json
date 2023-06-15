@@ -1,6 +1,6 @@
 {
   "name": "ai-arena-frontend",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Test your strategy and programming skills in the AI Arena.",
   "scripts": {
     "ng": "ng",
@@ -24,7 +24,7 @@
   "author": "András Leitereg",
   "license": "UNLICENSED",
   "dependencies": {
-    "@Kristofy/nanowar-visualizer": "^1.0.1",
+    "@Kristofy/nanowar-visualizer": "^1.0.2",
     "@angular-material-components/file-input": "9",
     "@angular/animations": "15",
     "@angular/cdk": "15.0.3",
