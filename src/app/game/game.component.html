@@ -9,5 +9,18 @@
     <app-bot-list [game]="selectedGame" class="col-12 col-xl-6"></app-bot-list>
     <app-match-list [context]="selectedGame" class="col-12 col-xl-6"></app-match-list>
   </div>
-  <div [innerHTML]="renderGameDescription(selectedGame.fullDescription)"></div>
+  <mat-form-field>
+    <mat-label>Description language</mat-label>
+    <mat-select [(ngModel)]="descriptionLanguage">
+      <mat-option
+        *ngFor="let fullDescriptionOption of selectedGame.fullDescriptionOptions"
+        [value]="fullDescriptionOption.languageCode"
+      >
+        {{ fullDescriptionOption.languageCode }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div
+    [innerHTML]="renderGameDescription(selectedGame.fullDescriptionOptions, descriptionLanguage)"
+  ></div>
 </div>
