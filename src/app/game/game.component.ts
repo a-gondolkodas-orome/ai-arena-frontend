@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { filter, from, ignoreElements, map, Observable } from "rxjs";
+import { filter, from, ignoreElements, map, Observable, tap } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import { GetGameGQL } from "../graphql/generated";
 import { handleGraphqlAuthErrors } from "../error";
@@ -8,6 +8,8 @@ import { marked } from "marked";
 import * as DOMPurify from "dompurify";
 import { GetGameQueryResult } from "../../types";
 import { DomSanitizer } from "@angular/platform-browser";
+import { decodeJson, notNull } from "../../utils";
+import * as t from "io-ts";
 
 @Component({
   selector: "app-game",
@@ -15,6 +17,8 @@ import { DomSanitizer } from "@angular/platform-browser";
   styleUrls: ["./game.component.scss"],
 })
 export class GameComponent {
+  static readonly fullDescriptionCodec = t.record(t.string, t.string);
+
   constructor(
     protected getGame: GetGameGQL,
     protected route: ActivatedRoute,
@@ -35,17 +39,49 @@ export class GameComponent {
           return false;
         }),
         handleGraphqlAuthErrors(this.notificationService),
+        map((game) => ({
+          ...game,
+          fullDescriptionOptions: Object.entries(
+            decodeJson(GameComponent.fullDescriptionCodec, game.fullDescription),
+          ).map(([languageCode, description]) => ({ languageCode, description })),
+        })),
+        tap((game) => {
+          const userLanguage = window.navigator.language;
+          const descriptionLanguageCodes = game.fullDescriptionOptions.map(
+            ({ languageCode }) => languageCode,
+          );
+          this.descriptionLanguage =
+            descriptionLanguageCodes.find((languageCode) => languageCode === userLanguage) ||
+            descriptionLanguageCodes.find(
+              (languageCode) => languageCode === userLanguage.substring(0, 2),
+            ) ||
+            (descriptionLanguageCodes.includes("en") && "en") ||
+            descriptionLanguageCodes[0];
+        }),
       );
     }
   }
 
-  game$: Observable<GetGameQueryResult>;
+  game$: Observable<
+    GetGameQueryResult & { fullDescriptionOptions: { languageCode: string; description: string }[] }
+  >;
+
+  descriptionLanguage!: string;
 
   async handleBackToDashboard() {
     await this.router.navigate([""]);
   }
 
-  protected renderGameDescription(rawDescription: string) {
+  protected renderGameDescription(
+    fullDescriptionOptions: {
+      languageCode: string;
+      description: string;
+    }[],
+    descriptionLanguage: string,
+  ) {
+    const rawDescription = notNull(
+      fullDescriptionOptions.find((option) => option.languageCode === descriptionLanguage),
+    ).description;
     return this.sanitizer.bypassSecurityTrustHtml(DOMPurify.sanitize(marked.parse(rawDescription)));
   }
 }
