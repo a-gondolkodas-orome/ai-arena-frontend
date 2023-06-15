@@ -1,5 +1,13 @@
-node_modules
-npm-debug.log
-/dist
-# Cache used by TypeScript's incremental build
-*.tsbuildinfo
+*
+
+!.yarn
+!.yarnrc.yml
+!yarn.lock
+
+!src
+!angular.json
+!package.json
+!tsconfig.app.json
+!tsconfig.json
+
+!nginx
