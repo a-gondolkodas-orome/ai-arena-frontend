@@ -5,6 +5,7 @@ import {
   GetMatchGQL,
   GetContestMatchesGQL,
   MatchHeadFragment,
+  GraphqlValidationError,
 } from "../graphql/generated";
 import { MatDialog } from "@angular/material/dialog";
 import { NotificationService } from "../services/notification.service";
@@ -91,11 +92,20 @@ export class MatchListComponent implements OnInit, OnDestroy {
           )
         : this.getContestMatches.watch({ id: this.context.id }).valueChanges.pipe(
             map((result) => result.data.getContest),
-            filter(<T>(value: T): value is Exclude<T, null | undefined> => {
-              if (value != null) return true;
-              this.notificationService.error("Contest not found");
-              return false;
-            }),
+            filter(
+              <T>(value: T): value is Exclude<T, GraphqlValidationError | null | undefined> => {
+                if (value == null) {
+                  this.notificationService.error("Contest not found");
+                  return false;
+                }
+                const validationError = value as unknown as GraphqlValidationError;
+                if (validationError.__typename === "GraphqlValidationError") {
+                  this.notificationService.error(validationError.message);
+                  return false;
+                }
+                return true;
+              },
+            ),
             handleGraphqlAuthErrors(this.notificationService),
             map((getContest) => getContest.matches),
           );

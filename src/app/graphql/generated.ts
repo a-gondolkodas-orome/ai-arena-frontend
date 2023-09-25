@@ -21,7 +21,6 @@ export type AuthError = GraphqlAuthenticationError | GraphqlAuthorizationError;
 
 export type Bot = {
   __typename: "Bot";
-  deleted: Scalars["Boolean"];
   game: Game;
   id: Scalars["ID"];
   name: Scalars["String"];
@@ -72,7 +71,9 @@ export type Contest = {
   date: Scalars["DateTime"];
   game: Game;
   id: Scalars["ID"];
+  isArchived?: Maybe<Scalars["Boolean"]>;
   mapNames: Array<Scalars["String"]>;
+  matchSizeTotal?: Maybe<Scalars["Float"]>;
   matches?: Maybe<Array<Match>>;
   name: Scalars["String"];
   owner: User;
@@ -88,11 +89,6 @@ export type ContestInput = {
   name: Scalars["String"];
 };
 
-export type ContestNotFoundError = GraphqlError & {
-  __typename: "ContestNotFoundError";
-  message: Scalars["String"];
-};
-
 export type ContestProgress = {
   __typename: "ContestProgress";
   completedMatchCount: Scalars["Float"];
@@ -105,7 +101,11 @@ export type ContestRegistration = {
   contestId: Scalars["String"];
 };
 
-export type ContestResponse = Contest | GraphqlAuthenticationError | GraphqlAuthorizationError;
+export type ContestResponse =
+  | Contest
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError
+  | GraphqlValidationError;
 
 export enum ContestStatus {
   Closed = "CLOSED",
@@ -234,6 +234,11 @@ export type GraphqlError = {
   message: Scalars["String"];
 };
 
+export type GraphqlValidationError = GraphqlError & {
+  __typename: "GraphqlValidationError";
+  message: Scalars["String"];
+};
+
 export type LoginResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | LoginSuccess;
 
 export type LoginSuccess = {
@@ -289,8 +294,10 @@ export type Mutation = {
   createBot: CreateBotResponse;
   createContest: CreateContestResponse;
   createMatch: CreateMatchResponse;
-  deleteBot?: Maybe<AuthError>;
+  deleteBot?: Maybe<ValidatedNoContentResponse>;
+  deleteContest?: Maybe<ValidatedNoContentResponse>;
   deleteMatch?: Maybe<AuthError>;
+  flipContestArchivedStatus?: Maybe<ContestResponse>;
   register: RegistrationResponse;
   registerToContest: RegisterToContestResponse;
   startContest: StartContestResponse;
@@ -314,7 +321,15 @@ export type MutationDeleteBotArgs = {
   id: Scalars["String"];
 };
 
+export type MutationDeleteContestArgs = {
+  id: Scalars["String"];
+};
+
 export type MutationDeleteMatchArgs = {
+  id: Scalars["String"];
+};
+
+export type MutationFlipContestArchivedStatusArgs = {
   id: Scalars["String"];
 };
 
@@ -451,16 +466,16 @@ export type StartContestError = GraphqlError & {
 
 export type StartContestResponse =
   | Contest
-  | ContestNotFoundError
   | GraphqlAuthenticationError
   | GraphqlAuthorizationError
+  | GraphqlValidationError
   | StartContestError;
 
 export type UnregisterFromContestResponse =
   | Contest
-  | ContestNotFoundError
   | GraphqlAuthenticationError
-  | GraphqlAuthorizationError;
+  | GraphqlAuthorizationError
+  | GraphqlValidationError;
 
 export type UpdateContestStatusError = GraphqlError & {
   __typename: "UpdateContestStatusError";
@@ -471,9 +486,9 @@ export type UpdateContestStatusError = GraphqlError & {
 
 export type UpdateContestStatusResponse =
   | Contest
-  | ContestNotFoundError
   | GraphqlAuthenticationError
   | GraphqlAuthorizationError
+  | GraphqlValidationError
   | UpdateContestStatusError;
 
 export type User = {
@@ -492,6 +507,11 @@ export type Users = {
 };
 
 export type UsersResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | Users;
+
+export type ValidatedNoContentResponse =
+  | GraphqlAuthenticationError
+  | GraphqlAuthorizationError
+  | GraphqlValidationError;
 
 export type LoginQueryVariables = Exact<{
   credentials: Credentials;
@@ -585,7 +605,6 @@ export type GetBotsQuery = {
           __typename: "Bot";
           id: string;
           name: string;
-          deleted: boolean;
           submitStatus: {
             __typename: "BotSubmitStatus";
             stage: BotSubmitStage;
@@ -625,6 +644,7 @@ export type DeleteBotMutation = {
   deleteBot?:
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
     | null;
 };
 
@@ -643,6 +663,8 @@ export type CreateContestMutation = {
         date: Date;
         status: ContestStatus;
         scoreJson?: string | null;
+        isArchived?: boolean | null;
+        matchSizeTotal?: number | null;
         game: { __typename: "Game"; id: string; name: string };
         owner: { __typename: "User"; id: string; username: string };
         bots: Array<
@@ -703,7 +725,11 @@ export type GetContestsQuery = {
           id: string;
           name: string;
           date: Date;
+          isArchived?: boolean | null;
+          matchSizeTotal?: number | null;
           game: { __typename: "Game"; name: string };
+          bots: Array<{ __typename: "Bot"; id: string } | { __typename: "DeletedBot"; id: string }>;
+          matches?: Array<{ __typename: "Match"; id: string }> | null;
         }>;
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
@@ -725,6 +751,8 @@ export type GetContestQuery = {
         date: Date;
         status: ContestStatus;
         scoreJson?: string | null;
+        isArchived?: boolean | null;
+        matchSizeTotal?: number | null;
         game: { __typename: "Game"; id: string; name: string };
         owner: { __typename: "User"; id: string; username: string };
         bots: Array<
@@ -761,6 +789,7 @@ export type GetContestQuery = {
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
     | null;
 };
 
@@ -792,6 +821,44 @@ export type GetContestMatchesQuery = {
       }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
+    | null;
+};
+
+export type DeleteContestMutationVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type DeleteContestMutation = {
+  __typename: "Mutation";
+  deleteContest?:
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
+    | null;
+};
+
+export type FlipContestArchivedStatusMutationVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type FlipContestArchivedStatusMutation = {
+  __typename: "Mutation";
+  flipContestArchivedStatus?:
+    | {
+        __typename: "Contest";
+        id: string;
+        name: string;
+        date: Date;
+        isArchived?: boolean | null;
+        matchSizeTotal?: number | null;
+        game: { __typename: "Game"; name: string };
+        bots: Array<{ __typename: "Bot"; id: string } | { __typename: "DeletedBot"; id: string }>;
+        matches?: Array<{ __typename: "Match"; id: string }> | null;
+      }
+    | { __typename: "GraphqlAuthenticationError"; message: string }
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
     | null;
 };
 
@@ -810,6 +877,8 @@ export type RegisterToContestMutation = {
         date: Date;
         status: ContestStatus;
         scoreJson?: string | null;
+        isArchived?: boolean | null;
+        matchSizeTotal?: number | null;
         game: { __typename: "Game"; id: string; name: string };
         owner: { __typename: "User"; id: string; username: string };
         bots: Array<
@@ -872,6 +941,8 @@ export type UnregisterFromContestMutation = {
         date: Date;
         status: ContestStatus;
         scoreJson?: string | null;
+        isArchived?: boolean | null;
+        matchSizeTotal?: number | null;
         game: { __typename: "Game"; id: string; name: string };
         owner: { __typename: "User"; id: string; username: string };
         bots: Array<
@@ -906,9 +977,9 @@ export type UnregisterFromContestMutation = {
           timeRemaining?: number | null;
         } | null;
       }
-    | { __typename: "ContestNotFoundError"; message: string }
     | { __typename: "GraphqlAuthenticationError"; message: string }
-    | { __typename: "GraphqlAuthorizationError"; message: string };
+    | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string };
 };
 
 export type UpdateContestStatusMutationVariables = Exact<{
@@ -927,6 +998,8 @@ export type UpdateContestStatusMutation = {
         date: Date;
         status: ContestStatus;
         scoreJson?: string | null;
+        isArchived?: boolean | null;
+        matchSizeTotal?: number | null;
         game: { __typename: "Game"; id: string; name: string };
         owner: { __typename: "User"; id: string; username: string };
         bots: Array<
@@ -961,9 +1034,9 @@ export type UpdateContestStatusMutation = {
           timeRemaining?: number | null;
         } | null;
       }
-    | { __typename: "ContestNotFoundError"; message: string }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
     | {
         __typename: "UpdateContestStatusError";
         from: ContestStatus;
@@ -987,6 +1060,8 @@ export type StartContestMutation = {
         date: Date;
         status: ContestStatus;
         scoreJson?: string | null;
+        isArchived?: boolean | null;
+        matchSizeTotal?: number | null;
         game: { __typename: "Game"; id: string; name: string };
         owner: { __typename: "User"; id: string; username: string };
         bots: Array<
@@ -1021,10 +1096,22 @@ export type StartContestMutation = {
           timeRemaining?: number | null;
         } | null;
       }
-    | { __typename: "ContestNotFoundError"; message: string }
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
     | { __typename: "StartContestError"; status: ContestStatus; message: string };
+};
+
+export type ContestHeadFragment = {
+  __typename: "Contest";
+  id: string;
+  name: string;
+  date: Date;
+  isArchived?: boolean | null;
+  matchSizeTotal?: number | null;
+  game: { __typename: "Game"; name: string };
+  bots: Array<{ __typename: "Bot"; id: string } | { __typename: "DeletedBot"; id: string }>;
+  matches?: Array<{ __typename: "Match"; id: string }> | null;
 };
 
 export type ContestDetailsFragment = {
@@ -1035,6 +1122,8 @@ export type ContestDetailsFragment = {
   date: Date;
   status: ContestStatus;
   scoreJson?: string | null;
+  isArchived?: boolean | null;
+  matchSizeTotal?: number | null;
   game: { __typename: "Game"; id: string; name: string };
   owner: { __typename: "User"; id: string; username: string };
   bots: Array<
@@ -1251,6 +1340,29 @@ export type MatchDetailsFragment = {
   >;
 };
 
+export const ContestHeadFragmentDoc = gql`
+  fragment ContestHead on Contest {
+    id
+    name
+    game {
+      name
+    }
+    date
+    bots {
+      ... on Bot {
+        id
+      }
+      ... on DeletedBot {
+        id
+      }
+    }
+    matches {
+      id
+    }
+    isArchived
+    matchSizeTotal
+  }
+`;
 export const MatchHeadFragmentDoc = gql`
   fragment MatchHead on Match {
     id
@@ -1311,6 +1423,8 @@ export const ContestDetailsFragmentDoc = gql`
       timeRemaining
     }
     scoreJson
+    isArchived
+    matchSizeTotal
   }
   ${MatchHeadFragmentDoc}
 `;
@@ -1470,7 +1584,6 @@ export const GetBotsDocument = gql`
             stage
             log
           }
-          deleted
         }
       }
       ... on GraphqlError {
@@ -1527,6 +1640,9 @@ export const DeleteBotDocument = gql`
   mutation DeleteBot($id: String!) {
     deleteBot(id: $id) {
       __typename
+      ... on GraphqlValidationError {
+        message
+      }
       ... on GraphqlError {
         message
       }
@@ -1585,12 +1701,7 @@ export const GetContestsDocument = gql`
       __typename
       ... on Contests {
         contests {
-          id
-          name
-          game {
-            name
-          }
-          date
+          ...ContestHead
         }
       }
       ... on GraphqlError {
@@ -1598,6 +1709,7 @@ export const GetContestsDocument = gql`
       }
     }
   }
+  ${ContestHeadFragmentDoc}
 `;
 
 @Injectable({
@@ -1660,6 +1772,58 @@ export class GetContestMatchesGQL extends Apollo.Query<
   GetContestMatchesQueryVariables
 > {
   override document = GetContestMatchesDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const DeleteContestDocument = gql`
+  mutation DeleteContest($id: String!) {
+    deleteContest(id: $id) {
+      __typename
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class DeleteContestGQL extends Apollo.Mutation<
+  DeleteContestMutation,
+  DeleteContestMutationVariables
+> {
+  override document = DeleteContestDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const FlipContestArchivedStatusDocument = gql`
+  mutation FlipContestArchivedStatus($id: String!) {
+    flipContestArchivedStatus(id: $id) {
+      __typename
+      ... on Contest {
+        ...ContestHead
+      }
+      ... on GraphqlError {
+        message
+      }
+    }
+  }
+  ${ContestHeadFragmentDoc}
+`;
+
+@Injectable({
+  providedIn: "root",
+})
+export class FlipContestArchivedStatusGQL extends Apollo.Mutation<
+  FlipContestArchivedStatusMutation,
+  FlipContestArchivedStatusMutationVariables
+> {
+  override document = FlipContestArchivedStatusDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

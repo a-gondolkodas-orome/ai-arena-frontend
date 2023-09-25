@@ -1,12 +1,40 @@
 <mat-list class="card-list">
   <mat-list-item *ngFor="let contest of contests$ | async">
     <a [routerLink]="['..', 'contests', contest.id]" class="button-link">
-      <div class="card-list-item-container">
+      <div *ngIf="adminMode || !contest.isArchived" class="card-list-item-container">
         <mat-card>
           <mat-card-content class="card-list-item-content">
             <span>
               {{ contest.name }}
               of {{ contest.game.name }} ({{ contest.date | date: "short" }})
+            </span>
+            <mat-chip-set>
+              <mat-chip *ngIf="contest.isArchived"> archived </mat-chip>
+              <mat-chip *ngIf="contest.bots"> {{ contest.bots.length }} bots </mat-chip>
+              <mat-chip *ngIf="contest.matches"> {{ contest.matches.length }} matches </mat-chip>
+              <mat-chip *ngIf="adminMode && contest.matchSizeTotal != null">
+                {{ Math.round(contest.matchSizeTotal / 100000) / 10 }} MB
+              </mat-chip>
+            </mat-chip-set>
+            <span>
+              <button
+                mat-icon-button
+                *ngIf="adminMode"
+                (click)="archiveContest(contest.id, $event); (false)"
+                [matTooltip]="contest.isArchived ? 'unarchive' : 'archive'"
+                matTooltipShowDelay="1000"
+              >
+                <mat-icon>{{ contest.isArchived ? "unarchive" : "archive" }}</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                *ngIf="adminMode"
+                (click)="deleteContest(contest.id, $event); (false)"
+                matTooltip="delete"
+                matTooltipShowDelay="1000"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
             </span>
           </mat-card-content>
         </mat-card>

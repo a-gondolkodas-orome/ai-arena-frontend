@@ -29,6 +29,7 @@ const adminRoutes: Routes = [
       {
         path: "contests",
         component: ContestListComponent,
+        data: { adminMode: true },
       },
     ],
   },

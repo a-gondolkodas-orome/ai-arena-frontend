@@ -22,12 +22,7 @@ query GetContests {
     __typename
     ... on Contests {
       contests {
-        id
-        name
-        game {
-          name
-        }
-        date
+        ...ContestHead
       }
     }
     ... on GraphqlError {
@@ -55,6 +50,27 @@ query GetContestMatches($id: String!) {
       matches {
         ...MatchHead
       }
+    }
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+mutation DeleteContest($id: String!) {
+  deleteContest(id: $id) {
+    __typename
+    ... on GraphqlError {
+      message
+    }
+  }
+}
+
+mutation FlipContestArchivedStatus($id: String!) {
+  flipContestArchivedStatus(id: $id) {
+    __typename
+    ... on Contest {
+      ...ContestHead
     }
     ... on GraphqlError {
       message
@@ -123,6 +139,28 @@ mutation StartContest($contestId: String!) {
   }
 }
 
+fragment ContestHead on Contest {
+  id
+  name
+  game {
+    name
+  }
+  date
+  bots {
+    ... on Bot {
+      id
+    }
+    ... on DeletedBot {
+      id
+    }
+  }
+  matches {
+    id
+  }
+  isArchived
+  matchSizeTotal
+}
+
 fragment ContestDetails on Contest {
   id
   game {
@@ -159,4 +197,6 @@ fragment ContestDetails on Contest {
     timeRemaining
   }
   scoreJson
+  isArchived
+  matchSizeTotal
 }

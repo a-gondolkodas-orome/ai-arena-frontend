@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { AddBotDialogComponent } from "../add-bot-dialog/add-bot-dialog.component";
 import { Bot, DeleteBotGQL, Game, GetBotGQL, GetBotsGQL } from "../graphql/generated";
-import { concatMap, filter, map, Observable, Subscription } from "rxjs";
+import { concatMap, filter, map, Observable, Subscription, tap } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
 import { NotificationService } from "../services/notification.service";
 import * as t from "io-ts";
@@ -40,12 +40,10 @@ export class BotListComponent implements OnInit, OnDestroy {
         map((result) => result.data.getBots),
         handleGraphqlAuthErrors(this.notificationService),
         map((getBots) =>
-          getBots.bots
-            .filter((bot) => !bot.deleted)
-            .map((bot) => ({
-              ...bot,
-              evalStatus: getEvalStatus(bot.submitStatus.stage.toString()),
-            })),
+          getBots.bots.map((bot) => ({
+            ...bot,
+            evalStatus: getEvalStatus(bot.submitStatus.stage.toString()),
+          })),
         ),
       );
     this.sseSubscription = Sse.botEvents
@@ -91,7 +89,6 @@ export class BotListComponent implements OnInit, OnDestroy {
                 },
               },
             });
-            cache.modify({ id: cacheId, fields: { deleted: () => true } });
           },
         },
       )
@@ -103,10 +100,11 @@ export class BotListComponent implements OnInit, OnDestroy {
           return false;
         }),
         map((data) => data.deleteBot),
-        filter((value): value is Exclude<typeof value, null> => {
-          return value !== null;
+        filter((value): value is Exclude<typeof value, null | undefined> => {
+          return value != null;
         }),
         handleGraphqlAuthErrors(this.notificationService),
+        tap((error) => this.notificationService.error(error.message)),
       )
       .subscribe();
   }

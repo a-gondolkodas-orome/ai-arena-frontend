@@ -35,7 +35,6 @@ query GetBots($gameId: String!, $includeTestBots: Boolean!) {
           stage
           log
         }
-        deleted
       }
     }
     ... on GraphqlError {
@@ -68,6 +67,10 @@ query GetBot($id: String!) {
 mutation DeleteBot($id: String!) {
   deleteBot(id: $id) {
     __typename
+    # StupidGraphql why isn't this handled by the base class case?
+    ... on GraphqlValidationError {
+      message
+    }
     ... on GraphqlError {
       message
     }

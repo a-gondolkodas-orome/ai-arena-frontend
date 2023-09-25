@@ -5,6 +5,7 @@ import {
   ContestStatus,
   GetBotsGQL,
   GetContestGQL,
+  GraphqlValidationError,
   RegisterToContestGQL,
   StartContestGQL,
   UnregisterFromContestGQL,
@@ -103,10 +104,17 @@ export class ContestComponent implements OnInit, OnDestroy {
       const contestQuery = this.getContest.watch({ id: contestId });
       const contest$ = contestQuery.valueChanges.pipe(
         map((result) => result.data.getContest),
-        filter(<T>(value: T): value is Exclude<T, null | undefined> => {
-          if (value != null) return true;
-          this.notificationService.error("Contest not found");
-          return false;
+        filter(<T>(value: T): value is Exclude<T, GraphqlValidationError | null | undefined> => {
+          if (value == null) {
+            this.notificationService.error("Contest not found");
+            return false;
+          }
+          const validationError = value as unknown as GraphqlValidationError;
+          if (validationError.__typename === "GraphqlValidationError") {
+            this.notificationService.error(validationError.message);
+            return false;
+          }
+          return true;
         }),
         handleGraphqlAuthErrors(this.notificationService),
         tap((contest) => {
