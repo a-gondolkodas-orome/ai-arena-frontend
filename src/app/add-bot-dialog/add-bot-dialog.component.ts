@@ -9,7 +9,6 @@ import * as t from "io-ts";
 import { decode } from "../../utils";
 import { BotWithUploadLink, CreateBotGQL } from "../graphql/generated";
 import { NotificationService } from "../services/notification.service";
-import { environment } from "../../environments/environment";
 import { BotListComponent } from "../bot-list/bot-list.component";
 import { ToReferenceFunction } from "@apollo/client/cache/core/types/common";
 
@@ -114,7 +113,7 @@ export class AddBotDialogComponent implements OnDestroy {
           }
           const formData = new FormData();
           formData.append("sourceFile", sourceFile);
-          return this.httpClient.post(environment.backendUrl + result.uploadLink, formData);
+          return this.httpClient.post("/api" + result.uploadLink, formData);
         }),
         tap({ next: closeDialog, error: closeDialog }),
       )

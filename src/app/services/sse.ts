@@ -8,7 +8,6 @@ import {
   MatchUpdateEvent,
   matchUpdateEventCodec,
 } from "../../common";
-import { environment } from "../../environments/environment";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 export class Sse {
@@ -18,7 +17,7 @@ export class Sse {
   static open(token: string) {
     this.close();
     this.abortController = new AbortController();
-    fetchEventSource(environment.backendUrl + "/sse", {
+    fetchEventSource("/api/sse", {
       headers: { Authorization: `Bearer ${token}` },
       onmessage: (message) => {
         if (!message.data) return;

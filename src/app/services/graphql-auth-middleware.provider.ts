@@ -3,7 +3,6 @@ import { APOLLO_OPTIONS } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { LoginStatusService } from "./login-status.service";
 import { possibleTypes, typePolicies } from "../apollo-cache-config";
-import { environment } from "../../environments/environment";
 import { NotificationService } from "./notification.service";
 import { decode } from "../../utils";
 import { aiArenaExceptionCodec } from "../error";
@@ -17,7 +16,7 @@ export const GraphqlAuthMiddlewareProvider = {
     loginStatusService: LoginStatusService,
     notificationService: NotificationService,
   ): ApolloClientOptions<unknown> {
-    const http = httpLink.create({ uri: environment.backendUrl + "/graphql" });
+    const http = httpLink.create({ uri: "/api/graphql" });
     const handleAuthError = new ApolloLink(function (operation, forward) {
       return new Observable(function (observer) {
         const subscription = forward(operation).subscribe({

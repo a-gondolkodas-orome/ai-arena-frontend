@@ -42,7 +42,7 @@ RUN yarn install --immutable
 COPY --chown=node src ./src
 COPY --chown=node angular.json package.json tsconfig.app.json tsconfig.json ./
 
-RUN yarn run build --configuration kubernetes
+RUN yarn run build
 
 # Second stage
 FROM nginx

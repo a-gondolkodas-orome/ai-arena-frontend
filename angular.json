@@ -76,27 +76,6 @@
               ],
               "outputHashing": "all"
             },
-            "kubernetes": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "3mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.kubernetes.ts"
-                }
-              ],
-              "outputHashing": "all"
-            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
