@@ -54,6 +54,9 @@ mutation DeleteMatch($id: String!) {
 fragment MatchHead on Match {
   id
   mapName
+  game {
+    name
+  }
   bots {
     ... on Bot {
       id

@@ -1,9 +1,16 @@
 <div *ngIf="matchWithWatchBot$ | async as match" class="row full-height">
-  <lib-nanowar-visualizer
-    *ngIf="match.logString; else noResult"
-    [jsonstring]="match.logString"
-    [bot_id]="match.watchBotId ?? match.bots[0].id"
-  ></lib-nanowar-visualizer>
+  <ng-container *ngIf="match.logString; else noResult" [ngSwitch]="match.game.name">
+    <lib-nanowar-visualizer
+      *ngSwitchCase="'Planet War'"
+      [jsonstring]="match.logString"
+      [bot_id]="match.watchBotId ?? match.bots[0].id"
+    ></lib-nanowar-visualizer>
+    <lib-quoridor-visualizer
+      *ngSwitchCase="'Quoridor'"
+      [jsonstring]="match.logString"
+      [bot_id]="match.watchBotId ?? match.bots[0].id"
+    ></lib-quoridor-visualizer>
+  </ng-container>
   <ng-template #noResult [ngSwitch]="true">
     <div *ngSwitchCase="match.runStatus.stage === MatchRunStage.RunSuccess">
       ERROR: match finished without result

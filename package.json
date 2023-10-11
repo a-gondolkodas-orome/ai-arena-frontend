@@ -25,6 +25,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@Kristofy/nanowar-visualizer": "^1.0.2",
+    "@Kristofy/quoridor-visualizer": "^0.2.0",
     "@angular-material-components/file-input": "9",
     "@angular/animations": "15",
     "@angular/cdk": "15.0.3",

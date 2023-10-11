@@ -38,6 +38,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { BotComponent } from "./bot/bot.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { ContestListComponent } from "./contest-list/contest-list.component";
+import { QuoridorVisualizerModule } from "@Kristofy/quoridor-visualizer";
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { ContestListComponent } from "./contest-list/contest-list.component";
     ContestListComponent,
     MatchListComponent,
     FormsModule,
+    QuoridorVisualizerModule,
   ],
   providers: [
     GraphqlAuthMiddlewareProvider,

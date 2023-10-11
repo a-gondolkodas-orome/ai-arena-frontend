@@ -17,8 +17,6 @@ export type Scalars = {
   DateTime: Date;
 };
 
-export type AuthError = GraphqlAuthenticationError | GraphqlAuthorizationError;
-
 export type Bot = {
   __typename: "Bot";
   game: Game;
@@ -296,7 +294,7 @@ export type Mutation = {
   createMatch: CreateMatchResponse;
   deleteBot?: Maybe<ValidatedNoContentResponse>;
   deleteContest?: Maybe<ValidatedNoContentResponse>;
-  deleteMatch?: Maybe<AuthError>;
+  deleteMatch?: Maybe<ValidatedNoContentResponse>;
   flipContestArchivedStatus?: Maybe<ContestResponse>;
   register: RegistrationResponse;
   registerToContest: RegisterToContestResponse;
@@ -681,6 +679,7 @@ export type CreateContestMutation = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -769,6 +768,7 @@ export type GetContestQuery = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -807,6 +807,7 @@ export type GetContestMatchesQuery = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -895,6 +896,7 @@ export type RegisterToContestMutation = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -959,6 +961,7 @@ export type UnregisterFromContestMutation = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -1016,6 +1019,7 @@ export type UpdateContestStatusMutation = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -1078,6 +1082,7 @@ export type StartContestMutation = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -1140,6 +1145,7 @@ export type ContestDetailsFragment = {
     id: string;
     mapName: string;
     scoreJson?: string | null;
+    game: { __typename: "Game"; name: string };
     bots: Array<
       | {
           __typename: "Bot";
@@ -1251,6 +1257,7 @@ export type GetMatchesQuery = {
           id: string;
           mapName: string;
           scoreJson?: string | null;
+          game: { __typename: "Game"; name: string };
           bots: Array<
             | {
                 __typename: "Bot";
@@ -1281,6 +1288,7 @@ export type GetMatchQuery = {
         id: string;
         mapName: string;
         runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+        game: { __typename: "Game"; name: string };
         bots: Array<
           | {
               __typename: "Bot";
@@ -1302,6 +1310,7 @@ export type DeleteMatchMutation = {
   deleteMatch?:
     | { __typename: "GraphqlAuthenticationError"; message: string }
     | { __typename: "GraphqlAuthorizationError"; message: string }
+    | { __typename: "GraphqlValidationError"; message: string }
     | null;
 };
 
@@ -1310,6 +1319,7 @@ export type MatchHeadFragment = {
   id: string;
   mapName: string;
   scoreJson?: string | null;
+  game: { __typename: "Game"; name: string };
   bots: Array<
     | {
         __typename: "Bot";
@@ -1329,6 +1339,7 @@ export type MatchDetailsFragment = {
   id: string;
   mapName: string;
   runStatus: { __typename: "MatchRunStatus"; stage: MatchRunStage; log?: string | null };
+  game: { __typename: "Game"; name: string };
   bots: Array<
     | {
         __typename: "Bot";
@@ -1367,6 +1378,9 @@ export const MatchHeadFragmentDoc = gql`
   fragment MatchHead on Match {
     id
     mapName
+    game {
+      name
+    }
     bots {
       ... on Bot {
         id
