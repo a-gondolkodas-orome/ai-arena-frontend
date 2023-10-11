@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from "@angular/router";
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { JwtToken } from "../services/jwt-token";
 import { LoginComponent } from "../login/login.component";
 
 @Injectable({ providedIn: "root" })
-export class AuthGuard implements CanActivate {
+export class AuthGuard {
   constructor(protected router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {

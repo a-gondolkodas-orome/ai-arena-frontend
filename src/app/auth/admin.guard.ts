@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { CanActivate, CanMatch, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { firstValueFrom } from "rxjs";
 import { Role } from "../graphql/generated";
 
 @Injectable({ providedIn: "root" })
-export class AdminGuard implements CanActivate, CanMatch {
+export class AdminGuard {
   constructor(protected router: Router, protected authService: AuthService) {}
 
   async canActivate() {

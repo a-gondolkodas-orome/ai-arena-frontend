@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+//@use "@ng-matero/extensions" as mtx;
+//@include mtx.all-component-themes($theme);
 
 html,
 body {
@@ -69,4 +71,13 @@ app-match {
 
 .full-height {
   height: 100%;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }

@@ -1,6 +1,6 @@
 <div *ngIf="contestData$ | async as contestData">
   <h1>{{ contestData.contest.name }}</h1>
-  <div>date: {{ contestData.contest.date | date: "short" }}</div>
+  <div>date: {{ contestData.contest.date | date : "short" }}</div>
   <div>
     <div>status: {{ contestData.contest.status }}</div>
     <button
