@@ -4,11 +4,13 @@
       *ngSwitchCase="'Planet War'"
       [jsonstring]="match.logString"
       [bot_id]="match.watchBotId ?? match.bots[0].id"
+      class="full-height"
     ></lib-nanowar-visualizer>
     <lib-quoridor-visualizer
       *ngSwitchCase="'Quoridor'"
       [jsonstring]="match.logString"
       [bot_id]="match.watchBotId ?? match.bots[0].id"
+      class="full-height"
     ></lib-quoridor-visualizer>
   </ng-container>
   <ng-template #noResult [ngSwitch]="true">

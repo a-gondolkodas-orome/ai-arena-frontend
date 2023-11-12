@@ -21,9 +21,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@Kristofy/quoridor-visualizer@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "@Kristofy/quoridor-visualizer@npm:0.2.4::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fquoridor-visualizer%2F0.2.4%2Fbb236b599848103b6d08145e12d74dfbf57b4ae9"
+"@Kristofy/quoridor-visualizer@npm:^0.2.10":
+  version: 0.2.10
+  resolution: "@Kristofy/quoridor-visualizer@npm:0.2.10::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kristofy%2Fquoridor-visualizer%2F0.2.10%2F0364b44295e520f92959aa5c6e8cf5a73a646929"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
@@ -33,7 +33,7 @@ __metadata:
     "@fortawesome/fontawesome-svg-core": ^6.4.0
     "@fortawesome/free-solid-svg-icons": ^6.4.0
     p5: 1
-  checksum: 8977c2514020b5efdb39f6d2616bb320483fb05b9a065533b76e909c5de6f5bdda3e2b260b7503935663ad33dd72ec388678c33dd0c06e8e32112fcaa35e5708
+  checksum: f905ba8fecbd549d7a55c56c726a407ee331a00c32ee2acfae3d47870750c51d497e5f9e91d74c03bcaee0167a9fd7186cb7c2421d7de0b6f22864a151da1ff7
   languageName: node
   linkType: hard
 
@@ -5249,7 +5249,7 @@ __metadata:
   resolution: "ai-arena-frontend@workspace:."
   dependencies:
     "@Kristofy/nanowar-visualizer": "npm:^1.1.0"
-    "@Kristofy/quoridor-visualizer": "npm:^0.2.4"
+    "@Kristofy/quoridor-visualizer": "npm:^0.2.10"
     "@angular-devkit/build-angular": "npm:16.2.6"
     "@angular-material-components/file-input": "npm:16"
     "@angular/animations": "npm:16.2.8"
