@@ -6,30 +6,36 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: Date;
+  DateTime: { input: Date; output: Date };
 };
 
 export type Bot = {
   __typename: "Bot";
   game: Game;
-  id: Scalars["ID"];
-  name: Scalars["String"];
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
   source?: Maybe<File>;
   submitStatus: BotSubmitStatus;
   user: User;
 };
 
 export type BotInput = {
-  gameId: Scalars["String"];
-  name: Scalars["String"];
+  gameId: Scalars["String"]["input"];
+  name: Scalars["String"]["input"];
 };
 
 export type BotOrDeleted = Bot | DeletedBot;
@@ -46,14 +52,14 @@ export enum BotSubmitStage {
 
 export type BotSubmitStatus = {
   __typename: "BotSubmitStatus";
-  log?: Maybe<Scalars["String"]>;
+  log?: Maybe<Scalars["String"]["output"]>;
   stage: BotSubmitStage;
 };
 
 export type BotWithUploadLink = {
   __typename: "BotWithUploadLink";
   bot: Bot;
-  uploadLink: Scalars["String"];
+  uploadLink: Scalars["String"]["output"];
 };
 
 export type Bots = {
@@ -66,37 +72,37 @@ export type BotsResponse = Bots | GraphqlAuthenticationError | GraphqlAuthorizat
 export type Contest = {
   __typename: "Contest";
   bots: Array<BotOrDeleted>;
-  date: Scalars["DateTime"];
+  date: Scalars["DateTime"]["output"];
   game: Game;
-  id: Scalars["ID"];
-  isArchived?: Maybe<Scalars["Boolean"]>;
-  mapNames: Array<Scalars["String"]>;
-  matchSizeTotal?: Maybe<Scalars["Float"]>;
+  id: Scalars["ID"]["output"];
+  isArchived?: Maybe<Scalars["Boolean"]["output"]>;
+  mapNames: Array<Scalars["String"]["output"]>;
+  matchSizeTotal?: Maybe<Scalars["Float"]["output"]>;
   matches?: Maybe<Array<Match>>;
-  name: Scalars["String"];
+  name: Scalars["String"]["output"];
   owner: User;
   progress?: Maybe<ContestProgress>;
-  scoreJson?: Maybe<Scalars["String"]>;
+  scoreJson?: Maybe<Scalars["String"]["output"]>;
   status: ContestStatus;
 };
 
 export type ContestInput = {
-  date: Scalars["DateTime"];
-  gameId: Scalars["String"];
-  mapNames: Array<Scalars["String"]>;
-  name: Scalars["String"];
+  date: Scalars["DateTime"]["input"];
+  gameId: Scalars["String"]["input"];
+  mapNames: Array<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
 };
 
 export type ContestProgress = {
   __typename: "ContestProgress";
-  completedMatchCount: Scalars["Float"];
-  timeRemaining?: Maybe<Scalars["Float"]>;
-  totalMatchCount: Scalars["Float"];
+  completedMatchCount: Scalars["Float"]["output"];
+  timeRemaining?: Maybe<Scalars["Float"]["output"]>;
+  totalMatchCount: Scalars["Float"]["output"];
 };
 
 export type ContestRegistration = {
-  botId: Scalars["String"];
-  contestId: Scalars["String"];
+  botId: Scalars["String"]["input"];
+  contestId: Scalars["String"]["input"];
 };
 
 export type ContestResponse =
@@ -123,13 +129,13 @@ export type ContestsResponse = Contests | GraphqlAuthenticationError | GraphqlAu
 export type CreateBotError = GraphqlError & {
   __typename: "CreateBotError";
   fieldErrors: CreateBotFieldErrors;
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type CreateBotFieldErrors = {
   __typename: "CreateBotFieldErrors";
-  gameId?: Maybe<Array<Scalars["String"]>>;
-  name?: Maybe<Array<Scalars["String"]>>;
+  gameId?: Maybe<Array<Scalars["String"]["output"]>>;
+  name?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type CreateBotResponse =
@@ -141,14 +147,14 @@ export type CreateBotResponse =
 export type CreateContestError = GraphqlError & {
   __typename: "CreateContestError";
   fieldErrors: CreateContestFieldErrors;
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type CreateContestFieldErrors = {
   __typename: "CreateContestFieldErrors";
-  date?: Maybe<Array<Scalars["String"]>>;
-  gameId?: Maybe<Array<Scalars["String"]>>;
-  name?: Maybe<Array<Scalars["String"]>>;
+  date?: Maybe<Array<Scalars["String"]["output"]>>;
+  gameId?: Maybe<Array<Scalars["String"]["output"]>>;
+  name?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type CreateContestResponse =
@@ -160,14 +166,14 @@ export type CreateContestResponse =
 export type CreateMatchError = GraphqlError & {
   __typename: "CreateMatchError";
   fieldErrors: CreateMatchFieldErrors;
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type CreateMatchFieldErrors = {
   __typename: "CreateMatchFieldErrors";
-  botIds?: Maybe<Array<Scalars["String"]>>;
-  gameId?: Maybe<Array<Scalars["String"]>>;
-  mapName?: Maybe<Array<Scalars["String"]>>;
+  botIds?: Maybe<Array<Scalars["String"]["output"]>>;
+  gameId?: Maybe<Array<Scalars["String"]["output"]>>;
+  mapName?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type CreateMatchResponse =
@@ -177,35 +183,35 @@ export type CreateMatchResponse =
   | Match;
 
 export type Credentials = {
-  email: Scalars["String"];
-  password: Scalars["String"];
+  email: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
 };
 
 export type DeletedBot = {
   __typename: "DeletedBot";
-  id: Scalars["ID"];
+  id: Scalars["ID"]["output"];
 };
 
 export type File = {
   __typename: "File";
-  contentBase64: Scalars["String"];
-  fileName: Scalars["String"];
+  contentBase64: Scalars["String"]["output"];
+  fileName: Scalars["String"]["output"];
 };
 
 export type Game = {
   __typename: "Game";
-  fullDescription: Scalars["String"];
-  id: Scalars["ID"];
+  fullDescription: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
   maps: Array<GameMap>;
-  name: Scalars["String"];
-  picture: Scalars["String"];
+  name: Scalars["String"]["output"];
+  picture: Scalars["String"]["output"];
   playerCount: PlayerCount;
-  shortDescription: Scalars["String"];
+  shortDescription: Scalars["String"]["output"];
 };
 
 export type GameMap = {
   __typename: "GameMap";
-  name: Scalars["String"];
+  name: Scalars["String"]["output"];
   playerCount: PlayerCount;
 };
 
@@ -220,46 +226,46 @@ export type GamesResponse = Games | GraphqlAuthenticationError | GraphqlAuthoriz
 
 export type GraphqlAuthenticationError = GraphqlError & {
   __typename: "GraphqlAuthenticationError";
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type GraphqlAuthorizationError = GraphqlError & {
   __typename: "GraphqlAuthorizationError";
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type GraphqlError = {
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type GraphqlValidationError = GraphqlError & {
   __typename: "GraphqlValidationError";
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type LoginResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | LoginSuccess;
 
 export type LoginSuccess = {
   __typename: "LoginSuccess";
-  token: Scalars["String"];
+  token: Scalars["String"]["output"];
 };
 
 export type Match = {
   __typename: "Match";
   bots: Array<BotOrDeleted>;
   game: Game;
-  id: Scalars["ID"];
-  logString?: Maybe<Scalars["String"]>;
-  mapName: Scalars["String"];
+  id: Scalars["ID"]["output"];
+  logString?: Maybe<Scalars["String"]["output"]>;
+  mapName: Scalars["String"]["output"];
   runStatus: MatchRunStatus;
-  scoreJson?: Maybe<Scalars["String"]>;
+  scoreJson?: Maybe<Scalars["String"]["output"]>;
   user: User;
 };
 
 export type MatchInput = {
-  botIds: Array<Scalars["String"]>;
-  gameId: Scalars["String"];
-  mapName: Scalars["String"];
+  botIds: Array<Scalars["String"]["input"]>;
+  gameId: Scalars["String"]["input"];
+  mapName: Scalars["String"]["input"];
 };
 
 export type MatchResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | Match;
@@ -276,7 +282,7 @@ export enum MatchRunStage {
 
 export type MatchRunStatus = {
   __typename: "MatchRunStatus";
-  log?: Maybe<Scalars["String"]>;
+  log?: Maybe<Scalars["String"]["output"]>;
   stage: MatchRunStage;
 };
 
@@ -316,19 +322,19 @@ export type MutationCreateMatchArgs = {
 };
 
 export type MutationDeleteBotArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type MutationDeleteContestArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type MutationDeleteMatchArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type MutationFlipContestArchivedStatusArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type MutationRegisterArgs = {
@@ -340,22 +346,22 @@ export type MutationRegisterToContestArgs = {
 };
 
 export type MutationStartContestArgs = {
-  contestId: Scalars["String"];
+  contestId: Scalars["String"]["input"];
 };
 
 export type MutationUnregisterFromContestArgs = {
-  contestId: Scalars["String"];
+  contestId: Scalars["String"]["input"];
 };
 
 export type MutationUpdateStatusArgs = {
-  contestId: Scalars["String"];
+  contestId: Scalars["String"]["input"];
   status: ContestStatus;
 };
 
 export type PlayerCount = {
   __typename: "PlayerCount";
-  max: Scalars["Float"];
-  min: Scalars["Float"];
+  max: Scalars["Float"]["output"];
+  min: Scalars["Float"]["output"];
 };
 
 export type Query = {
@@ -374,28 +380,28 @@ export type Query = {
 };
 
 export type QueryGetBotArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type QueryGetBotsArgs = {
-  gameId: Scalars["String"];
-  includeTestBots: Scalars["Boolean"];
+  gameId: Scalars["String"]["input"];
+  includeTestBots: Scalars["Boolean"]["input"];
 };
 
 export type QueryGetContestArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type QueryGetGameArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type QueryGetMatchArgs = {
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 };
 
 export type QueryGetMatchesArgs = {
-  gameId: Scalars["String"];
+  gameId: Scalars["String"]["input"];
 };
 
 export type QueryLoginArgs = {
@@ -405,13 +411,13 @@ export type QueryLoginArgs = {
 export type RegisterToContestError = GraphqlError & {
   __typename: "RegisterToContestError";
   fieldErrors: RegisterToContestFieldErrors;
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
 };
 
 export type RegisterToContestFieldErrors = {
   __typename: "RegisterToContestFieldErrors";
-  botId?: Maybe<Array<Scalars["String"]>>;
-  contestId?: Maybe<Array<Scalars["String"]>>;
+  botId?: Maybe<Array<Scalars["String"]["output"]>>;
+  contestId?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type RegisterToContestResponse =
@@ -423,20 +429,20 @@ export type RegisterToContestResponse =
 export type RegistrationError = GraphqlError & {
   __typename: "RegistrationError";
   fieldErrors?: Maybe<RegistrationFieldErrors>;
-  message: Scalars["String"];
-  nonFieldErrors?: Maybe<Array<Scalars["String"]>>;
+  message: Scalars["String"]["output"];
+  nonFieldErrors?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type RegistrationFieldErrors = {
   __typename: "RegistrationFieldErrors";
-  email?: Maybe<Array<Scalars["String"]>>;
-  username?: Maybe<Array<Scalars["String"]>>;
+  email?: Maybe<Array<Scalars["String"]["output"]>>;
+  username?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type RegistrationInput = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-  username: Scalars["String"];
+  email: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
 };
 
 export type RegistrationResponse =
@@ -447,8 +453,8 @@ export type RegistrationResponse =
 
 export type RegistrationSuccess = {
   __typename: "RegistrationSuccess";
-  token: Scalars["String"];
-  userId: Scalars["String"];
+  token: Scalars["String"]["output"];
+  userId: Scalars["String"]["output"];
 };
 
 export enum Role {
@@ -458,7 +464,7 @@ export enum Role {
 
 export type StartContestError = GraphqlError & {
   __typename: "StartContestError";
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
   status: ContestStatus;
 };
 
@@ -478,7 +484,7 @@ export type UnregisterFromContestResponse =
 export type UpdateContestStatusError = GraphqlError & {
   __typename: "UpdateContestStatusError";
   from: ContestStatus;
-  message: Scalars["String"];
+  message: Scalars["String"]["output"];
   to: ContestStatus;
 };
 
@@ -491,10 +497,10 @@ export type UpdateContestStatusResponse =
 
 export type User = {
   __typename: "User";
-  email: Scalars["String"];
-  id: Scalars["ID"];
+  email: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
   roles: Array<Role>;
-  username: Scalars["String"];
+  username: Scalars["String"]["output"];
 };
 
 export type UserResponse = GraphqlAuthenticationError | GraphqlAuthorizationError | User;
@@ -590,8 +596,8 @@ export type CreateBotMutation = {
 };
 
 export type GetBotsQueryVariables = Exact<{
-  gameId: Scalars["String"];
-  includeTestBots: Scalars["Boolean"];
+  gameId: Scalars["String"]["input"];
+  includeTestBots: Scalars["Boolean"]["input"];
 }>;
 
 export type GetBotsQuery = {
@@ -615,7 +621,7 @@ export type GetBotsQuery = {
 };
 
 export type GetBotQueryVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type GetBotQuery = {
@@ -634,7 +640,7 @@ export type GetBotQuery = {
 };
 
 export type DeleteBotMutationVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type DeleteBotMutation = {
@@ -712,7 +718,9 @@ export type CreateContestMutation = {
     | { __typename: "GraphqlAuthorizationError"; message: string };
 };
 
-export type GetContestsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetContestsQueryVariables = Exact<{
+  includeMatchSizeTotal: Scalars["Boolean"]["input"];
+}>;
 
 export type GetContestsQuery = {
   __typename: "Query";
@@ -721,11 +729,11 @@ export type GetContestsQuery = {
         __typename: "Contests";
         contests: Array<{
           __typename: "Contest";
+          matchSizeTotal?: number | null;
           id: string;
           name: string;
           date: Date;
           isArchived?: boolean | null;
-          matchSizeTotal?: number | null;
           game: { __typename: "Game"; name: string };
           bots: Array<{ __typename: "Bot"; id: string } | { __typename: "DeletedBot"; id: string }>;
           matches?: Array<{ __typename: "Match"; id: string }> | null;
@@ -736,7 +744,7 @@ export type GetContestsQuery = {
 };
 
 export type GetContestQueryVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type GetContestQuery = {
@@ -794,7 +802,7 @@ export type GetContestQuery = {
 };
 
 export type GetContestMatchesQueryVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type GetContestMatchesQuery = {
@@ -827,7 +835,7 @@ export type GetContestMatchesQuery = {
 };
 
 export type DeleteContestMutationVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type DeleteContestMutation = {
@@ -840,7 +848,7 @@ export type DeleteContestMutation = {
 };
 
 export type FlipContestArchivedStatusMutationVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type FlipContestArchivedStatusMutation = {
@@ -852,7 +860,6 @@ export type FlipContestArchivedStatusMutation = {
         name: string;
         date: Date;
         isArchived?: boolean | null;
-        matchSizeTotal?: number | null;
         game: { __typename: "Game"; name: string };
         bots: Array<{ __typename: "Bot"; id: string } | { __typename: "DeletedBot"; id: string }>;
         matches?: Array<{ __typename: "Match"; id: string }> | null;
@@ -929,7 +936,7 @@ export type RegisterToContestMutation = {
 };
 
 export type UnregisterFromContestMutationVariables = Exact<{
-  contestId: Scalars["String"];
+  contestId: Scalars["String"]["input"];
 }>;
 
 export type UnregisterFromContestMutation = {
@@ -986,7 +993,7 @@ export type UnregisterFromContestMutation = {
 };
 
 export type UpdateContestStatusMutationVariables = Exact<{
-  contestId: Scalars["String"];
+  contestId: Scalars["String"]["input"];
   status: ContestStatus;
 }>;
 
@@ -1050,7 +1057,7 @@ export type UpdateContestStatusMutation = {
 };
 
 export type StartContestMutationVariables = Exact<{
-  contestId: Scalars["String"];
+  contestId: Scalars["String"]["input"];
 }>;
 
 export type StartContestMutation = {
@@ -1113,7 +1120,6 @@ export type ContestHeadFragment = {
   name: string;
   date: Date;
   isArchived?: boolean | null;
-  matchSizeTotal?: number | null;
   game: { __typename: "Game"; name: string };
   bots: Array<{ __typename: "Bot"; id: string } | { __typename: "DeletedBot"; id: string }>;
   matches?: Array<{ __typename: "Match"; id: string }> | null;
@@ -1186,7 +1192,7 @@ export type GetGamesQuery = {
 };
 
 export type GetGameQueryVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type GetGameQuery = {
@@ -1242,7 +1248,7 @@ export type CreateMatchMutation = {
 };
 
 export type GetMatchesQueryVariables = Exact<{
-  gameId: Scalars["String"];
+  gameId: Scalars["String"]["input"];
 }>;
 
 export type GetMatchesQuery = {
@@ -1273,7 +1279,7 @@ export type GetMatchesQuery = {
 };
 
 export type GetMatchQueryVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type GetMatchQuery = {
@@ -1302,7 +1308,7 @@ export type GetMatchQuery = {
 };
 
 export type DeleteMatchMutationVariables = Exact<{
-  id: Scalars["String"];
+  id: Scalars["String"]["input"];
 }>;
 
 export type DeleteMatchMutation = {
@@ -1371,7 +1377,6 @@ export const ContestHeadFragmentDoc = gql`
       id
     }
     isArchived
-    matchSizeTotal
   }
 `;
 export const MatchHeadFragmentDoc = gql`
@@ -1710,12 +1715,13 @@ export class CreateContestGQL extends Apollo.Mutation<
   }
 }
 export const GetContestsDocument = gql`
-  query GetContests {
+  query GetContests($includeMatchSizeTotal: Boolean!) {
     getContests {
       __typename
       ... on Contests {
         contests {
           ...ContestHead
+          matchSizeTotal @include(if: $includeMatchSizeTotal)
         }
       }
       ... on GraphqlError {

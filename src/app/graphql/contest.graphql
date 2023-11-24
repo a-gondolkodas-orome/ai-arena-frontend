@@ -17,12 +17,13 @@ mutation CreateContest($contestInput: ContestInput!) {
   }
 }
 
-query GetContests {
+query GetContests($includeMatchSizeTotal: Boolean!) {
   getContests {
     __typename
     ... on Contests {
       contests {
         ...ContestHead
+        matchSizeTotal @include(if: $includeMatchSizeTotal)
       }
     }
     ... on GraphqlError {
@@ -158,7 +159,6 @@ fragment ContestHead on Contest {
     id
   }
   isArchived
-  matchSizeTotal
 }
 
 fragment ContestDetails on Contest {

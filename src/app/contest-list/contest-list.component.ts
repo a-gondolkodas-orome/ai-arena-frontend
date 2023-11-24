@@ -63,7 +63,7 @@ export class ContestListComponent implements OnInit, OnDestroy {
       this.adminMode = true;
     }
     this.contests$ = this.getContests
-      .watch(undefined, { pollInterval: 10 * Time.second })
+      .watch({ includeMatchSizeTotal: this.adminMode }, { pollInterval: 10 * Time.second })
       .valueChanges.pipe(
         map((result) => result.data.getContests),
         handleGraphqlAuthErrors(this.notificationService),
