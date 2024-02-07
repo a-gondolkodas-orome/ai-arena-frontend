@@ -7,6 +7,7 @@ import { handleGraphqlAuthErrors } from "../error";
 import { Location } from "@angular/common";
 import { Sse } from "../services/sse";
 import { AuthService } from "../services/auth.service";
+import * as base64 from "base64-js";
 
 @Component({
   selector: "app-match",
@@ -50,7 +51,16 @@ export class MatchComponent implements OnInit, OnDestroy {
           const userBot = match.bots.find(
             (bot) => bot.__typename === "Bot" && bot.user.id === user.id,
           );
-          return { ...match, watchBotId: userBot?.id };
+          return {
+            ...match,
+            log: match.logBase64
+              ? {
+                  binary: base64.toByteArray(match.logBase64),
+                  jsonString: atob(match.logBase64),
+                }
+              : undefined,
+            watchBotId: userBot?.id,
+          };
         }),
       );
       this.sseSubscription = Sse.matchEvents
@@ -64,7 +74,10 @@ export class MatchComponent implements OnInit, OnDestroy {
   }
 
   matchWithWatchBot$!: Observable<
-    Extract<GetMatchQuery["getMatch"], { __typename: "Match" }> & { watchBotId?: string }
+    Extract<GetMatchQuery["getMatch"], { __typename: "Match" }> & {
+      log?: { binary: ArrayBuffer; jsonString: string };
+      watchBotId?: string;
+    }
   >;
   protected sseSubscription?: Subscription;
 

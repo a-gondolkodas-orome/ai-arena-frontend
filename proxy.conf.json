@@ -4,10 +4,14 @@
     "secure": false,
     "pathRewrite": {
       "^/api": ""
-    }
+    },
+    "logLevel": "debug",
+    "changeOrigin": true
   },
   "/public": {
     "target": "http://localhost:3000",
-    "secure": false
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
   }
 }

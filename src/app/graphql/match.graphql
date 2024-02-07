@@ -82,6 +82,6 @@ fragment MatchDetails on Match {
     stage
     log
   }
-  logString
+  logBase64
   scoreJson
 }

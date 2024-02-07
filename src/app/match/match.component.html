@@ -1,14 +1,14 @@
 <div *ngIf="matchWithWatchBot$ | async as match" class="row full-height">
-  <ng-container *ngIf="match.logString; else noResult" [ngSwitch]="match.game.name">
+  <ng-container *ngIf="match.log; else noResult" [ngSwitch]="match.game.name">
     <lib-nanowar-visualizer
       *ngSwitchCase="'Planet War'"
-      [jsonstring]="match.logString"
+      [jsonstring]="match.log.jsonString"
       [bot_id]="match.watchBotId ?? match.bots[0].id"
       class="full-height"
     ></lib-nanowar-visualizer>
     <lib-quoridor-visualizer
       *ngSwitchCase="'Quoridor'"
-      [jsonstring]="match.logString"
+      [matchLog]="match.log.jsonString.startsWith('{') ? match.log.jsonString : match.log.binary"
       [bot_id]="match.watchBotId ?? match.bots[0].id"
       class="full-height"
     ></lib-quoridor-visualizer>

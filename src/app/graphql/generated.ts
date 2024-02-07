@@ -255,7 +255,7 @@ export type Match = {
   bots: Array<BotOrDeleted>;
   game: Game;
   id: Scalars["ID"]["output"];
-  logString?: Maybe<Scalars["String"]["output"]>;
+  logBase64?: Maybe<Scalars["String"]["output"]>;
   mapName: Scalars["String"]["output"];
   runStatus: MatchRunStatus;
   scoreJson?: Maybe<Scalars["String"]["output"]>;
@@ -1289,7 +1289,7 @@ export type GetMatchQuery = {
     | { __typename: "GraphqlAuthorizationError"; message: string }
     | {
         __typename: "Match";
-        logString?: string | null;
+        logBase64?: string | null;
         scoreJson?: string | null;
         id: string;
         mapName: string;
@@ -1340,7 +1340,7 @@ export type MatchHeadFragment = {
 
 export type MatchDetailsFragment = {
   __typename: "Match";
-  logString?: string | null;
+  logBase64?: string | null;
   scoreJson?: string | null;
   id: string;
   mapName: string;
@@ -1465,7 +1465,7 @@ export const MatchDetailsFragmentDoc = gql`
       stage
       log
     }
-    logString
+    logBase64
     scoreJson
   }
   ${MatchHeadFragmentDoc}

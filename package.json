@@ -15,7 +15,8 @@
     "eslint:check": "yarn run eslint --report-unused-disable-directives src/",
     "eslint:fix": "yarn run eslint:check --fix",
     "postinstall": "husky install",
-    "generate": "graphql-codegen && yarn run prettier --write src/app/graphql/generated.ts"
+    "generate": "graphql-codegen && yarn run prettier --write src/app/graphql/generated.ts",
+    "docker:publish": "docker build . -f Dockerfile.prod --build-arg=\"NPM_AUTH_TOKEN=$NPM_AUTH_TOKEN\" -t ghcr.io/a-gondolkodas-orome/ai-arena-frontend && docker push ghcr.io/a-gondolkodas-orome/ai-arena-frontend"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@Kristofy/nanowar-visualizer": "^1.1.0",
-    "@Kristofy/quoridor-visualizer": "^0.2.10",
+    "@Kristofy/quoridor-visualizer": "^0.3.2",
     "@angular-material-components/file-input": "16",
     "@angular/animations": "16.2.8",
     "@angular/cdk": "16.2.7",
@@ -46,8 +47,10 @@
     "@ng-bootstrap/ng-bootstrap": "15",
     "@ng-matero/extensions": "16",
     "@popperjs/core": "^2.10.2",
+    "@protobuf-ts/runtime": "^2.9.1",
     "@types/p5": "^1.6.1",
     "apollo-angular": "5",
+    "base64-js": "^1.5.1",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.9.1",
     "dayjs": "^1.11.7",
