@@ -43,7 +43,12 @@
         <span *ngIf="bot.__typename === 'DeletedBot'" class="deleted-bot">{{
           bot.id.substring(0, 8)
         }}</span>
-        <span *ngIf="bot.__typename === 'Bot'">{{ bot.user.username }} ({{ bot.name }})</span>
+        <span *ngIf="bot.__typename === 'Bot'"
+          >{{ bot.user.username }} (
+          <a *ngIf="adminMode" [routerLink]="['/bot', bot.id]">{{ bot.name }}</a>
+          <ng-container *ngIf="!adminMode">{{ bot.name }}</ng-container>
+          )</span
+        >
       </li>
     </ul>
     <div *ngIf="!contestData.adminMode && contestData.contest.status === 'OPEN'">

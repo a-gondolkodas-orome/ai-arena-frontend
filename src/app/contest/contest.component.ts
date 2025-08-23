@@ -12,7 +12,7 @@ import {
   UpdateContestStatusGQL,
   User,
 } from "../graphql/generated";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { combineLatest, filter, map, Observable, Subscription, switchMap, tap } from "rxjs";
 import { handleGraphqlAuthErrors } from "../error";
@@ -68,6 +68,7 @@ type ContestData =
     MatTooltipModule,
     MatTableModule,
     MatProgressBarModule,
+    RouterLink,
   ],
 })
 export class ContestComponent implements OnInit, OnDestroy {
